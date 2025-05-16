@@ -3,8 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <title>Content Manager</title>
+    <script>
+      // Prevent conflict with existing JS or Bootstrap
+      window.CMS_MANUAL_INIT = true;
+    </script>
     <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
   </head>
   <body>
+    <script>
+      window.CMS.init(); // Manually initialize CMS
+    </script>
   </body>
 </html>
