@@ -2,68 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MB Engineering Portfolio</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <header>
     <h1>MB Engineering</h1>
     <p>Your Name | Engineering Technologist</p>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <nav>
-    <a href="#about">About</a>
-    <a href="#resume">Resume</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#blog">Blog</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <main>
+    <section id="about" class="card">
+      <h2>About Me</h2>
+      <p>
+        Hello! I'm an aspiring engineering technologist passionate about solving real-world problems through design, testing, and hands-on development. This site is a showcase of my work, resume, and reflections on school and job experiences.
+      </p>
+    </section>
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>Hello! I'm an aspiring engineering technologist passionate about solving real-world problems through design, testing, and hands-on development. This site is a showcase of my work, resume, and reflections on school and job experiences.</p>
-  </section>
+    <section id="resume" class="card">
+      <h2>Resume</h2>
+      <p>You can view or download my resume below.</p>
+      <a href="assets/uploads/YourName_Resume.pdf" target="_blank">Download Resume</a>
+    </section>
 
-  <section id="resume">
-    <h2>Resume</h2>
-    <p>You can view or download my resume below.</p>
-    <a href="resume.pdf" target="_blank">Download Resume</a>
-  </section>
+    <section id="gallery" class="card">
+      <h2>Project Gallery</h2>
+      <div class="gallery">
+        <div>
+          <img src="assets/uploads/project1.jpg" alt="Project Photo" />
+          <p>Project Photo</p>
+        </div>
+        <div>
+          <img src="assets/uploads/project2.jpg" alt="Another Project" />
+          <p>Another Project</p>
+        </div>
+      </div>
+    </section>
 
-  <section id="gallery">
-    <h2>Project Gallery</h2>
-    <div class="gallery">
-      <img src="assets/uploads/sample1.jpg" alt="Project Photo">
-      <video controls>
-        <source src="assets/uploads/sample1.mp4" type="video/mp4" />
-        Your browser does not support video playback.
-      </video>
-      <a href="assets/uploads/sample.pdf" target="_blank">View Project Document</a>
-    </div>
-  </section>
+    <section id="blog" class="card">
+      <h2>Blog</h2>
+      <p>Coming soon: Technical write-ups, school reflections, and hands-on build logs.</p>
+    </section>
 
-  <section id="blog">
-    <h2>Blog</h2>
-    <article>
-      <h3>My First Internship</h3>
-      <p>I had the opportunity to work with a team of talented engineers during my first internship. We designed a test fixture, ran simulations, and even got hands-on in the lab. This experience helped me understand the value of prototyping and clear documentation.</p>
-    </article>
-  </section>
-
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>Email: your.email@example.com</p>
-    <p>LinkedIn: <a href="https://linkedin.com/in/yourprofile" target="_blank">yourprofile</a></p>
-  </section>
+    <section id="contact" class="card">
+      <h2>Contact</h2>
+      <p>Feel free to reach out via LinkedIn, email, or at my next career fair visit.</p>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2025 Your Name. All rights reserved.</p>
+    <p>&copy; 2025 MB Engineering</p>
   </footer>
 
-  <!-- Link your JS at the end for better loading -->
-  <script src="script.js"></script>
+  <!-- 🟢 Add Netlify Identity Widget to enable admin invite logins -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
 </body>
 </html>
 
