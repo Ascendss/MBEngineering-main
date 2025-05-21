@@ -1,118 +1,170 @@
-/* General Page Styles */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  line-height: 1.6;
-  background-color: #f4f4f4;
-  color: #333;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MB Engineering Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
 
-a {
-  color: #0066cc;
-  text-decoration: none;
-}
+    body {
+      background: #f4f6f8;
+      color: #222;
+      line-height: 1.6;
+    }
 
-a:hover {
-  text-decoration: underline;
-}
+    header {
+      background: #1f1f1f;
+      color: white;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
 
-/* Header */
-header {
-  background-color: #333;
-  color: #fff;
-  padding: 2rem;
-  text-align: center;
-}
+    header h1 {
+      font-size: 1.75rem;
+    }
 
-/* Navigation Bar */
-nav {
-  display: flex;
-  justify-content: center;
-  background-color: #444;
-  padding: 0.5rem;
-}
+    header p {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
 
-nav a {
-  margin: 0 1rem;
-  color: #fff;
-  font-weight: bold;
-}
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
 
-nav a:hover {
-  color: #ddd;
-}
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: 5px;
+      transition: background 0.2s ease;
+    }
 
-/* Sections */
-section {
-  padding: 2rem;
-  background-color: #fff;
-  margin: 1rem auto;
-  max-width: 800px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  border-radius: 6px;
-}
+    nav ul li a:hover {
+      background: #333;
+    }
 
-/* Gallery */
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
+    main {
+      padding: 2rem;
+      display: grid;
+      gap: 2rem;
+      max-width: 960px;
+      margin: auto;
+    }
 
-.gallery img,
-.gallery video,
-.gallery a {
-  flex: 1 1 calc(33% - 1rem);
-  max-width: 100%;
-  height: auto;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  text-align: center;
-}
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
 
-/* Blog Article */
-#blog article {
-  background-color: #f9f9f9;
-  padding: 1rem;
-  border-left: 4px solid #0066cc;
-  margin-top: 1rem;
-  border-radius: 4px;
-}
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
 
-/* Footer */
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: #333;
-  color: #fff;
-  margin-top: 2rem;
-}
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+    }
 
-/* Buttons */
-button {
-  padding: 0.5rem 1rem;
-  background-color: #0066cc;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-}
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 0.85rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MB Engineering</h1>
+    <p>Your Name | Engineering Technologist</p>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
-button:hover {
-  background-color: #004a99;
-}
+  <main>
+    <section id="about" class="card">
+      <h2>About Me</h2>
+      <p>
+        Hello! I'm an aspiring engineering technologist passionate about solving real-world problems through design, testing, and hands-on development. This site is a showcase of my work, resume, and reflections on school and job experiences.
+      </p>
+    </section>
 
-/* Back to Top Button Styling (optional if JS adds it) */
-#backToTop {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 0.5rem 1rem;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  display: none;
-}
+    <section id="resume" class="card">
+      <h2>Resume</h2>
+      <p>You can view or download my resume below.</p>
+      <a href="assets/uploads/YourName_Resume.pdf" target="_blank">Download Resume</a>
+    </section>
+
+    <section id="gallery" class="card">
+      <h2>Project Gallery</h2>
+      <div class="gallery">
+        <div>
+          <img src="assets/uploads/project1.jpg" alt="Project 1" />
+          <p>Project 1</p>
+        </div>
+        <div>
+          <img src="assets/uploads/project2.jpg" alt="Project 2" />
+          <p>Project 2</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="blog" class="card">
+      <h2>Blog</h2>
+      <p>Coming soon: Technical write-ups, school reflections, and hands-on build logs.</p>
+    </section>
+
+    <section id="contact" class="card">
+      <h2>Contact</h2>
+      <p>Feel free to reach out via LinkedIn, email, or at my next career fair visit.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 MB Engineering</p>
+  </footer>
+
+  <!-- Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>
