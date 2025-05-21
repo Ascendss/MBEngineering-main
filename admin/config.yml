@@ -24,3 +24,14 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "File", name: "file", widget: "file" }
+
+  - name: "projects"
+    label: "Projects"
+    folder: "content/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Link", name: "link", widget: "string", required: false }
