@@ -4,8 +4,8 @@ const matter = require("gray-matter");
 
 exports.handler = async () => {
   try {
-    // ✅ Use process.cwd() to correctly resolve root-relative paths on Netlify
-    const dir = path.join(process.cwd(), "content/projects");
+    // Use project root-relative path instead of __dirname
+    const dir = path.join(process.cwd(), "content", "projects");
 
     if (!fs.existsSync(dir)) {
       throw new Error(`Directory not found: ${dir}`);
