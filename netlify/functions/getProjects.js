@@ -4,11 +4,11 @@ const matter = require("gray-matter");
 
 exports.handler = async () => {
   try {
-    // Use Netlify-compatible root path
     const dir = path.join(process.cwd(), "content", "projects");
+    console.log("Looking for directory:", dir);
 
-    // Read all .md files in the content/projects directory
     const files = fs.readdirSync(dir);
+    console.log("Files found:", files);
 
     const projects = files
       .filter(file => file.endsWith(".md"))
@@ -16,11 +16,12 @@ exports.handler = async () => {
         const filePath = path.join(dir, file);
         const content = fs.readFileSync(filePath, "utf8");
         const { data } = matter(content);
+        console.log("Parsed project:", data);
 
         return {
-          title: data.title,
-          description: data.description,
-          image: data.image,
+          title: data.title || "Untitled",
+          description: data.description || "",
+          image: data.image || "",
           link: data.link || "#",
           slug: file.replace(".md", "")
         };
@@ -31,6 +32,7 @@ exports.handler = async () => {
       body: JSON.stringify(projects)
     };
   } catch (error) {
+    console.error("Function error:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message })
