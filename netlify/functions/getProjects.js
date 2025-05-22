@@ -4,8 +4,8 @@ const matter = require("gray-matter");
 
 exports.handler = async () => {
   try {
-    // Use project root-relative path instead of __dirname
-    const dir = path.join(process.cwd(), "content", "projects");
+    // Corrected: Only go two levels up to reach /content/projects
+    const dir = path.resolve(__dirname, "../../content/projects");
 
     if (!fs.existsSync(dir)) {
       throw new Error(`Directory not found: ${dir}`);
