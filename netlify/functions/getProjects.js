@@ -4,8 +4,8 @@ const matter = require("gray-matter");
 
 exports.handler = async () => {
   try {
-    // Adjust to Netlify function’s root directory
-    const dir = path.resolve("./content/projects");
+    // FIXED: Use correct relative path based on Netlify function root
+    const dir = path.resolve(__dirname, "../../../content/projects");
 
     if (!fs.existsSync(dir)) {
       throw new Error(`Directory not found: ${dir}`);
@@ -21,9 +21,9 @@ exports.handler = async () => {
         const { data } = matter(content);
 
         return {
-          title: data.title || "Untitled",
-          description: data.description || "",
-          image: data.image || "",
+          title: data.title,
+          description: data.description,
+          image: data.image,
           link: data.link || "#",
           slug: file.replace(".md", "")
         };
@@ -34,10 +34,11 @@ exports.handler = async () => {
       body: JSON.stringify(projects)
     };
   } catch (error) {
-    console.error("Error in getProjects.js:", error.message);
+    console.error("getProjects.js error:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message })
     };
   }
 };
+
