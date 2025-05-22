@@ -4,7 +4,10 @@ const matter = require("gray-matter");
 
 exports.handler = async () => {
   try {
-    const dir = path.resolve(__dirname, "../../content/projects");
+    // Use Netlify-compatible root path
+    const dir = path.join(process.cwd(), "content", "projects");
+
+    // Read all .md files in the content/projects directory
     const files = fs.readdirSync(dir);
 
     const projects = files
@@ -27,7 +30,6 @@ exports.handler = async () => {
       statusCode: 200,
       body: JSON.stringify(projects)
     };
-
   } catch (error) {
     return {
       statusCode: 500,
