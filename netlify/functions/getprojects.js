@@ -4,10 +4,11 @@ const matter = require("gray-matter");
 
 exports.handler = async () => {
   try {
-    const dir = path.join(process.cwd(), "content", "projects");
+    // This resolves path to content/projects using __dirname (where getprojects.js is located)
+    const dir = path.resolve(__dirname, "../../content/projects");
 
     if (!fs.existsSync(dir)) {
-      throw new Error(`Directory not found: ${dir}`);
+      throw new Error(`Directory not found at: ${dir}`);
     }
 
     const files = fs.readdirSync(dir);
@@ -20,9 +21,9 @@ exports.handler = async () => {
         const { data } = matter(content);
 
         return {
-          title: data.title,
-          description: data.description,
-          image: data.image,
+          title: data.title || "Untitled",
+          description: data.description || "",
+          image: data.image || "",
           link: data.link || "#",
           slug: file.replace(".md", "")
         };
@@ -30,13 +31,13 @@ exports.handler = async () => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(projects)
+      body: JSON.stringify(projects),
     };
   } catch (error) {
-    console.error("getProjects.js error:", error);
+    console.error("Serverless Function Error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({ error: error.message }),
     };
   }
 };
