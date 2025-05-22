@@ -1,4 +1,4 @@
-fetch("/.netlify/functions/getProjects")
+fetch("/.netlify/functions/getprojects")
   .then(res => res.json())
   .then(projects => {
     const gallery = document.querySelector(".gallery");
