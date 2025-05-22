@@ -25,4 +25,3 @@ fetch("/.netlify/functions/getProjects")
     console.error("Failed to load projects:", err);
     gallery.innerHTML = "<p>Unable to load projects at this time.</p>";
   });
-
