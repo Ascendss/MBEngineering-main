@@ -2,7 +2,7 @@ fetch("/.netlify/functions/getProjects")
   .then(res => res.json())
   .then(projects => {
     const gallery = document.querySelector(".gallery");
-    if (!gallery) return; // Avoid crash if element is missing
+    if (!gallery) return console.error("Gallery element not found");
 
     gallery.innerHTML = "";
 
