@@ -1,7 +1,9 @@
-fetch('/.netlify/functions/getProjects')
+fetch("/.netlify/functions/getProjects")
   .then(res => res.json())
   .then(projects => {
-    const gallery = document.querySelector('.gallery');
+    const gallery = document.querySelector(".gallery");
+    if (!gallery) return; // Avoid crash if element is missing
+
     gallery.innerHTML = "";
 
     projects.forEach(project => {
@@ -12,7 +14,8 @@ fetch('/.netlify/functions/getProjects')
           <img src="${project.image}" alt="${project.title}" />
           <h3>${project.title}</h3>
           <p>${project.description}</p>
-        </a>`;
+        </a>
+      `;
       gallery.appendChild(div);
     });
   })
