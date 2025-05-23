@@ -4,8 +4,10 @@ const matter = require("gray-matter");
 
 exports.handler = async () => {
   try {
-    // Use __dirname to ensure correct path within Netlify function
     const dir = path.resolve(__dirname, "../../content/projects");
+
+    // 🔍 Log the path to help us debug in Netlify logs
+    console.log("🪵 Reading from directory:", dir);
 
     if (!fs.existsSync(dir)) {
       throw new Error(`Directory not found: ${dir}`);
@@ -34,7 +36,7 @@ exports.handler = async () => {
       body: JSON.stringify(projects)
     };
   } catch (error) {
-    console.error("getprojects.js error:", error.message);
+    console.error("🔥 Function error:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message })
