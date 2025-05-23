@@ -6,11 +6,11 @@ exports.handler = async () => {
   try {
     const dir = path.resolve(__dirname, "../../content/projects");
 
-    // 🔍 Log the path to help us debug in Netlify logs
+    // 🔍 Log the absolute path being used
     console.log("🪵 Reading from directory:", dir);
 
     if (!fs.existsSync(dir)) {
-      throw new Error(`Directory not found: ${dir}`);
+      throw new Error(`❌ Directory not found: ${dir}`);
     }
 
     const files = fs.readdirSync(dir);
@@ -23,7 +23,7 @@ exports.handler = async () => {
         const { data } = matter(content);
 
         return {
-          title: data.title || "Untitled Project",
+          title: data.title || "Untitled",
           description: data.description || "",
           image: data.image || "",
           link: data.link || "#",
