@@ -38,41 +38,24 @@
 
     <section id="gallery" class="card">
       <h2>Project Gallery</h2>
-      <div id="project-gallery" class="project-gallery">
-        <!-- Dynamic projects will be inserted here by script.js -->
-      </div>
+      <div class="gallery"></div>
     </section>
 
     <section id="blog" class="card">
       <h2>Blog</h2>
-      <p>Coming soon: Technical write-ups, school reflections, and hands-on build logs.</p>
+      <p>Check back soon for updates and stories from my engineering journey.</p>
     </section>
 
     <section id="contact" class="card">
       <h2>Contact</h2>
-      <p>Feel free to reach out via LinkedIn, email, or at my next career fair visit.</p>
+      <p>Email me at <a href="mailto:youremail@example.com">youremail@example.com</a></p>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 MB Engineering</p>
+    <p>© 2025 MB Engineering</p>
   </footer>
 
-  <!-- Netlify Identity Widget -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
-  </script>
-
-  <!-- Project Loader Script -->
   <script src="script.js"></script>
 </body>
 </html>
