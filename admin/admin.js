@@ -1,3 +1,39 @@
+// Authentication handling
+function checkAuth() {
+    const user = netlifyIdentity.currentUser();
+    const loginContainer = document.getElementById('login-container');
+    const adminContent = document.getElementById('admin-content');
+
+    if (!user) {
+        loginContainer.style.display = 'flex';
+        adminContent.style.display = 'none';
+    } else {
+        loginContainer.style.display = 'none';
+        adminContent.style.display = 'block';
+        loadProjects();
+        loadPosts();
+    }
+}
+
+// Set up authentication listeners
+netlifyIdentity.on('init', user => {
+    checkAuth();
+});
+
+netlifyIdentity.on('login', () => {
+    checkAuth();
+});
+
+netlifyIdentity.on('logout', () => {
+    checkAuth();
+});
+
+// Handle logout button
+document.getElementById('logout-button').addEventListener('click', (e) => {
+    e.preventDefault();
+    netlifyIdentity.logout();
+});
+
 // Function to handle project uploads
 async function handleProjectUpload(event) {
     event.preventDefault();
@@ -223,11 +259,10 @@ async function deletePost(postId) {
 
 // Initialize the admin interface
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Netlify Identity
+    netlifyIdentity.init();
+
     // Set up form handlers
     document.getElementById('projectForm').addEventListener('submit', handleProjectUpload);
     document.getElementById('blogForm').addEventListener('submit', handleBlogPost);
-
-    // Load existing content
-    loadProjects();
-    loadPosts();
 }); 
