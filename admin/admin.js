@@ -1,3 +1,13 @@
+// Function to convert file to base64
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
 // Authentication handling
 function checkAuth() {
     const user = netlifyIdentity.currentUser();
@@ -44,13 +54,20 @@ async function handleProjectUpload(event) {
     const image = formData.get('image');
 
     try {
-        // First upload the image
-        const imageFormData = new FormData();
-        imageFormData.append('file', image);
+        // First convert image to base64
+        const base64Image = await fileToBase64(image);
         
+        // Upload the image
         const uploadResponse = await fetch('/.netlify/functions/upload', {
             method: 'POST',
-            body: imageFormData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                filename: image.name,
+                content: base64Image,
+                contentType: image.type
+            })
         });
 
         if (!uploadResponse.ok) {
@@ -99,6 +116,15 @@ async function loadProjects() {
         const projects = await response.json();
         const projectsList = document.getElementById('projectsList');
         
+        if (!Array.isArray(projects)) {
+            throw new Error('Expected projects to be an array');
+        }
+
+        if (projects.length === 0) {
+            projectsList.innerHTML = '<p>No projects yet</p>';
+            return;
+        }
+        
         projectsList.innerHTML = projects.map(project => `
             <div class="project-card">
                 <img src="${project.image}" alt="${project.title}">
@@ -113,7 +139,7 @@ async function loadProjects() {
         `).join('');
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('projectsList').innerHTML = '<p>Error loading projects</p>';
+        document.getElementById('projectsList').innerHTML = `<p>Error loading projects: ${error.message}</p>`;
     }
 }
 
@@ -156,13 +182,20 @@ async function handleBlogPost(event) {
     try {
         let imageUrl = null;
         
-        if (image.size > 0) {
-            const imageFormData = new FormData();
-            imageFormData.append('file', image);
+        if (image && image.size > 0) {
+            // Convert image to base64
+            const base64Image = await fileToBase64(image);
             
             const uploadResponse = await fetch('/.netlify/functions/upload', {
                 method: 'POST',
-                body: imageFormData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filename: image.name,
+                    content: base64Image,
+                    contentType: image.type
+                })
             });
 
             if (!uploadResponse.ok) {
@@ -212,6 +245,15 @@ async function loadPosts() {
         const posts = await response.json();
         const postsList = document.getElementById('postsList');
         
+        if (!Array.isArray(posts)) {
+            throw new Error('Expected posts to be an array');
+        }
+
+        if (posts.length === 0) {
+            postsList.innerHTML = '<p>No blog posts yet</p>';
+            return;
+        }
+        
         postsList.innerHTML = posts.map(post => `
             <div class="post-card">
                 ${post.image ? `<img src="${post.image}" alt="${post.title}">` : ''}
@@ -226,7 +268,7 @@ async function loadPosts() {
         `).join('');
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('postsList').innerHTML = '<p>Error loading blog posts</p>';
+        document.getElementById('postsList').innerHTML = `<p>Error loading blog posts: ${error.message}</p>`;
     }
 }
 

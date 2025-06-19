@@ -1,47 +1,40 @@
+const { createHash } = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
-const formidable = require('formidable');
 
 exports.handler = async function(event, context) {
     // Only allow POST
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
-            body: 'Method Not Allowed'
+            body: JSON.stringify({ error: 'Method Not Allowed' })
         };
     }
 
     try {
-        // Parse the multipart form data
-        const form = new formidable.IncomingForm();
+        // Parse the base64 file content from the request body
+        const { filename, content, contentType } = JSON.parse(event.body);
         
-        const { fields, files } = await new Promise((resolve, reject) => {
-            form.parse(event, (err, fields, files) => {
-                if (err) reject(err);
-                resolve({ fields, files });
-            });
-        });
-
-        const file = files.file;
-        if (!file) {
-            throw new Error('No file uploaded');
+        if (!filename || !content) {
+            throw new Error('Filename and content are required');
         }
 
+        // Remove the base64 prefix (e.g., "data:image/jpeg;base64,")
+        const base64Data = content.replace(/^data:([A-Za-z-+/]+);base64,/, '');
+        
+        // Create a unique filename
+        const fileExtension = path.extname(filename);
+        const timestamp = Date.now();
+        const hash = createHash('md5').update(base64Data).digest('hex').substring(0, 6);
+        const newFilename = `${timestamp}-${hash}${fileExtension}`;
+        
         // Ensure uploads directory exists
         const uploadsDir = path.join(__dirname, '../../assets/uploads');
         await fs.mkdir(uploadsDir, { recursive: true });
-
-        // Generate unique filename
-        const timestamp = Date.now();
-        const originalName = file.name;
-        const extension = path.extname(originalName);
-        const filename = `${timestamp}${extension}`;
         
-        // Copy file to uploads directory
-        await fs.copyFile(file.path, path.join(uploadsDir, filename));
-        
-        // Clean up temp file
-        await fs.unlink(file.path);
+        // Write the file
+        const filePath = path.join(uploadsDir, newFilename);
+        await fs.writeFile(filePath, Buffer.from(base64Data, 'base64'));
 
         return {
             statusCode: 200,
@@ -49,7 +42,7 @@ exports.handler = async function(event, context) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                imageUrl: `/assets/uploads/${filename}`
+                imageUrl: `/assets/uploads/${newFilename}`
             })
         };
     } catch (error) {
