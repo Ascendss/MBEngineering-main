@@ -1,7 +1,15 @@
 {
-  "name": "mbportfolio",
+  "name": "mb-engineering",
   "version": "1.0.0",
+  "description": "MB Engineering Portfolio Website",
+  "main": "index.js",
+  "scripts": {
+    "start": "netlify dev"
+  },
   "dependencies": {
-    "gray-matter": "^4.0.3"
+    "formidable": "^2.1.1"
+  },
+  "devDependencies": {
+    "netlify-cli": "^12.0.0"
   }
 }

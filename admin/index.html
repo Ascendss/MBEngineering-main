@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Content Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MB Engineering - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <script>
       // Prevent conflict with existing JS or Bootstrap
       window.CMS_MANUAL_INIT = true;
@@ -10,6 +13,74 @@
     <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
   </head>
   <body>
+    <header>
+      <h1>MB Engineering Admin</h1>
+      <nav>
+        <ul>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#blog">Blog</a></li>
+          <li><a href="/" target="_blank">View Site</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="projects" class="card">
+        <h2>Manage Projects</h2>
+        <div class="upload-section">
+          <h3>Upload New Project</h3>
+          <form id="projectForm" class="upload-form">
+            <div class="form-group">
+              <label for="projectTitle">Project Title:</label>
+              <input type="text" id="projectTitle" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="projectDescription">Description:</label>
+              <textarea id="projectDescription" name="description" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="projectImage">Project Image:</label>
+              <input type="file" id="projectImage" name="image" accept="image/*" required>
+            </div>
+            <button type="submit">Upload Project</button>
+          </form>
+        </div>
+
+        <div class="existing-projects">
+          <h3>Existing Projects</h3>
+          <div id="projectsList" class="projects-grid"></div>
+        </div>
+      </section>
+
+      <section id="blog" class="card">
+        <h2>Manage Blog Posts</h2>
+        <div class="upload-section">
+          <h3>New Blog Post</h3>
+          <form id="blogForm" class="upload-form">
+            <div class="form-group">
+              <label for="blogTitle">Post Title:</label>
+              <input type="text" id="blogTitle" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="blogContent">Content:</label>
+              <textarea id="blogContent" name="content" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="blogImage">Featured Image:</label>
+              <input type="file" id="blogImage" name="image" accept="image/*">
+            </div>
+            <button type="submit">Publish Post</button>
+          </form>
+        </div>
+
+        <div class="existing-posts">
+          <h3>Published Posts</h3>
+          <div id="postsList" class="posts-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="admin.js"></script>
     <script>
       window.CMS.init(); // Manually initialize CMS
     </script>
