@@ -1,58 +1,73 @@
 const { createHash } = require('crypto');
-const fs = require('fs').promises;
 const path = require('path');
 
-exports.handler = async function(event, context) {
-    // Only allow POST
+exports.handler = async function(event) {
     if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, body: 'Method Not Allowed' };
+    }
+
+    const { GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME } = process.env;
+
+    if (!GITHUB_TOKEN || !GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
         return {
-            statusCode: 405,
-            body: JSON.stringify({ error: 'Method Not Allowed' })
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Server is not configured for file uploads. Missing GitHub environment variables.' })
         };
     }
 
     try {
-        // Parse the base64 file content from the request body
-        const { filename, content, contentType } = JSON.parse(event.body);
-        
+        const { filename, content } = JSON.parse(event.body);
+
         if (!filename || !content) {
-            throw new Error('Filename and content are required');
+            return { statusCode: 400, body: JSON.stringify({ error: 'Filename and content are required.' }) };
         }
 
-        // Remove the base64 prefix (e.g., "data:image/jpeg;base64,")
-        const base64Data = content.replace(/^data:([A-Za-z-+/]+);base64,/, '');
-        
+        // Extract the base64 content
+        const base64Data = content.split(';base64,').pop();
+
         // Create a unique filename
         const fileExtension = path.extname(filename);
         const timestamp = Date.now();
         const hash = createHash('md5').update(base64Data).digest('hex').substring(0, 6);
         const newFilename = `${timestamp}-${hash}${fileExtension}`;
-        
-        // Ensure uploads directory exists
-        const uploadsDir = path.join(__dirname, '../../assets/uploads');
-        await fs.mkdir(uploadsDir, { recursive: true });
-        
-        // Write the file
-        const filePath = path.join(uploadsDir, newFilename);
-        await fs.writeFile(filePath, Buffer.from(base64Data, 'base64'));
+        const filePath = `assets/uploads/${newFilename}`;
+
+        const githubApiUrl = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`;
+
+        const response = await fetch(githubApiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+                message: `feat: Upload ${newFilename}`,
+                content: base64Data,
+                branch: 'main'
+            })
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.json();
+            throw new Error(`GitHub API error: ${errorBody.message}`);
+        }
+
+        const responseData = await response.json();
+        const imageUrl = `https://raw.githubusercontent.com/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/main/${filePath}`;
 
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({
-                imageUrl: `/assets/uploads/${newFilename}`
+                imageUrl: imageUrl
             })
         };
+
     } catch (error) {
         console.error('Upload error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({
-                error: 'Failed to upload file',
-                details: error.message
-            })
+            body: JSON.stringify({ error: 'Failed to upload file.', details: error.message })
         };
     }
 }; 
