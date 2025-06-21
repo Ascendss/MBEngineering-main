@@ -1,6 +1,7 @@
-const { Octokit } = require("@octokit/rest");
+// const { Octokit } = require("@octokit/rest");
 
 exports.handler = async function(event) {
+    const { Octokit } = await import("@octokit/rest");
     const { GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME } = process.env;
     const octokit = new Octokit({ auth: GITHUB_TOKEN });
     const projectsFilePath = 'content/projects.json';
