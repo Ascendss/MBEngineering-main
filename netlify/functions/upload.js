@@ -1,8 +1,8 @@
-const { Octokit } = require("@octokit/rest");
 const { createHash } = require('crypto');
 const path = require('path');
 
 exports.handler = async function(event) {
+    const { Octokit } = await import("@octokit/rest");
     console.log("Upload function invoked.");
 
     if (event.httpMethod !== 'POST') {
