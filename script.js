@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     projectCard.className = 'project-card';
 
                     const projectImage = document.createElement('img');
-                    projectImage.src = project.imageUrl;
+                    projectImage.src = project.imageUrl.startsWith('/') ? project.imageUrl : `/${project.imageUrl}`;
                     projectImage.alt = project.title;
 
                     const projectTitle = document.createElement('h3');
