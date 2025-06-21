@@ -1,6 +1,7 @@
-const { Octokit } = require("@octokit/rest");
+// const { Octokit } = require("@octokit/rest");
 
 exports.handler = async function(event) {
+    const { Octokit } = await import("@octokit/rest");
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
