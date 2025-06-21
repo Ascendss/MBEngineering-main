@@ -5,19 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MB Engineering Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style2.css" />
 </head>
 <body>
   <header>
-    <h1>MB Engineering</h1>
-    <p>Your Name | Engineering Technologist</p>
+    <a href="index.html" class="home-link">
+      <h1>MB Engineering</h1>
+      <p>Your Name | Engineering Technologist</p>
+    </a>
     <nav>
       <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#resume">Resume</a></li>
-        <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#blog">Blog</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
   </header>
@@ -38,7 +40,9 @@
 
     <section id="gallery" class="card">
       <h2>Project Gallery</h2>
-      <div class="gallery"></div>
+      <div class="gallery" id="gallery-container">
+        <!-- Projects will be dynamically inserted here -->
+      </div>
     </section>
 
     <section id="blog" class="card">
@@ -57,5 +61,16 @@
   </footer>
 
   <script src="script.js"></script>
+  <!-- Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  </script>
 </body>
 </html>

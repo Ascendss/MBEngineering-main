@@ -6,10 +6,18 @@ async function fetchProjects() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const projects = await response.json();
-    displayProjects(projects);
+    const gallery = document.querySelector('.gallery');
+    gallery.innerHTML = ''; // Clear existing content
+    projects.forEach(project => {
+      const projectElement = document.createElement('div');
+      projectElement.innerHTML = `
+        <img src="${project.imageUrl}" alt="${project.title}">
+        <p>${project.title}</p>
+      `;
+      gallery.appendChild(projectElement);
+    });
   } catch (error) {
-    console.error('Error fetching projects:', error);
-    document.querySelector('.gallery').innerHTML = '<p>Error loading projects. Please try again later.</p>';
+    console.error('Failed to fetch projects:', error);
   }
 }
 
@@ -33,4 +41,38 @@ function displayProjects(projects) {
 }
 
 // Load projects when the page loads
-document.addEventListener('DOMContentLoaded', fetchProjects);
+document.addEventListener('DOMContentLoaded', function() {
+    const galleryContainer = document.getElementById('gallery-container');
+
+    if (galleryContainer) {
+        fetch('/.netlify/functions/getprojects')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(projects => {
+                galleryContainer.innerHTML = ''; // Clear existing content
+                projects.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'project-card';
+
+                    const projectImage = document.createElement('img');
+                    projectImage.src = project.imageUrl;
+                    projectImage.alt = project.title;
+
+                    const projectTitle = document.createElement('h3');
+                    projectTitle.textContent = project.title;
+
+                    projectCard.appendChild(projectImage);
+                    projectCard.appendChild(projectTitle);
+                    galleryContainer.appendChild(projectCard);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching projects:', error);
+                galleryContainer.innerHTML = '<p>Error loading projects. Please try again later.</p>';
+            });
+    }
+});
