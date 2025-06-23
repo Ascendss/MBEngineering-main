@@ -1,91 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MB Engineering - Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<html>
+<head>
+    <title>Admin</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  </head>
-  <body>
-    <div id="login-container" style="display: none;">
-      <div class="login-box">
-        <h1>Admin Login</h1>
-        <div data-netlify-identity-button></div>
-      </div>
+</head>
+<body>
+
+    <div id="login-container">
+        <div class="login-box">
+            <h1>Admin Login</h1>
+            <button id="login-button" class="login-btn">Log In</button>
+        </div>
     </div>
 
     <div id="admin-content" style="display: none;">
-      <header>
-        <h1>MB Engineering Admin</h1>
-        <nav>
-          <ul>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#blog">Blog</a></li>
-            <li><a href="/" target="_blank">View Site</a></li>
-            <li><a href="#" id="logout-button">Logout</a></li>
-          </ul>
-        </nav>
-      </header>
+        <header>
+            <h1>Admin Panel</h1>
+            <div id="user-info"></div>
+            <button id="logout-button" class="logout-btn">Log Out</button>
+        </header>
 
-      <main>
-        <section id="projects" class="card">
-          <h2>Manage Projects</h2>
-          <div class="upload-section">
-            <h3>Upload New Project</h3>
-            <form id="projectForm" class="upload-form">
-              <div class="form-group">
-                <label for="projectTitle">Project Title:</label>
-                <input type="text" id="projectTitle" name="title" required>
-              </div>
-              <div class="form-group">
-                <label for="projectDescription">Description:</label>
-                <textarea id="projectDescription" name="description" required></textarea>
-              </div>
-              <div class="form-group">
-                <label for="projectImage">Project Image:</label>
-                <input type="file" id="projectImage" name="image" accept="image/*" required>
-              </div>
-              <button type="submit">Upload Project</button>
-            </form>
-          </div>
+        <main>
+            <div class="form-container">
+                <h2>Create New Project</h2>
+                <form id="projectForm">
+                    <label for="projectTitle">Title:</label>
+                    <input type="text" id="projectTitle" required>
+                    
+                    <label for="projectImage">Image:</label>
+                    <input type="file" id="projectImage" accept="image/*">
 
-          <div class="existing-projects">
-            <h3>Existing Projects</h3>
-            <div id="projectsList" class="projects-grid"></div>
-          </div>
-        </section>
+                    <button type="submit">Create Project</button>
+                </form>
+            </div>
+            
+            <div class="form-container">
+                <h2>Create New Blog Post</h2>
+                <form id="blogForm">
+                    <label for="blogTitle">Title:</label>
+                    <input type="text" id="blogTitle" required>
 
-        <section id="blog" class="card">
-          <h2>Manage Blog Posts</h2>
-          <div class="upload-section">
-            <h3>New Blog Post</h3>
-            <form id="blogForm" class="upload-form">
-              <div class="form-group">
-                <label for="blogTitle">Post Title:</label>
-                <input type="text" id="blogTitle" name="title" required>
-              </div>
-              <div class="form-group">
-                <label for="blogContent">Content:</label>
-                <textarea id="blogContent" name="content" required></textarea>
-              </div>
-              <div class="form-group">
-                <label for="blogImage">Featured Image:</label>
-                <input type="file" id="blogImage" name="image" accept="image/*">
-              </div>
-              <button type="submit">Publish Post</button>
-            </form>
-          </div>
+                    <label for="blogContent">Content:</label>
+                    <textarea id="blogContent" rows="10" required></textarea>
 
-          <div class="existing-posts">
-            <h3>Published Posts</h3>
-            <div id="postsList" class="posts-grid"></div>
-          </div>
-        </section>
-      </main>
+                    <button type="submit">Create Blog Post</button>
+                </form>
+            </div>
+        </main>
     </div>
 
-    <script src="admin.js"></script>
-  </body>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginContainer = document.getElementById('login-container');
+        const adminContent = document.getElementById('admin-content');
+        const loginButton = document.getElementById('login-button');
+        const logoutButton = document.getElementById('logout-button');
+        const userInfo = document.getElementById('user-info');
+        
+        const projectForm = document.getElementById('projectForm');
+        
+        // Handle user state
+        const handleUserState = (user) => {
+            if (user) {
+                loginContainer.style.display = 'none';
+                adminContent.style.display = 'block';
+                userInfo.textContent = `Logged in as ${user.email}`;
+            } else {
+                loginContainer.style.display = 'block';
+                adminContent.style.display = 'none';
+                userInfo.textContent = '';
+            }
+        };
+
+        // Initialize Netlify Identity
+        netlifyIdentity.init();
+        
+        netlifyIdentity.on('init', handleUserState);
+        netlifyIdentity.on('login', handleUserState);
+        netlifyIdentity.on('logout', () => handleUserState(null));
+
+        loginButton.addEventListener('click', () => netlifyIdentity.open());
+        logoutButton.addEventListener('click', () => netlifyIdentity.logout());
+
+        // Handle Project Upload
+        projectForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('projectTitle').value;
+            const imageFile = document.getElementById('projectImage').files[0];
+            let imageUrl = '';
+
+            try {
+                // 1. If an image is selected, upload it first
+                if (imageFile) {
+                    const uploadResponse = await fetch('/.netlify/functions/uploadImage', {
+                        method: 'POST',
+                        headers: { 'Content-Type': imageFile.type },
+                        body: imageFile
+                    });
+                    const uploadResult = await uploadResponse.json();
+                    if (!uploadResponse.ok) {
+                        throw new Error(uploadResult.error || 'Failed to upload image.');
+                    }
+                    imageUrl = uploadResult.path; // Get the path from the response
+                }
+
+                // 2. Create the project with the title and image URL
+                const projectData = { title, imageUrl };
+                const createResponse = await fetch('/.netlify/functions/createProject', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(projectData)
+                });
+
+                if (!createResponse.ok) {
+                    throw new Error('Failed to create project.');
+                }
+
+                alert('Project created successfully!');
+                projectForm.reset();
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error: ${error.message}`);
+            }
+        });
+
+        // Placeholder for blog post handler
+        document.getElementById('blogForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Blog functionality not implemented yet.');
+        });
+    });
+    </script>
+</body>
 </html>
