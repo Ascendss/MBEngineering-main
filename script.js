@@ -58,15 +58,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     const projectCard = document.createElement('div');
                     projectCard.className = 'project-card';
 
-                    const projectImage = document.createElement('img');
-                    projectImage.src = project.imageUrl.startsWith('/') ? project.imageUrl : `/${project.imageUrl}`;
-                    projectImage.alt = project.title;
+                    if (project.imageUrl) {
+                        const projectImage = document.createElement('img');
+                        projectImage.src = project.imageUrl.startsWith('/') ? project.imageUrl : `/${project.imageUrl}`;
+                        projectImage.alt = project.title;
+                        projectCard.appendChild(projectImage);
+                    }
 
                     const projectTitle = document.createElement('h3');
                     projectTitle.textContent = project.title;
-
-                    projectCard.appendChild(projectImage);
                     projectCard.appendChild(projectTitle);
+                    
                     galleryContainer.appendChild(projectCard);
                 });
             })
