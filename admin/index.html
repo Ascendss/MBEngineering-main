@@ -112,11 +112,15 @@ const uploadResponse = await fetch('/.netlify/functions/upload', {
                     if (!uploadResponse.ok) {
                         throw new Error(uploadResult.error || 'Failed to upload image.');
                     }
-                    imageUrl = uploadResult.path; // Get the path from the response
+                    imageUrl = uploadResult.imageUrl; // Get the path from the response
                 }
 
                 // 2. Create the project with the title and image URL
-                const projectData = { title, imageUrl };
+                const projectData = { 
+                    title, 
+                    description: '', 
+                    image: imageUrl 
+                };
                 const createResponse = await fetch('/.netlify/functions/createProject', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
