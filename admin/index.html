@@ -93,10 +93,13 @@
             try {
                 // 1. If an image is selected, upload it first
                 if (imageFile) {
-                    const uploadResponse = await fetch('/.netlify/functions/uploadImage', {
+                    const uploadResponse = await fetch('/.netlify/functions/upload', {
                         method: 'POST',
-                        headers: { 'Content-Type': imageFile.type },
-                        body: imageFile
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            filename: imageFile.name,
+                            content: base64
+                        })
                     });
                     const uploadResult = await uploadResponse.json();
                     if (!uploadResponse.ok) {
