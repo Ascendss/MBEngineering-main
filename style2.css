@@ -186,6 +186,13 @@ footer {
   border-radius: 8px;
 }
 
+.markdown-content video {
+  max-width: 100%;
+  display: block;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+}
+
 .markdown-content code {
   background: #f5f5f5;
   padding: 0.2rem 0.5rem;
@@ -275,7 +282,8 @@ footer {
     margin: 1rem;
   }
 
-  .markdown-content iframe {
+  .markdown-content iframe,
+  .markdown-content video {
     width: 100%;
     height: auto;
     aspect-ratio: 16 / 9;

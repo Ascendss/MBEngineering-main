@@ -144,8 +144,8 @@
             background: #f9f9f9;
             border-radius: 8px;
         }
-        .btn-insert-image {
-            background: #28a745;
+        .btn-insert-image,
+        .btn-insert-video {
             color: white;
             padding: 0.5rem 1rem;
             border: none;
@@ -154,10 +154,20 @@
             font-size: 0.85rem;
             margin-bottom: 0.5rem;
         }
+        .btn-insert-image {
+            background: #28a745;
+        }
         .btn-insert-image:hover {
             background: #218838;
         }
-        .btn-insert-image:disabled {
+        .btn-insert-video {
+            background: #6f42c1;
+        }
+        .btn-insert-video:hover {
+            background: #5a32a3;
+        }
+        .btn-insert-image:disabled,
+        .btn-insert-video:disabled {
             background: #6c757d;
             cursor: not-allowed;
         }
@@ -165,6 +175,7 @@
             display: flex;
             gap: 0.5rem;
             margin-bottom: 0.5rem;
+            flex-wrap: wrap;
         }
         .placeholder-img {
             width: 80px;
@@ -176,6 +187,11 @@
             justify-content: center;
             color: #999;
             font-size: 0.75rem;
+        }
+        .form-actions {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
         }
     </style>
 </head>
@@ -221,13 +237,13 @@
                     <h2 id="project-form-title">Create New Project</h2>
                     <form id="projectForm">
                         <input type="hidden" id="projectId" value="">
-                        
+
                         <label for="projectTitle">Title:</label>
                         <input type="text" id="projectTitle" required>
-                        
+
                         <label for="projectSummary">Summary:</label>
                         <input type="text" id="projectSummary" placeholder="Short one-line description for the gallery card">
-                        
+
                         <label for="projectImage">Hero Image:</label>
                         <div id="projectCurrentImagePreview" class="current-image-preview" style="display: none;">
                             <p>Current image:</p>
@@ -235,10 +251,11 @@
                             <p><em>Upload a new image to replace, or leave empty to keep current.</em></p>
                         </div>
                         <input type="file" id="projectImage" accept="image/*">
-                        
+
                         <label for="projectContent">Full Project Content (Markdown):</label>
                         <div class="textarea-toolbar">
                             <button type="button" id="projectInsertImageBtn" class="btn-insert-image">📷 Insert Inline Image...</button>
+                            <button type="button" id="projectInsertVideoBtn" class="btn-insert-video">🎬 Insert Inline Video...</button>
                         </div>
                         <textarea id="projectContent" rows="15" placeholder="Write a detailed breakdown here. You can use Markdown, images, and HTML for videos.
 
@@ -257,7 +274,7 @@ This project measures vapor quality in a two-phase flow loop.
 ## Demo Video
 <iframe width='560' height='315' src='https://www.youtube.com/embed/VIDEO_ID' frameborder='0' allowfullscreen></iframe>"></textarea>
 
-                        <div style="display: flex; align-items: center; margin-top: 1rem;">
+                        <div class="form-actions">
                             <button type="submit" id="projectSubmitBtn">Create Project</button>
                             <button type="button" id="projectCancelEdit" class="btn-cancel" style="display: none;">Cancel Edit</button>
                         </div>
@@ -284,13 +301,13 @@ This project measures vapor quality in a two-phase flow loop.
                     <h2 id="blog-form-title">Create New Blog Post</h2>
                     <form id="blogForm">
                         <input type="hidden" id="blogId" value="">
-                        
+
                         <label for="blogTitle">Title:</label>
                         <input type="text" id="blogTitle" required>
-                        
+
                         <label for="blogSummary">Summary:</label>
                         <input type="text" id="blogSummary" placeholder="Short description for the blog list">
-                        
+
                         <label for="blogHeroImage">Hero Image:</label>
                         <div id="blogCurrentImagePreview" class="current-image-preview" style="display: none;">
                             <p>Current image:</p>
@@ -298,10 +315,11 @@ This project measures vapor quality in a two-phase flow loop.
                             <p><em>Upload a new image to replace, or leave empty to keep current.</em></p>
                         </div>
                         <input type="file" id="blogHeroImage" accept="image/*">
-                        
+
                         <label for="blogContent">Full Blog Content (Markdown):</label>
                         <div class="textarea-toolbar">
                             <button type="button" id="blogInsertImageBtn" class="btn-insert-image">📷 Insert Inline Image...</button>
+                            <button type="button" id="blogInsertVideoBtn" class="btn-insert-video">🎬 Insert Inline Video...</button>
                         </div>
                         <textarea id="blogContent" rows="15" placeholder="Write your blog post here using Markdown.
 
@@ -321,7 +339,7 @@ Here's what I learned:
 ## Conclusion
 Overall, this was a great learning experience..."></textarea>
 
-                        <div style="display: flex; align-items: center; margin-top: 1rem;">
+                        <div class="form-actions">
                             <button type="submit" id="blogSubmitBtn">Create Blog Post</button>
                             <button type="button" id="blogCancelEdit" class="btn-cancel" style="display: none;">Cancel Edit</button>
                         </div>
@@ -331,8 +349,10 @@ Overall, this was a great learning experience..."></textarea>
         </main>
     </div>
 
-    <!-- Hidden file input for inline image uploads -->
+    <!-- Hidden file inputs for inline uploads -->
     <input type="file" id="inlineImageInput" accept="image/*" style="display: none;">
+    <input type="file" id="projectVideoInput" accept="video/*" style="display: none;">
+    <input type="file" id="blogVideoInput" accept="video/*" style="display: none;">
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -355,8 +375,8 @@ Overall, this was a great learning experience..."></textarea>
             textarea.focus();
         }
 
-        // Upload image and return URL
-        async function uploadImage(file) {
+        // Upload file (image or video) and return URL
+        async function uploadFile(file) {
             const base64 = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = () => resolve(reader.result);
@@ -375,12 +395,28 @@ Overall, this was a great learning experience..."></textarea>
             
             const result = await response.json();
             if (!response.ok) {
-                throw new Error(result.error || 'Failed to upload image.');
+                throw new Error(result.error || 'Failed to upload file.');
             }
             return result.imageUrl;
         }
 
-        // Inline image insertion handler
+        // Alias for backwards compatibility
+        const uploadImage = uploadFile;
+
+        // Get video MIME type from filename
+        function getVideoMimeType(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const mimeTypes = {
+                'mp4': 'video/mp4',
+                'webm': 'video/webm',
+                'mov': 'video/quicktime',
+                'ogg': 'video/ogg'
+            };
+            return mimeTypes[ext] || 'video/mp4';
+        }
+
+        // ==================== INLINE IMAGE INSERTION ====================
+        
         const inlineImageInput = document.getElementById('inlineImageInput');
         let currentInlineTarget = null;
 
@@ -395,7 +431,7 @@ Overall, this was a great learning experience..."></textarea>
                 btn.disabled = true;
                 btn.textContent = '⏳ Uploading...';
                 
-                const imageUrl = await uploadImage(file);
+                const imageUrl = await uploadFile(file);
                 insertAtCursor(textarea, `\n\n![image description](${imageUrl})\n\n`);
                 
                 btn.textContent = '✅ Inserted!';
@@ -414,6 +450,88 @@ Overall, this was a great learning experience..."></textarea>
             currentInlineTarget = null;
         });
 
+        // ==================== INLINE VIDEO INSERTION ====================
+        
+        const projectVideoInput = document.getElementById('projectVideoInput');
+        const blogVideoInput = document.getElementById('blogVideoInput');
+        let currentVideoTarget = null;
+
+        // Project video upload handler
+        projectVideoInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentVideoTarget) return;
+
+            const btn = currentVideoTarget.btn;
+            const textarea = currentVideoTarget.textarea;
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = '⏳ Uploading video...';
+                
+                const videoUrl = await uploadFile(file);
+                const mimeType = getVideoMimeType(file.name);
+                
+                const videoHtml = `\n\n<video controls width="100%">
+  <source src="${videoUrl}" type="${mimeType}">
+  Your browser does not support the video tag.
+</video>\n\n`;
+                
+                insertAtCursor(textarea, videoHtml);
+                
+                btn.textContent = '✅ Inserted!';
+                setTimeout(() => {
+                    btn.textContent = '🎬 Insert Inline Video...';
+                    btn.disabled = false;
+                }, 1500);
+            } catch (error) {
+                console.error('Video upload error:', error);
+                alert(`Error: ${error.message}`);
+                btn.textContent = '🎬 Insert Inline Video...';
+                btn.disabled = false;
+            }
+            
+            projectVideoInput.value = '';
+            currentVideoTarget = null;
+        });
+
+        // Blog video upload handler
+        blogVideoInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentVideoTarget) return;
+
+            const btn = currentVideoTarget.btn;
+            const textarea = currentVideoTarget.textarea;
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = '⏳ Uploading video...';
+                
+                const videoUrl = await uploadFile(file);
+                const mimeType = getVideoMimeType(file.name);
+                
+                const videoHtml = `\n\n<video controls width="100%">
+  <source src="${videoUrl}" type="${mimeType}">
+  Your browser does not support the video tag.
+</video>\n\n`;
+                
+                insertAtCursor(textarea, videoHtml);
+                
+                btn.textContent = '✅ Inserted!';
+                setTimeout(() => {
+                    btn.textContent = '🎬 Insert Inline Video...';
+                    btn.disabled = false;
+                }, 1500);
+            } catch (error) {
+                console.error('Video upload error:', error);
+                alert(`Error: ${error.message}`);
+                btn.textContent = '🎬 Insert Inline Video...';
+                btn.disabled = false;
+            }
+            
+            blogVideoInput.value = '';
+            currentVideoTarget = null;
+        });
+
         // ==================== PROJECTS ====================
         
         const projectForm = document.getElementById('projectForm');
@@ -430,6 +548,7 @@ Overall, this was a great learning experience..."></textarea>
         const projectSubmitBtn = document.getElementById('projectSubmitBtn');
         const projectCancelEditBtn = document.getElementById('projectCancelEdit');
         const projectInsertImageBtn = document.getElementById('projectInsertImageBtn');
+        const projectInsertVideoBtn = document.getElementById('projectInsertVideoBtn');
 
         let currentEditingProject = null;
         let allProjects = [];
@@ -438,6 +557,12 @@ Overall, this was a great learning experience..."></textarea>
         projectInsertImageBtn.addEventListener('click', () => {
             currentInlineTarget = { btn: projectInsertImageBtn, textarea: projectContentField };
             inlineImageInput.click();
+        });
+
+        // Project inline video button
+        projectInsertVideoBtn.addEventListener('click', () => {
+            currentVideoTarget = { btn: projectInsertVideoBtn, textarea: projectContentField };
+            projectVideoInput.click();
         });
 
         async function loadProjects() {
@@ -614,6 +739,7 @@ Overall, this was a great learning experience..."></textarea>
         const blogSubmitBtn = document.getElementById('blogSubmitBtn');
         const blogCancelEditBtn = document.getElementById('blogCancelEdit');
         const blogInsertImageBtn = document.getElementById('blogInsertImageBtn');
+        const blogInsertVideoBtn = document.getElementById('blogInsertVideoBtn');
 
         let currentEditingBlog = null;
         let allBlogPosts = [];
@@ -622,6 +748,12 @@ Overall, this was a great learning experience..."></textarea>
         blogInsertImageBtn.addEventListener('click', () => {
             currentInlineTarget = { btn: blogInsertImageBtn, textarea: blogContentField };
             inlineImageInput.click();
+        });
+
+        // Blog inline video button
+        blogInsertVideoBtn.addEventListener('click', () => {
+            currentVideoTarget = { btn: blogInsertVideoBtn, textarea: blogContentField };
+            blogVideoInput.click();
         });
 
         async function loadBlogPosts() {
