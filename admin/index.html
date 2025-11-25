@@ -33,12 +33,12 @@
         .tab-content.active {
             display: block;
         }
-        .projects-list {
+        .items-list {
             display: grid;
             gap: 1rem;
             margin-bottom: 2rem;
         }
-        .project-item {
+        .list-item {
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -47,24 +47,28 @@
             border-radius: 8px;
             border: 1px solid #ddd;
         }
-        .project-item img {
+        .list-item img {
             width: 80px;
             height: 60px;
             object-fit: cover;
             border-radius: 4px;
         }
-        .project-item-info {
+        .list-item-info {
             flex: 1;
         }
-        .project-item-info h4 {
+        .list-item-info h4 {
             margin: 0 0 0.25rem 0;
         }
-        .project-item-info p {
+        .list-item-info p {
             margin: 0;
             color: #666;
             font-size: 0.9rem;
         }
-        .project-item-actions {
+        .list-item-info .date {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        .list-item-actions {
             display: flex;
             gap: 0.5rem;
         }
@@ -133,12 +137,45 @@
             padding: 2rem;
             color: #666;
         }
-        .no-projects {
+        .no-items {
             text-align: center;
             padding: 2rem;
             color: #666;
             background: #f9f9f9;
             border-radius: 8px;
+        }
+        .btn-insert-image {
+            background: #28a745;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+        .btn-insert-image:hover {
+            background: #218838;
+        }
+        .btn-insert-image:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .textarea-toolbar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .placeholder-img {
+            width: 80px;
+            height: 60px;
+            background: #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -161,27 +198,27 @@
         <main>
             <!-- Tab Navigation -->
             <div class="admin-tabs">
-                <button class="admin-tab active" data-tab="projects">Projects</button>
+                <button class="admin-tab active" data-tab="projects">Project Gallery</button>
                 <button class="admin-tab" data-tab="blog">Blog Posts</button>
             </div>
 
-            <!-- Projects Tab -->
+            <!-- ===================== PROJECTS TAB ===================== -->
             <div id="projects-tab" class="tab-content active">
                 
                 <!-- Existing Projects List -->
                 <div class="form-container">
                     <h2>Your Projects</h2>
-                    <div id="projects-list" class="projects-list">
+                    <div id="projects-list" class="items-list">
                         <div class="loading">Loading projects...</div>
                     </div>
                 </div>
 
                 <!-- Create/Edit Project Form -->
                 <div class="form-container">
-                    <div id="form-mode" class="form-mode-indicator create-mode">
+                    <div id="project-form-mode" class="form-mode-indicator create-mode">
                         ✨ Creating New Project
                     </div>
-                    <h2 id="form-title">Create New Project</h2>
+                    <h2 id="project-form-title">Create New Project</h2>
                     <form id="projectForm">
                         <input type="hidden" id="projectId" value="">
                         
@@ -192,14 +229,17 @@
                         <input type="text" id="projectSummary" placeholder="Short one-line description for the gallery card">
                         
                         <label for="projectImage">Hero Image:</label>
-                        <div id="currentImagePreview" class="current-image-preview" style="display: none;">
+                        <div id="projectCurrentImagePreview" class="current-image-preview" style="display: none;">
                             <p>Current image:</p>
-                            <img id="currentImage" src="" alt="Current hero image">
+                            <img id="projectCurrentImage" src="" alt="Current hero image">
                             <p><em>Upload a new image to replace, or leave empty to keep current.</em></p>
                         </div>
                         <input type="file" id="projectImage" accept="image/*">
                         
                         <label for="projectContent">Full Project Content (Markdown):</label>
+                        <div class="textarea-toolbar">
+                            <button type="button" id="projectInsertImageBtn" class="btn-insert-image">📷 Insert Inline Image...</button>
+                        </div>
                         <textarea id="projectContent" rows="15" placeholder="Write a detailed breakdown here. You can use Markdown, images, and HTML for videos.
 
 Example:
@@ -215,37 +255,84 @@ This project measures vapor quality in a two-phase flow loop.
 ![Close-up photo](https://your-image-url.png)
 
 ## Demo Video
-<iframe width='560' height='315' src='https://www.youtube.com/embed/VIDEO_ID' frameborder='0' allowfullscreen></iframe>
+<iframe width='560' height='315' src='https://www.youtube.com/embed/VIDEO_ID' frameborder='0' allowfullscreen></iframe>"></textarea>
 
-## Resources
-- [Schematic PDF](#)
-- [GitHub Repo](#)"></textarea>
-
-                        <div style="display: flex; align-items: center;">
-                            <button type="submit" id="submitBtn">Create Project</button>
-                            <button type="button" id="cancelEdit" class="btn-cancel" style="display: none;">Cancel Edit</button>
+                        <div style="display: flex; align-items: center; margin-top: 1rem;">
+                            <button type="submit" id="projectSubmitBtn">Create Project</button>
+                            <button type="button" id="projectCancelEdit" class="btn-cancel" style="display: none;">Cancel Edit</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Blog Tab -->
+            <!-- ===================== BLOG TAB ===================== -->
             <div id="blog-tab" class="tab-content">
+                
+                <!-- Existing Blog Posts List -->
                 <div class="form-container">
-                    <h2>Create New Blog Post</h2>
+                    <h2>Your Blog Posts</h2>
+                    <div id="blog-list" class="items-list">
+                        <div class="loading">Loading blog posts...</div>
+                    </div>
+                </div>
+
+                <!-- Create/Edit Blog Post Form -->
+                <div class="form-container">
+                    <div id="blog-form-mode" class="form-mode-indicator create-mode">
+                        ✨ Creating New Blog Post
+                    </div>
+                    <h2 id="blog-form-title">Create New Blog Post</h2>
                     <form id="blogForm">
+                        <input type="hidden" id="blogId" value="">
+                        
                         <label for="blogTitle">Title:</label>
                         <input type="text" id="blogTitle" required>
+                        
+                        <label for="blogSummary">Summary:</label>
+                        <input type="text" id="blogSummary" placeholder="Short description for the blog list">
+                        
+                        <label for="blogHeroImage">Hero Image:</label>
+                        <div id="blogCurrentImagePreview" class="current-image-preview" style="display: none;">
+                            <p>Current image:</p>
+                            <img id="blogCurrentImage" src="" alt="Current hero image">
+                            <p><em>Upload a new image to replace, or leave empty to keep current.</em></p>
+                        </div>
+                        <input type="file" id="blogHeroImage" accept="image/*">
+                        
+                        <label for="blogContent">Full Blog Content (Markdown):</label>
+                        <div class="textarea-toolbar">
+                            <button type="button" id="blogInsertImageBtn" class="btn-insert-image">📷 Insert Inline Image...</button>
+                        </div>
+                        <textarea id="blogContent" rows="15" placeholder="Write your blog post here using Markdown.
 
-                        <label for="blogContent">Content:</label>
-                        <textarea id="blogContent" rows="10" required></textarea>
+Example:
+## Introduction
+Today I want to share my experience with...
 
-                        <button type="submit">Create Blog Post</button>
+## The Process
+Here's what I learned:
+- First thing
+- Second thing
+- Third thing
+
+## Photos
+![Project photo](https://your-image-url.png)
+
+## Conclusion
+Overall, this was a great learning experience..."></textarea>
+
+                        <div style="display: flex; align-items: center; margin-top: 1rem;">
+                            <button type="submit" id="blogSubmitBtn">Create Blog Post</button>
+                            <button type="button" id="blogCancelEdit" class="btn-cancel" style="display: none;">Cancel Edit</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- Hidden file input for inline image uploads -->
+    <input type="file" id="inlineImageInput" accept="image/*" style="display: none;">
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -254,82 +341,124 @@ This project measures vapor quality in a two-phase flow loop.
         const loginButton = document.getElementById('login-button');
         const logoutButton = document.getElementById('logout-button');
         const userInfo = document.getElementById('user-info');
+
+        // ==================== SHARED UTILITIES ====================
+        
+        // Insert text at cursor position in a textarea
+        function insertAtCursor(textarea, text) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const before = textarea.value.substring(0, start);
+            const after = textarea.value.substring(end);
+            textarea.value = before + text + after;
+            textarea.selectionStart = textarea.selectionEnd = start + text.length;
+            textarea.focus();
+        }
+
+        // Upload image and return URL
+        async function uploadImage(file) {
+            const base64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+
+            const response = await fetch('/.netlify/functions/upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    filename: file.name,
+                    content: base64
+                })
+            });
+            
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to upload image.');
+            }
+            return result.imageUrl;
+        }
+
+        // Inline image insertion handler
+        const inlineImageInput = document.getElementById('inlineImageInput');
+        let currentInlineTarget = null;
+
+        inlineImageInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentInlineTarget) return;
+
+            const btn = currentInlineTarget.btn;
+            const textarea = currentInlineTarget.textarea;
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = '⏳ Uploading...';
+                
+                const imageUrl = await uploadImage(file);
+                insertAtCursor(textarea, `\n\n![image description](${imageUrl})\n\n`);
+                
+                btn.textContent = '✅ Inserted!';
+                setTimeout(() => {
+                    btn.textContent = '📷 Insert Inline Image...';
+                    btn.disabled = false;
+                }, 1500);
+            } catch (error) {
+                console.error('Inline image upload error:', error);
+                alert(`Error: ${error.message}`);
+                btn.textContent = '📷 Insert Inline Image...';
+                btn.disabled = false;
+            }
+            
+            inlineImageInput.value = '';
+            currentInlineTarget = null;
+        });
+
+        // ==================== PROJECTS ====================
         
         const projectForm = document.getElementById('projectForm');
         const projectsList = document.getElementById('projects-list');
-        
-        // Form elements
         const projectIdField = document.getElementById('projectId');
         const projectTitleField = document.getElementById('projectTitle');
         const projectSummaryField = document.getElementById('projectSummary');
         const projectContentField = document.getElementById('projectContent');
         const projectImageField = document.getElementById('projectImage');
-        const currentImagePreview = document.getElementById('currentImagePreview');
-        const currentImage = document.getElementById('currentImage');
-        const formMode = document.getElementById('form-mode');
-        const formTitle = document.getElementById('form-title');
-        const submitBtn = document.getElementById('submitBtn');
-        const cancelEditBtn = document.getElementById('cancelEdit');
+        const projectCurrentImagePreview = document.getElementById('projectCurrentImagePreview');
+        const projectCurrentImage = document.getElementById('projectCurrentImage');
+        const projectFormMode = document.getElementById('project-form-mode');
+        const projectFormTitle = document.getElementById('project-form-title');
+        const projectSubmitBtn = document.getElementById('projectSubmitBtn');
+        const projectCancelEditBtn = document.getElementById('projectCancelEdit');
+        const projectInsertImageBtn = document.getElementById('projectInsertImageBtn');
 
         let currentEditingProject = null;
         let allProjects = [];
 
-        // Tab switching
-        document.querySelectorAll('.admin-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
-            });
+        // Project inline image button
+        projectInsertImageBtn.addEventListener('click', () => {
+            currentInlineTarget = { btn: projectInsertImageBtn, textarea: projectContentField };
+            inlineImageInput.click();
         });
 
-        // Handle user state
-        const handleUserState = (user) => {
-            if (user) {
-                loginContainer.style.display = 'none';
-                adminContent.style.display = 'block';
-                userInfo.textContent = `Logged in as ${user.email}`;
-                loadProjects(); // Load projects when logged in
-            } else {
-                loginContainer.style.display = 'block';
-                adminContent.style.display = 'none';
-                userInfo.textContent = '';
-            }
-        };
-
-        // Initialize Netlify Identity
-        netlifyIdentity.init();
-        netlifyIdentity.on('init', handleUserState);
-        netlifyIdentity.on('login', handleUserState);
-        netlifyIdentity.on('logout', () => handleUserState(null));
-
-        loginButton.addEventListener('click', () => netlifyIdentity.open());
-        logoutButton.addEventListener('click', () => netlifyIdentity.logout());
-
-        // Load all projects
         async function loadProjects() {
             projectsList.innerHTML = '<div class="loading">Loading projects...</div>';
             try {
                 const response = await fetch('/.netlify/functions/getprojects');
                 if (!response.ok) throw new Error('Failed to load projects');
-                
                 allProjects = await response.json();
                 renderProjectsList();
             } catch (error) {
                 console.error('Error loading projects:', error);
-                projectsList.innerHTML = '<div class="no-projects">Error loading projects. Please refresh.</div>';
+                projectsList.innerHTML = '<div class="no-items">Error loading projects. Please refresh.</div>';
             }
         }
 
-        // Render projects list
         function renderProjectsList() {
             if (allProjects.length === 0) {
-                projectsList.innerHTML = '<div class="no-projects">No projects yet. Create your first one below!</div>';
+                projectsList.innerHTML = '<div class="no-items">No projects yet. Create your first one below!</div>';
                 return;
             }
 
-            // Sort by createdAt descending (newest first)
             const sorted = [...allProjects].sort((a, b) => 
                 new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
             );
@@ -337,14 +466,16 @@ This project measures vapor quality in a two-phase flow loop.
             projectsList.innerHTML = sorted.map(project => {
                 const imageUrl = project.heroImage || project.imageUrl || project.image || '';
                 const summary = project.summary || project.description || 'No summary';
+                const date = project.createdAt ? new Date(project.createdAt).toLocaleDateString() : '';
                 return `
-                    <div class="project-item" data-id="${project.id}">
-                        ${imageUrl ? `<img src="${imageUrl}" alt="${project.title}">` : '<div style="width:80px;height:60px;background:#ddd;border-radius:4px;"></div>'}
-                        <div class="project-item-info">
+                    <div class="list-item" data-id="${project.id}">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${project.title}">` : '<div class="placeholder-img">No image</div>'}
+                        <div class="list-item-info">
                             <h4>${project.title}</h4>
-                            <p>${summary.substring(0, 100)}${summary.length > 100 ? '...' : ''}</p>
+                            <p>${summary.substring(0, 80)}${summary.length > 80 ? '...' : ''}</p>
+                            ${date ? `<span class="date">${date}</span>` : ''}
                         </div>
-                        <div class="project-item-actions">
+                        <div class="list-item-actions">
                             <button class="btn-edit" onclick="editProject('${project.id}')">Edit</button>
                             <button class="btn-delete" onclick="deleteProject('${project.id}', '${project.title.replace(/'/g, "\\'")}')">Delete</button>
                         </div>
@@ -353,60 +484,48 @@ This project measures vapor quality in a two-phase flow loop.
             }).join('');
         }
 
-        // Edit project - populate form
         window.editProject = function(projectId) {
             const project = allProjects.find(p => p.id === projectId);
             if (!project) return;
 
             currentEditingProject = project;
-            
-            // Populate form
             projectIdField.value = project.id;
             projectTitleField.value = project.title || '';
             projectSummaryField.value = project.summary || '';
             projectContentField.value = project.content || project.description || '';
             
-            // Show current image
             const imageUrl = project.heroImage || project.imageUrl || project.image;
             if (imageUrl) {
-                currentImage.src = imageUrl;
-                currentImagePreview.style.display = 'block';
+                projectCurrentImage.src = imageUrl;
+                projectCurrentImagePreview.style.display = 'block';
             } else {
-                currentImagePreview.style.display = 'none';
+                projectCurrentImagePreview.style.display = 'none';
             }
 
-            // Update form UI for edit mode
-            formMode.textContent = '✏️ Editing Project';
-            formMode.className = 'form-mode-indicator edit-mode';
-            formTitle.textContent = 'Edit Project';
-            submitBtn.textContent = 'Update Project';
-            cancelEditBtn.style.display = 'inline-block';
-
-            // Scroll to form
+            projectFormMode.textContent = '✏️ Editing Project';
+            projectFormMode.className = 'form-mode-indicator edit-mode';
+            projectFormTitle.textContent = 'Edit Project';
+            projectSubmitBtn.textContent = 'Update Project';
+            projectCancelEditBtn.style.display = 'inline-block';
             projectForm.scrollIntoView({ behavior: 'smooth' });
         };
 
-        // Cancel edit - reset form
-        cancelEditBtn.addEventListener('click', resetForm);
-
-        function resetForm() {
+        function resetProjectForm() {
             currentEditingProject = null;
             projectForm.reset();
             projectIdField.value = '';
-            currentImagePreview.style.display = 'none';
-            
-            formMode.textContent = '✨ Creating New Project';
-            formMode.className = 'form-mode-indicator create-mode';
-            formTitle.textContent = 'Create New Project';
-            submitBtn.textContent = 'Create Project';
-            cancelEditBtn.style.display = 'none';
+            projectCurrentImagePreview.style.display = 'none';
+            projectFormMode.textContent = '✨ Creating New Project';
+            projectFormMode.className = 'form-mode-indicator create-mode';
+            projectFormTitle.textContent = 'Create New Project';
+            projectSubmitBtn.textContent = 'Create Project';
+            projectCancelEditBtn.style.display = 'none';
         }
 
-        // Delete project
+        projectCancelEditBtn.addEventListener('click', resetProjectForm);
+
         window.deleteProject = async function(projectId, projectTitle) {
-            if (!confirm(`Are you sure you want to delete "${projectTitle}"? This cannot be undone.`)) {
-                return;
-            }
+            if (!confirm(`Are you sure you want to delete "${projectTitle}"? This cannot be undone.`)) return;
 
             try {
                 const response = await fetch('/.netlify/functions/deleteProject', {
@@ -414,15 +533,11 @@ This project measures vapor quality in a two-phase flow loop.
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: projectId })
                 });
-
                 if (!response.ok) throw new Error('Failed to delete project');
-
                 alert('Project deleted successfully!');
-                loadProjects(); // Refresh the list
-                
-                // If we were editing this project, reset the form
+                loadProjects();
                 if (currentEditingProject && currentEditingProject.id === projectId) {
-                    resetForm();
+                    resetProjectForm();
                 }
             } catch (error) {
                 console.error('Error deleting project:', error);
@@ -430,10 +545,8 @@ This project measures vapor quality in a two-phase flow loop.
             }
         };
 
-        // Handle Project Create/Update
         projectForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const isEditing = !!projectIdField.value;
             const title = projectTitleField.value;
             const summary = projectSummaryField.value;
@@ -441,96 +554,271 @@ This project measures vapor quality in a two-phase flow loop.
             const imageFile = projectImageField.files[0];
             
             let imageUrl = '';
-
-            // If editing and no new image, keep the old one
             if (isEditing && !imageFile && currentEditingProject) {
                 imageUrl = currentEditingProject.heroImage || currentEditingProject.imageUrl || currentEditingProject.image || '';
             }
 
             try {
-                submitBtn.disabled = true;
-                submitBtn.textContent = isEditing ? 'Updating...' : 'Creating...';
+                projectSubmitBtn.disabled = true;
+                projectSubmitBtn.textContent = isEditing ? 'Updating...' : 'Creating...';
 
-                // Upload new image if selected
                 if (imageFile) {
-                    const base64 = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(imageFile);
-                    });
-
-                    const uploadResponse = await fetch('/.netlify/functions/upload', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            filename: imageFile.name,
-                            content: base64
-                        })
-                    });
-                    const uploadResult = await uploadResponse.json();
-                    if (!uploadResponse.ok) {
-                        throw new Error(uploadResult.error || 'Failed to upload image.');
-                    }
-                    imageUrl = uploadResult.imageUrl;
+                    imageUrl = await uploadImage(imageFile);
                 }
 
                 if (isEditing) {
-                    // Update existing project
-                    const projectData = {
-                        id: projectIdField.value,
-                        title,
-                        summary,
-                        content,
-                        heroImage: imageUrl
-                    };
-                    
-                    const updateResponse = await fetch('/.netlify/functions/updateProject', {
+                    const response = await fetch('/.netlify/functions/updateProject', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(projectData)
+                        body: JSON.stringify({ id: projectIdField.value, title, summary, content, heroImage: imageUrl })
                     });
-
-                    if (!updateResponse.ok) {
-                        const error = await updateResponse.json();
+                    if (!response.ok) {
+                        const error = await response.json();
                         throw new Error(error.error || 'Failed to update project.');
                     }
-
                     alert('Project updated successfully!');
                 } else {
-                    // Create new project
-                    const projectData = { title, summary, content, imageUrl };
-                    
-                    const createResponse = await fetch('/.netlify/functions/createProject', {
+                    const response = await fetch('/.netlify/functions/createProject', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(projectData)
+                        body: JSON.stringify({ title, summary, content, imageUrl })
                     });
-
-                    if (!createResponse.ok) {
-                        throw new Error('Failed to create project.');
-                    }
-
+                    if (!response.ok) throw new Error('Failed to create project.');
                     alert('Project created successfully!');
                 }
 
-                resetForm();
-                loadProjects(); // Refresh the list
-
+                resetProjectForm();
+                loadProjects();
             } catch (error) {
                 console.error('Error:', error);
                 alert(`Error: ${error.message}`);
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = isEditing ? 'Update Project' : 'Create Project';
+                projectSubmitBtn.disabled = false;
+                projectSubmitBtn.textContent = isEditing ? 'Update Project' : 'Create Project';
             }
         });
 
-        // Blog form placeholder
-        document.getElementById('blogForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Blog functionality not implemented yet.');
+        // ==================== BLOG POSTS ====================
+        
+        const blogForm = document.getElementById('blogForm');
+        const blogList = document.getElementById('blog-list');
+        const blogIdField = document.getElementById('blogId');
+        const blogTitleField = document.getElementById('blogTitle');
+        const blogSummaryField = document.getElementById('blogSummary');
+        const blogContentField = document.getElementById('blogContent');
+        const blogHeroImageField = document.getElementById('blogHeroImage');
+        const blogCurrentImagePreview = document.getElementById('blogCurrentImagePreview');
+        const blogCurrentImage = document.getElementById('blogCurrentImage');
+        const blogFormMode = document.getElementById('blog-form-mode');
+        const blogFormTitle = document.getElementById('blog-form-title');
+        const blogSubmitBtn = document.getElementById('blogSubmitBtn');
+        const blogCancelEditBtn = document.getElementById('blogCancelEdit');
+        const blogInsertImageBtn = document.getElementById('blogInsertImageBtn');
+
+        let currentEditingBlog = null;
+        let allBlogPosts = [];
+
+        // Blog inline image button
+        blogInsertImageBtn.addEventListener('click', () => {
+            currentInlineTarget = { btn: blogInsertImageBtn, textarea: blogContentField };
+            inlineImageInput.click();
         });
+
+        async function loadBlogPosts() {
+            blogList.innerHTML = '<div class="loading">Loading blog posts...</div>';
+            try {
+                const response = await fetch('/.netlify/functions/getBlogPosts');
+                if (!response.ok) throw new Error('Failed to load blog posts');
+                allBlogPosts = await response.json();
+                renderBlogList();
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                blogList.innerHTML = '<div class="no-items">Error loading blog posts. Please refresh.</div>';
+            }
+        }
+
+        function renderBlogList() {
+            if (allBlogPosts.length === 0) {
+                blogList.innerHTML = '<div class="no-items">No blog posts yet. Create your first one below!</div>';
+                return;
+            }
+
+            const sorted = [...allBlogPosts].sort((a, b) => 
+                new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+            );
+
+            blogList.innerHTML = sorted.map(post => {
+                const imageUrl = post.heroImage || '';
+                const summary = post.summary || 'No summary';
+                const date = post.createdAt ? new Date(post.createdAt).toLocaleDateString() : '';
+                return `
+                    <div class="list-item" data-id="${post.id}">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${post.title}">` : '<div class="placeholder-img">No image</div>'}
+                        <div class="list-item-info">
+                            <h4>${post.title}</h4>
+                            <p>${summary.substring(0, 80)}${summary.length > 80 ? '...' : ''}</p>
+                            ${date ? `<span class="date">${date}</span>` : ''}
+                        </div>
+                        <div class="list-item-actions">
+                            <button class="btn-edit" onclick="editBlogPost('${post.id}')">Edit</button>
+                            <button class="btn-delete" onclick="deleteBlogPost('${post.id}', '${post.title.replace(/'/g, "\\'")}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.editBlogPost = function(postId) {
+            const post = allBlogPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            currentEditingBlog = post;
+            blogIdField.value = post.id;
+            blogTitleField.value = post.title || '';
+            blogSummaryField.value = post.summary || '';
+            blogContentField.value = post.content || '';
+            
+            if (post.heroImage) {
+                blogCurrentImage.src = post.heroImage;
+                blogCurrentImagePreview.style.display = 'block';
+            } else {
+                blogCurrentImagePreview.style.display = 'none';
+            }
+
+            blogFormMode.textContent = '✏️ Editing Blog Post';
+            blogFormMode.className = 'form-mode-indicator edit-mode';
+            blogFormTitle.textContent = 'Edit Blog Post';
+            blogSubmitBtn.textContent = 'Update Blog Post';
+            blogCancelEditBtn.style.display = 'inline-block';
+            blogForm.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        function resetBlogForm() {
+            currentEditingBlog = null;
+            blogForm.reset();
+            blogIdField.value = '';
+            blogCurrentImagePreview.style.display = 'none';
+            blogFormMode.textContent = '✨ Creating New Blog Post';
+            blogFormMode.className = 'form-mode-indicator create-mode';
+            blogFormTitle.textContent = 'Create New Blog Post';
+            blogSubmitBtn.textContent = 'Create Blog Post';
+            blogCancelEditBtn.style.display = 'none';
+        }
+
+        blogCancelEditBtn.addEventListener('click', resetBlogForm);
+
+        window.deleteBlogPost = async function(postId, postTitle) {
+            if (!confirm(`Are you sure you want to delete "${postTitle}"? This cannot be undone.`)) return;
+
+            try {
+                const response = await fetch('/.netlify/functions/deleteBlogPost', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: postId })
+                });
+                if (!response.ok) throw new Error('Failed to delete blog post');
+                alert('Blog post deleted successfully!');
+                loadBlogPosts();
+                if (currentEditingBlog && currentEditingBlog.id === postId) {
+                    resetBlogForm();
+                }
+            } catch (error) {
+                console.error('Error deleting blog post:', error);
+                alert(`Error: ${error.message}`);
+            }
+        };
+
+        blogForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const isEditing = !!blogIdField.value;
+            const title = blogTitleField.value;
+            const summary = blogSummaryField.value;
+            const content = blogContentField.value;
+            const imageFile = blogHeroImageField.files[0];
+            
+            let imageUrl = '';
+            if (isEditing && !imageFile && currentEditingBlog) {
+                imageUrl = currentEditingBlog.heroImage || '';
+            }
+
+            try {
+                blogSubmitBtn.disabled = true;
+                blogSubmitBtn.textContent = isEditing ? 'Updating...' : 'Creating...';
+
+                if (imageFile) {
+                    imageUrl = await uploadImage(imageFile);
+                }
+
+                if (isEditing) {
+                    const response = await fetch('/.netlify/functions/updateBlogPost', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: blogIdField.value, title, summary, content, heroImage: imageUrl })
+                    });
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || 'Failed to update blog post.');
+                    }
+                    alert('Blog post updated successfully!');
+                } else {
+                    const response = await fetch('/.netlify/functions/createBlogPost', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, summary, content, imageUrl })
+                    });
+                    if (!response.ok) throw new Error('Failed to create blog post.');
+                    alert('Blog post created successfully!');
+                }
+
+                resetBlogForm();
+                loadBlogPosts();
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error: ${error.message}`);
+            } finally {
+                blogSubmitBtn.disabled = false;
+                blogSubmitBtn.textContent = isEditing ? 'Update Blog Post' : 'Create Blog Post';
+            }
+        });
+
+        // ==================== TAB SWITCHING ====================
+        
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+                
+                // Load data for the active tab
+                if (tab.dataset.tab === 'blog') {
+                    loadBlogPosts();
+                }
+            });
+        });
+
+        // ==================== AUTH ====================
+        
+        const handleUserState = (user) => {
+            if (user) {
+                loginContainer.style.display = 'none';
+                adminContent.style.display = 'block';
+                userInfo.textContent = `Logged in as ${user.email}`;
+                loadProjects();
+            } else {
+                loginContainer.style.display = 'block';
+                adminContent.style.display = 'none';
+                userInfo.textContent = '';
+            }
+        };
+
+        netlifyIdentity.init();
+        netlifyIdentity.on('init', handleUserState);
+        netlifyIdentity.on('login', handleUserState);
+        netlifyIdentity.on('logout', () => handleUserState(null));
+
+        loginButton.addEventListener('click', () => netlifyIdentity.open());
+        logoutButton.addEventListener('click', () => netlifyIdentity.logout());
     });
     </script>
 </body>

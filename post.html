@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact - MB Engineering</title>
+  <title>Blog Post - MB Engineering</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style2.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <header>
@@ -25,14 +26,21 @@
   </header>
 
   <main>
-    <section id="contact" class="card">
-      <h2>Contact</h2>
-      <p>Email me at <a href="mailto:youremail@example.com">youremail@example.com</a></p>
+    <section class="card project-detail">
+      <button class="back-btn" onclick="window.history.back()">← Back to Blog</button>
+      <h2 id="post-title">Loading post...</h2>
+      <p id="post-date" class="post-date-detail"></p>
+      <p id="post-summary" class="project-summary-detail"></p>
+      <div id="post-hero"></div>
+      <div id="post-content" class="markdown-content"></div>
     </section>
   </main>
 
   <footer>
     <p>&copy; 2025 MB Engineering</p>
   </footer>
+
+  <script src="post.js"></script>
 </body>
-</html> 
+</html>
+
