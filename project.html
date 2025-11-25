@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Details - MB Engineering</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style2.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="home-link">
+      <h1>MB Engineering</h1>
+      <p>Your Name | Engineering Technologist</p>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card project-detail">
+      <button class="back-btn" onclick="window.history.back()">← Back to Gallery</button>
+      <h2 id="project-title">Loading project...</h2>
+      <p id="project-summary" class="project-summary-detail"></p>
+      <div id="project-hero"></div>
+      <div id="project-content" class="markdown-content"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 MB Engineering</p>
+  </footer>
+
+  <script src="project.js"></script>
+</body>
+</html>
+

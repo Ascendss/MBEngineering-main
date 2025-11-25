@@ -16,10 +16,19 @@
         };
     }
 
+    // Helper to generate URL-safe slugs
+    function slugify(title) {
+        return title
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
     const projectsFilePath = 'content/projects.json';
 
     try {
-        const newProjectData = JSON.parse(event.body);
+        const { title, image, imageUrl, summary, content } = JSON.parse(event.body || '{}');
         let projects = [];
         let existingFileSha = null;
 
@@ -42,9 +51,14 @@
             throw new Error(`Failed to get existing file: ${getResponse.statusText}`);
         }
 
+        // Build the new project with rich fields
         const project = {
             id: Date.now().toString(),
-            ...newProjectData,
+            title,
+            slug: `${slugify(title)}-${Date.now()}`,
+            summary: summary || '',
+            heroImage: imageUrl || image || '',
+            content: content || '',
             createdAt: new Date().toISOString()
         };
         projects.push(project);

@@ -28,8 +28,25 @@
                     <label for="projectTitle">Title:</label>
                     <input type="text" id="projectTitle" required>
                     
-                    <label for="projectImage">Image:</label>
+                    <label for="projectSummary">Summary:</label>
+                    <input type="text" id="projectSummary" placeholder="Short one-line description for the gallery card">
+                    
+                    <label for="projectImage">Hero Image:</label>
                     <input type="file" id="projectImage" accept="image/*">
+                    
+                    <label for="projectContent">Full Project Content (Markdown):</label>
+                    <textarea id="projectContent" rows="12" placeholder="Write a detailed breakdown here. You can use Markdown, images, and HTML for videos.
+
+Example:
+## Background
+This project measures vapor quality...
+
+## Design Notes
+- 4-layer PCB
+- Isolated sensor front end
+
+Here is a YouTube demo:
+<iframe width='560' height='315' src='https://www.youtube.com/embed/VIDEO_ID' frameborder='0' allowfullscreen></iframe>"></textarea>
 
                     <button type="submit">Create Project</button>
                 </form>
@@ -87,6 +104,8 @@
         projectForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('projectTitle').value;
+            const summary = document.getElementById('projectSummary').value;
+            const content = document.getElementById('projectContent').value;
             const imageFile = document.getElementById('projectImage').files[0];
             let imageUrl = '';
 
@@ -100,7 +119,8 @@
                         reader.onerror = reject;
                         reader.readAsDataURL(imageFile);
                     });
-const uploadResponse = await fetch('/.netlify/functions/upload', {
+
+                    const uploadResponse = await fetch('/.netlify/functions/upload', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -112,14 +132,15 @@ const uploadResponse = await fetch('/.netlify/functions/upload', {
                     if (!uploadResponse.ok) {
                         throw new Error(uploadResult.error || 'Failed to upload image.');
                     }
-                    imageUrl = uploadResult.imageUrl; // Get the path from the response
+                    imageUrl = uploadResult.imageUrl;
                 }
 
-                // 2. Create the project with the title and image URL
+                // 2. Create the project with all fields
                 const projectData = { 
                     title, 
-                    description: '', 
-                    image: imageUrl 
+                    summary,
+                    content,
+                    imageUrl
                 };
                 const createResponse = await fetch('/.netlify/functions/createProject', {
                     method: 'POST',
