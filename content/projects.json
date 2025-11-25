@@ -24,9 +24,10 @@
     "id": "1764032426715",
     "title": "test 8pm 11/24",
     "slug": "test-8pm-11-24-1764032426715",
-    "summary": "",
+    "summary": "this is the summary",
     "heroImage": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764032424848-962cb1.jpg",
-    "content": "",
-    "createdAt": "2025-11-25T01:00:26.715Z"
+    "content": "Nice catch—this screenshot actually explains what’s going on.\n\nIn GitHub Desktop you’ve got this in the top bar:\n\nPull origin with 1 ↑ 2 ↓\n\nThat means:\n\n1 local commit ahead of GitHub (your “Added admin project list…” commit)\n\n2 commits behind GitHub (there are 2 commits on GitHub that you haven’t pulled yet)\n\nBecause you’re behind, Desktop is telling you to pull first before it will let you push.\n\nWhat to do\n\nIn GitHub Desktop (MBEngineering-main repo):\n\nClick the blue “Pull origin” button.\n\nLet it finish the pull:\n\nIf there are no conflicts, it will just fast-forward or merge.\n\nAfter a successful pull:\n\nThe button should change to “Push origin” (you’ll probably see 1 ↑ 0 ↓ or 0 ↑ 0 ↓ if it auto-pushed).\n\nClick “Push origin” if it doesn’t auto-push.\n\nGo back to your GitHub repo page in the browser and refresh:\n\nYou should now see your new commit, something like\nAdded admin project list with thumbnail + edit support.\n\nQuick sanity check\n\nIf you want to double-check in Desktop:\n\nClick the History tab.\n\nYou should see your recent commit at the top of the local history.\n\nOnce you’ve pulled and pushed, the same commit will appear on GitHub’s history page too.\n\nDo that pull → push sequence and your admin changes (project list + editing) will be live in the remote repo.",
+    "createdAt": "2025-11-25T01:00:26.715Z",
+    "updatedAt": "2025-11-25T01:48:06.075Z"
   }
 ]
