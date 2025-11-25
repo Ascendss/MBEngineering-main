@@ -1,4 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // ==================== HEADER SCROLL EFFECT ====================
+  const header = document.querySelector('header');
+  if (header) {
+    function updateHeaderShadow() {
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
+    updateHeaderShadow();
+    window.addEventListener('scroll', updateHeaderShadow);
+  }
+
+  // ==================== ACTIVE NAV LINK HIGHLIGHTING ====================
+  const navLinks = document.querySelectorAll('nav a');
+  const path = window.location.pathname.replace(/index\.html$/, '');
+  navLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    // Check if current path ends with the href, or if we're on home page
+    if (path.endsWith(href) || (path === '/' && href === 'index.html') || path.endsWith('/' + href)) {
+      link.classList.add('is-active');
+    }
+  });
+
+  // ==================== GALLERY ====================
   const galleryContainer = document.getElementById('gallery-container');
 
   if (galleryContainer) {
