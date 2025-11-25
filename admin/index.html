@@ -13,19 +13,21 @@
         }
         .admin-tab {
             padding: 0.75rem 1.5rem;
-            border: 2px solid #333;
-            background: white;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
             cursor: pointer;
             border-radius: 4px;
             font-weight: 600;
             transition: all 0.2s;
         }
         .admin-tab:hover {
-            background: #f0f0f0;
+            background: #333;
         }
         .admin-tab.active {
-            background: #333;
-            color: white;
+            background: #fff;
+            color: #000;
+            border-color: #000;
         }
         .tab-content {
             display: none;
@@ -193,6 +195,23 @@
             align-items: center;
             margin-top: 1rem;
         }
+        .btn-primary {
+            background: #000;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .btn-primary:hover {
+            background: #333;
+        }
+        .btn-primary:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -216,6 +235,7 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="projects">Project Gallery</button>
                 <button class="admin-tab" data-tab="blog">Blog Posts</button>
+                <button class="admin-tab" data-tab="about">About Me</button>
             </div>
 
             <!-- ===================== PROJECTS TAB ===================== -->
@@ -344,6 +364,45 @@ Overall, this was a great learning experience..."></textarea>
                             <button type="button" id="blogCancelEdit" class="btn-cancel" style="display: none;">Cancel Edit</button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- ===================== ABOUT ME TAB ===================== -->
+            <div id="about-tab" class="tab-content">
+                <div class="form-container">
+                    <h2>Edit About Me Page</h2>
+                    <p style="color: #666; margin-bottom: 1.5rem;">This content appears on your public About page.</p>
+                    
+                    <label for="aboutTitle">Page Title:</label>
+                    <input type="text" id="aboutTitle" value="About Me">
+
+                    <label for="aboutContent">Content (Markdown):</label>
+                    <div class="textarea-toolbar">
+                        <button type="button" id="aboutInsertImageBtn" class="btn-insert-image">📷 Insert Inline Image...</button>
+                        <button type="button" id="aboutInsertVideoBtn" class="btn-insert-video">🎬 Insert Inline Video...</button>
+                    </div>
+                    <textarea id="aboutContent" rows="15" placeholder="Write about yourself using Markdown.
+
+Example:
+## Background
+I'm an engineering technologist with a passion for...
+
+## Education
+- Degree from University
+- Certification in...
+
+## Skills
+- CAD Design
+- PCB Layout
+- Programming
+
+## Interests
+Outside of work, I enjoy..."></textarea>
+
+                    <div class="form-actions">
+                        <button type="button" id="aboutSaveBtn" class="btn-primary">Save About Page</button>
+                    </div>
+                    <p id="aboutLastSaved" style="color: #666; font-size: 0.85rem; margin-top: 1rem;"></p>
                 </div>
             </div>
         </main>
@@ -913,6 +972,72 @@ Overall, this was a great learning experience..."></textarea>
             }
         });
 
+        // ==================== ABOUT ME ====================
+        
+        const aboutTitleField = document.getElementById('aboutTitle');
+        const aboutContentField = document.getElementById('aboutContent');
+        const aboutSaveBtn = document.getElementById('aboutSaveBtn');
+        const aboutLastSaved = document.getElementById('aboutLastSaved');
+        const aboutInsertImageBtn = document.getElementById('aboutInsertImageBtn');
+        const aboutInsertVideoBtn = document.getElementById('aboutInsertVideoBtn');
+
+        // About inline image button
+        aboutInsertImageBtn.addEventListener('click', () => {
+            currentInlineTarget = { btn: aboutInsertImageBtn, textarea: aboutContentField };
+            inlineImageInput.click();
+        });
+
+        // About inline video button
+        aboutInsertVideoBtn.addEventListener('click', () => {
+            currentVideoTarget = { btn: aboutInsertVideoBtn, textarea: aboutContentField };
+            blogVideoInput.click(); // reuse video uploader
+        });
+
+        async function loadAbout() {
+            try {
+                const res = await fetch('/content/about.json');
+                if (!res.ok) throw new Error('Failed to load about data');
+                const data = await res.json();
+                aboutTitleField.value = data.title || 'About Me';
+                aboutContentField.value = data.content || '';
+                if (data.updatedAt) {
+                    aboutLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
+                }
+            } catch (error) {
+                console.error('Error loading about:', error);
+            }
+        }
+
+        aboutSaveBtn.addEventListener('click', async () => {
+            const title = aboutTitleField.value;
+            const content = aboutContentField.value;
+
+            try {
+                aboutSaveBtn.disabled = true;
+                aboutSaveBtn.textContent = 'Saving...';
+
+                const res = await fetch('/.netlify/functions/updateAbout', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content })
+                });
+
+                if (res.ok) {
+                    alert('About Page Updated!');
+                    aboutLastSaved.textContent = `Last saved: ${new Date().toLocaleString()}`;
+                } else {
+                    const error = await res.json();
+                    throw new Error(error.error || 'Failed to update');
+                }
+            } catch (error) {
+                console.error('Error saving about:', error);
+                alert(`Error: ${error.message}`);
+            } finally {
+                aboutSaveBtn.disabled = false;
+                aboutSaveBtn.textContent = 'Save About Page';
+            }
+        });
+
         // ==================== TAB SWITCHING ====================
         
         document.querySelectorAll('.admin-tab').forEach(tab => {
@@ -925,6 +1050,8 @@ Overall, this was a great learning experience..."></textarea>
                 // Load data for the active tab
                 if (tab.dataset.tab === 'blog') {
                     loadBlogPosts();
+                } else if (tab.dataset.tab === 'about') {
+                    loadAbout();
                 }
             });
         });
