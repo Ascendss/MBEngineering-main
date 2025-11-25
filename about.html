@@ -24,30 +24,34 @@
     </nav>
   </header>
 
-  <main>
-    <section class="content">
-      <div class="card about-card">
-        <div class="about-layout">
-          <div class="about-photo">
-            <img src="assets/uploads/headshot.jpg" alt="Matt Banzhof portrait">
+  <main class="content">
+    <section class="about-page">
+      <header class="about-header">
+        <h1 id="about-title">About Me</h1>
+        <p id="about-tagline" class="about-tagline">
+          Electrical Engineering Technologist · R&amp;D · Prototyping · PCB Design
+        </p>
+      </header>
+
+      <div class="about-layout">
+        <div class="about-avatar-wrapper">
+          <img
+            src="assets/uploads/headshot.jpg"
+            alt="Matt Banzhof portrait"
+            class="about-avatar"
+          />
+        </div>
+
+        <div class="about-content-wrapper">
+          <div id="about-body" class="markdown-content about-body">
+            <!-- Filled dynamically from content/about.json -->
           </div>
 
-          <div class="about-content">
-            <h1 id="about-title">About Me</h1>
-            <p id="about-tagline" class="about-tagline">
-              Electrical Engineering Technologist · R&amp;D · Prototyping · PCB Design
-            </p>
-
-            <div id="about-body" class="markdown-content about-body">
-              <!-- Filled dynamically from content/about.json -->
-            </div>
-
-            <div class="about-cta-row">
-              <a href="resume.html" class="about-btn about-btn-primary">View Resume</a>
-              <a href="gallery.html" class="about-btn about-btn-secondary">View Project Gallery</a>
-              <a href="blog.html" class="about-btn about-btn-secondary">Read the Blog</a>
-              <a href="contact.html" class="about-btn about-btn-secondary">Contact Me</a>
-            </div>
+          <div class="about-cta-group">
+            <a href="resume.html" class="btn-about btn-about-primary">View Resume</a>
+            <a href="gallery.html" class="btn-about btn-about-secondary">View Project Gallery</a>
+            <a href="blog.html" class="btn-about btn-about-secondary">Read Blog</a>
+            <a href="contact.html" class="btn-about btn-about-secondary">Contact Me</a>
           </div>
         </div>
       </div>

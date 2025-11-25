@@ -297,126 +297,157 @@ footer {
 
 /* ===== About Page Layout ===== */
 
-.about-card {
-  max-width: 980px;
-  margin: 2rem auto;
-  padding: 2.5rem;
+.about-page {
+  max-width: 960px;
+  margin: 3rem auto 4rem;
+  padding: 3rem 3rem 3.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
 }
 
-.about-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
-  gap: 2.5rem;
-  align-items: center;
+.about-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
 }
 
-.about-photo img {
-  width: 100%;
-  max-width: 260px;
-  display: block;
-  border-radius: 9999px; /* circular portrait */
-  object-fit: cover;
-  margin: 0 auto;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-}
-
-/* Text column */
-
-.about-content {
-  max-width: 700px;
-}
-
-.about-content h1 {
-  margin-bottom: 0.5rem;
+.about-header h1 {
+  margin-bottom: 0.35rem;
 }
 
 .about-tagline {
   font-size: 0.95rem;
   color: #777;
-  margin-bottom: 1.5rem;
+  letter-spacing: 0.03em;
 }
 
-/* Use same markdown typography rules as project/blog detail pages,
-   but tighten up for About specifically */
+/* Two-column layout for avatar + text on larger screens */
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+}
 
+/* Avatar section */
+.about-avatar-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.about-avatar {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #ffffff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  transform: translateY(0);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.about-avatar:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+/* Text block */
+.about-content-wrapper {
+  max-width: 640px;
+}
+
+/* Better readability for the markdown content */
 .about-body {
   line-height: 1.7;
   font-size: 0.95rem;
+  color: #333;
 }
 
 .about-body p {
   line-height: 1.7;
   margin-bottom: 0.75rem;
-  max-width: 42rem; /* keep line length comfortable */
+  max-width: 42rem;
 }
 
 .about-body p + p {
   margin-top: 0.75rem;
 }
 
-.about-body h2 {
-  margin-top: 1.8rem;
-  margin-bottom: 0.75rem;
-  font-size: 1.1rem;
+.about-body h2,
+.about-body h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .about-body ul,
 .about-body ol {
-  margin-left: 1.25rem;
+  margin: 0.75rem 0 0.75rem 1.5rem;
 }
 
-/* CTA buttons */
-
-.about-cta-row {
-  margin-top: 1.75rem;
+/* CTA buttons at bottom of About */
+.about-cta-group {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin-top: 2.5rem;
 }
 
-.about-btn {
-  display: inline-block;
-  padding: 0.6rem 1.4rem;
+.btn-about {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.4rem;
   border-radius: 999px;
   font-size: 0.9rem;
+  font-weight: 600;
   text-decoration: none;
-  border: 1px solid #000;
-  cursor: pointer;
-  transition: background 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
+  border: 2px solid transparent;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease,
+              transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.about-btn-primary {
+.btn-about-primary {
   background: #000;
   color: #fff;
+  border-color: #000;
 }
 
-.about-btn-primary:hover {
-  background: #333;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+.btn-about-primary:hover {
+  background: #222;
+  border-color: #222;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
 }
 
-.about-btn-secondary {
+.btn-about-secondary {
   background: #fff;
-  color: #000;
+  color: #111;
+  border-color: #ddd;
 }
 
-.about-btn-secondary:hover {
-  background: #000;
-  color: #fff;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+.btn-about-secondary:hover {
+  background: #f3f3f3;
+  border-color: #bbb;
+  transform: translateY(-1px);
 }
 
 /* Responsive design */
 @media (max-width: 900px) {
-  .about-card {
-    margin: 1.5rem auto;
+  .about-page {
+    margin: 2rem auto;
+    padding: 2rem 2rem 2.5rem;
   }
 }
 
 @media (max-width: 768px) {
   nav ul {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
+  }
+
+  nav a {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
   }
   
   .gallery {
@@ -435,30 +466,31 @@ footer {
     aspect-ratio: 16 / 9;
   }
 
+  /* About page responsive */
+  .about-page {
+    padding: 2rem 1.5rem 2.5rem;
+    margin: 1.5rem 1rem;
+  }
+
   .about-layout {
     grid-template-columns: 1fr;
     text-align: left;
   }
 
-  .about-photo {
-    max-width: 220px;
-    margin: 0 auto 1.5rem;
+  .about-avatar-wrapper {
+    margin-bottom: 1rem;
   }
 
-  .about-photo img {
-    max-width: 220px;
+  .about-avatar {
+    width: 180px;
+    height: 180px;
   }
 
-  .about-content {
+  .about-content-wrapper {
     max-width: 100%;
   }
 
-  nav ul {
-    gap: 0.75rem;
-  }
-
-  nav a {
-    font-size: 0.8rem;
-    padding: 0.2rem 0.4rem;
+  .about-cta-group {
+    justify-content: center;
   }
 } 
