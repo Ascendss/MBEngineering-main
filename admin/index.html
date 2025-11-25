@@ -1,9 +1,146 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin</title>
+    <title>Admin Panel - MB Engineering</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+        /* Additional admin styles */
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .admin-tab {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #333;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .admin-tab:hover {
+            background: #f0f0f0;
+        }
+        .admin-tab.active {
+            background: #333;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .projects-list {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .project-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .project-item-info {
+            flex: 1;
+        }
+        .project-item-info h4 {
+            margin: 0 0 0.25rem 0;
+        }
+        .project-item-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .project-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-edit, .btn-delete {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .btn-edit {
+            background: #0066cc;
+            color: white;
+        }
+        .btn-edit:hover {
+            background: #0052a3;
+        }
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: #c82333;
+        }
+        .form-mode-indicator {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .form-mode-indicator.create-mode {
+            background: #d4edda;
+            color: #155724;
+        }
+        .form-mode-indicator.edit-mode {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+        .current-image-preview {
+            margin: 0.5rem 0;
+        }
+        .current-image-preview img {
+            max-width: 200px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .current-image-preview p {
+            font-size: 0.85rem;
+            color: #666;
+            margin: 0.25rem 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        .no-projects {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
 
@@ -22,47 +159,90 @@
         </header>
 
         <main>
-            <div class="form-container">
-                <h2>Create New Project</h2>
-                <form id="projectForm">
-                    <label for="projectTitle">Title:</label>
-                    <input type="text" id="projectTitle" required>
-                    
-                    <label for="projectSummary">Summary:</label>
-                    <input type="text" id="projectSummary" placeholder="Short one-line description for the gallery card">
-                    
-                    <label for="projectImage">Hero Image:</label>
-                    <input type="file" id="projectImage" accept="image/*">
-                    
-                    <label for="projectContent">Full Project Content (Markdown):</label>
-                    <textarea id="projectContent" rows="12" placeholder="Write a detailed breakdown here. You can use Markdown, images, and HTML for videos.
+            <!-- Tab Navigation -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="projects">Projects</button>
+                <button class="admin-tab" data-tab="blog">Blog Posts</button>
+            </div>
+
+            <!-- Projects Tab -->
+            <div id="projects-tab" class="tab-content active">
+                
+                <!-- Existing Projects List -->
+                <div class="form-container">
+                    <h2>Your Projects</h2>
+                    <div id="projects-list" class="projects-list">
+                        <div class="loading">Loading projects...</div>
+                    </div>
+                </div>
+
+                <!-- Create/Edit Project Form -->
+                <div class="form-container">
+                    <div id="form-mode" class="form-mode-indicator create-mode">
+                        ✨ Creating New Project
+                    </div>
+                    <h2 id="form-title">Create New Project</h2>
+                    <form id="projectForm">
+                        <input type="hidden" id="projectId" value="">
+                        
+                        <label for="projectTitle">Title:</label>
+                        <input type="text" id="projectTitle" required>
+                        
+                        <label for="projectSummary">Summary:</label>
+                        <input type="text" id="projectSummary" placeholder="Short one-line description for the gallery card">
+                        
+                        <label for="projectImage">Hero Image:</label>
+                        <div id="currentImagePreview" class="current-image-preview" style="display: none;">
+                            <p>Current image:</p>
+                            <img id="currentImage" src="" alt="Current hero image">
+                            <p><em>Upload a new image to replace, or leave empty to keep current.</em></p>
+                        </div>
+                        <input type="file" id="projectImage" accept="image/*">
+                        
+                        <label for="projectContent">Full Project Content (Markdown):</label>
+                        <textarea id="projectContent" rows="15" placeholder="Write a detailed breakdown here. You can use Markdown, images, and HTML for videos.
 
 Example:
 ## Background
-This project measures vapor quality...
+This project measures vapor quality in a two-phase flow loop.
 
-## Design Notes
-- 4-layer PCB
-- Isolated sensor front end
+## Key Features
+- 4-layer PCB with dedicated ground planes
+- Isolated analog front-end
+- UART digital interface
 
-Here is a YouTube demo:
-<iframe width='560' height='315' src='https://www.youtube.com/embed/VIDEO_ID' frameborder='0' allowfullscreen></iframe>"></textarea>
+## Additional Images
+![Close-up photo](https://your-image-url.png)
 
-                    <button type="submit">Create Project</button>
-                </form>
+## Demo Video
+<iframe width='560' height='315' src='https://www.youtube.com/embed/VIDEO_ID' frameborder='0' allowfullscreen></iframe>
+
+## Resources
+- [Schematic PDF](#)
+- [GitHub Repo](#)"></textarea>
+
+                        <div style="display: flex; align-items: center;">
+                            <button type="submit" id="submitBtn">Create Project</button>
+                            <button type="button" id="cancelEdit" class="btn-cancel" style="display: none;">Cancel Edit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            
-            <div class="form-container">
-                <h2>Create New Blog Post</h2>
-                <form id="blogForm">
-                    <label for="blogTitle">Title:</label>
-                    <input type="text" id="blogTitle" required>
 
-                    <label for="blogContent">Content:</label>
-                    <textarea id="blogContent" rows="10" required></textarea>
+            <!-- Blog Tab -->
+            <div id="blog-tab" class="tab-content">
+                <div class="form-container">
+                    <h2>Create New Blog Post</h2>
+                    <form id="blogForm">
+                        <label for="blogTitle">Title:</label>
+                        <input type="text" id="blogTitle" required>
 
-                    <button type="submit">Create Blog Post</button>
-                </form>
+                        <label for="blogContent">Content:</label>
+                        <textarea id="blogContent" rows="10" required></textarea>
+
+                        <button type="submit">Create Blog Post</button>
+                    </form>
+                </div>
             </div>
         </main>
     </div>
@@ -76,13 +256,41 @@ Here is a YouTube demo:
         const userInfo = document.getElementById('user-info');
         
         const projectForm = document.getElementById('projectForm');
+        const projectsList = document.getElementById('projects-list');
         
+        // Form elements
+        const projectIdField = document.getElementById('projectId');
+        const projectTitleField = document.getElementById('projectTitle');
+        const projectSummaryField = document.getElementById('projectSummary');
+        const projectContentField = document.getElementById('projectContent');
+        const projectImageField = document.getElementById('projectImage');
+        const currentImagePreview = document.getElementById('currentImagePreview');
+        const currentImage = document.getElementById('currentImage');
+        const formMode = document.getElementById('form-mode');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submitBtn');
+        const cancelEditBtn = document.getElementById('cancelEdit');
+
+        let currentEditingProject = null;
+        let allProjects = [];
+
+        // Tab switching
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+
         // Handle user state
         const handleUserState = (user) => {
             if (user) {
                 loginContainer.style.display = 'none';
                 adminContent.style.display = 'block';
                 userInfo.textContent = `Logged in as ${user.email}`;
+                loadProjects(); // Load projects when logged in
             } else {
                 loginContainer.style.display = 'block';
                 adminContent.style.display = 'none';
@@ -92,7 +300,6 @@ Here is a YouTube demo:
 
         // Initialize Netlify Identity
         netlifyIdentity.init();
-        
         netlifyIdentity.on('init', handleUserState);
         netlifyIdentity.on('login', handleUserState);
         netlifyIdentity.on('logout', () => handleUserState(null));
@@ -100,19 +307,152 @@ Here is a YouTube demo:
         loginButton.addEventListener('click', () => netlifyIdentity.open());
         logoutButton.addEventListener('click', () => netlifyIdentity.logout());
 
-        // Handle Project Upload
-        projectForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('projectTitle').value;
-            const summary = document.getElementById('projectSummary').value;
-            const content = document.getElementById('projectContent').value;
-            const imageFile = document.getElementById('projectImage').files[0];
-            let imageUrl = '';
+        // Load all projects
+        async function loadProjects() {
+            projectsList.innerHTML = '<div class="loading">Loading projects...</div>';
+            try {
+                const response = await fetch('/.netlify/functions/getprojects');
+                if (!response.ok) throw new Error('Failed to load projects');
+                
+                allProjects = await response.json();
+                renderProjectsList();
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                projectsList.innerHTML = '<div class="no-projects">Error loading projects. Please refresh.</div>';
+            }
+        }
+
+        // Render projects list
+        function renderProjectsList() {
+            if (allProjects.length === 0) {
+                projectsList.innerHTML = '<div class="no-projects">No projects yet. Create your first one below!</div>';
+                return;
+            }
+
+            // Sort by createdAt descending (newest first)
+            const sorted = [...allProjects].sort((a, b) => 
+                new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+            );
+
+            projectsList.innerHTML = sorted.map(project => {
+                const imageUrl = project.heroImage || project.imageUrl || project.image || '';
+                const summary = project.summary || project.description || 'No summary';
+                return `
+                    <div class="project-item" data-id="${project.id}">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${project.title}">` : '<div style="width:80px;height:60px;background:#ddd;border-radius:4px;"></div>'}
+                        <div class="project-item-info">
+                            <h4>${project.title}</h4>
+                            <p>${summary.substring(0, 100)}${summary.length > 100 ? '...' : ''}</p>
+                        </div>
+                        <div class="project-item-actions">
+                            <button class="btn-edit" onclick="editProject('${project.id}')">Edit</button>
+                            <button class="btn-delete" onclick="deleteProject('${project.id}', '${project.title.replace(/'/g, "\\'")}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Edit project - populate form
+        window.editProject = function(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (!project) return;
+
+            currentEditingProject = project;
+            
+            // Populate form
+            projectIdField.value = project.id;
+            projectTitleField.value = project.title || '';
+            projectSummaryField.value = project.summary || '';
+            projectContentField.value = project.content || project.description || '';
+            
+            // Show current image
+            const imageUrl = project.heroImage || project.imageUrl || project.image;
+            if (imageUrl) {
+                currentImage.src = imageUrl;
+                currentImagePreview.style.display = 'block';
+            } else {
+                currentImagePreview.style.display = 'none';
+            }
+
+            // Update form UI for edit mode
+            formMode.textContent = '✏️ Editing Project';
+            formMode.className = 'form-mode-indicator edit-mode';
+            formTitle.textContent = 'Edit Project';
+            submitBtn.textContent = 'Update Project';
+            cancelEditBtn.style.display = 'inline-block';
+
+            // Scroll to form
+            projectForm.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Cancel edit - reset form
+        cancelEditBtn.addEventListener('click', resetForm);
+
+        function resetForm() {
+            currentEditingProject = null;
+            projectForm.reset();
+            projectIdField.value = '';
+            currentImagePreview.style.display = 'none';
+            
+            formMode.textContent = '✨ Creating New Project';
+            formMode.className = 'form-mode-indicator create-mode';
+            formTitle.textContent = 'Create New Project';
+            submitBtn.textContent = 'Create Project';
+            cancelEditBtn.style.display = 'none';
+        }
+
+        // Delete project
+        window.deleteProject = async function(projectId, projectTitle) {
+            if (!confirm(`Are you sure you want to delete "${projectTitle}"? This cannot be undone.`)) {
+                return;
+            }
 
             try {
-                // 1. If an image is selected, upload it first
+                const response = await fetch('/.netlify/functions/deleteProject', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: projectId })
+                });
+
+                if (!response.ok) throw new Error('Failed to delete project');
+
+                alert('Project deleted successfully!');
+                loadProjects(); // Refresh the list
+                
+                // If we were editing this project, reset the form
+                if (currentEditingProject && currentEditingProject.id === projectId) {
+                    resetForm();
+                }
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                alert(`Error: ${error.message}`);
+            }
+        };
+
+        // Handle Project Create/Update
+        projectForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const isEditing = !!projectIdField.value;
+            const title = projectTitleField.value;
+            const summary = projectSummaryField.value;
+            const content = projectContentField.value;
+            const imageFile = projectImageField.files[0];
+            
+            let imageUrl = '';
+
+            // If editing and no new image, keep the old one
+            if (isEditing && !imageFile && currentEditingProject) {
+                imageUrl = currentEditingProject.heroImage || currentEditingProject.imageUrl || currentEditingProject.image || '';
+            }
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = isEditing ? 'Updating...' : 'Creating...';
+
+                // Upload new image if selected
                 if (imageFile) {
-                    // Read the file as base64
                     const base64 = await new Promise((resolve, reject) => {
                         const reader = new FileReader();
                         reader.onload = () => resolve(reader.result);
@@ -135,32 +475,58 @@ Here is a YouTube demo:
                     imageUrl = uploadResult.imageUrl;
                 }
 
-                // 2. Create the project with all fields
-                const projectData = { 
-                    title, 
-                    summary,
-                    content,
-                    imageUrl
-                };
-                const createResponse = await fetch('/.netlify/functions/createProject', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(projectData)
-                });
+                if (isEditing) {
+                    // Update existing project
+                    const projectData = {
+                        id: projectIdField.value,
+                        title,
+                        summary,
+                        content,
+                        heroImage: imageUrl
+                    };
+                    
+                    const updateResponse = await fetch('/.netlify/functions/updateProject', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(projectData)
+                    });
 
-                if (!createResponse.ok) {
-                    throw new Error('Failed to create project.');
+                    if (!updateResponse.ok) {
+                        const error = await updateResponse.json();
+                        throw new Error(error.error || 'Failed to update project.');
+                    }
+
+                    alert('Project updated successfully!');
+                } else {
+                    // Create new project
+                    const projectData = { title, summary, content, imageUrl };
+                    
+                    const createResponse = await fetch('/.netlify/functions/createProject', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(projectData)
+                    });
+
+                    if (!createResponse.ok) {
+                        throw new Error('Failed to create project.');
+                    }
+
+                    alert('Project created successfully!');
                 }
 
-                alert('Project created successfully!');
-                projectForm.reset();
+                resetForm();
+                loadProjects(); // Refresh the list
+
             } catch (error) {
                 console.error('Error:', error);
                 alert(`Error: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = isEditing ? 'Update Project' : 'Create Project';
             }
         });
 
-        // Placeholder for blog post handler
+        // Blog form placeholder
         document.getElementById('blogForm').addEventListener('submit', (e) => {
             e.preventDefault();
             alert('Blog functionality not implemented yet.');

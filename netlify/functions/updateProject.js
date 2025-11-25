@@ -1,5 +1,5 @@
 exports.handler = async function(event) {
-    if (event.httpMethod !== 'POST' && event.httpMethod !== 'DELETE') {
+    if (event.httpMethod !== 'PUT' && event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
             headers: { 'Content-Type': 'application/json' },
@@ -19,12 +19,12 @@ exports.handler = async function(event) {
     const projectsFilePath = 'content/projects.json';
 
     try {
-        const { id } = JSON.parse(event.body || '{}');
+        const updatedProject = JSON.parse(event.body || '{}');
         
-        if (!id) {
+        if (!updatedProject.id) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Project ID is required.' })
+                body: JSON.stringify({ error: 'Project ID is required for updates.' })
             };
         }
 
@@ -53,8 +53,8 @@ exports.handler = async function(event) {
             };
         }
 
-        // Find the project to delete
-        const projectIndex = projects.findIndex(p => p.id === id);
+        // Find and update the project
+        const projectIndex = projects.findIndex(p => p.id === updatedProject.id);
         if (projectIndex === -1) {
             return {
                 statusCode: 404,
@@ -62,15 +62,20 @@ exports.handler = async function(event) {
             };
         }
 
-        const deletedProject = projects[projectIndex];
-        
-        // Remove the project
-        projects.splice(projectIndex, 1);
+        // Merge updates with existing project (preserve fields not being updated)
+        projects[projectIndex] = {
+            ...projects[projectIndex],
+            title: updatedProject.title || projects[projectIndex].title,
+            summary: updatedProject.summary !== undefined ? updatedProject.summary : projects[projectIndex].summary,
+            heroImage: updatedProject.heroImage || updatedProject.imageUrl || projects[projectIndex].heroImage,
+            content: updatedProject.content !== undefined ? updatedProject.content : projects[projectIndex].content,
+            updatedAt: new Date().toISOString()
+        };
 
         // Save updated projects
         const putUrl = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${projectsFilePath}`;
         const putBody = {
-            message: `feat: Delete project ${deletedProject.title}`,
+            message: `feat: Update project ${projects[projectIndex].title}`,
             content: Buffer.from(JSON.stringify(projects, null, 2)).toString('base64'),
             branch: 'main',
             sha: existingFileSha
@@ -95,14 +100,14 @@ exports.handler = async function(event) {
         return {
             statusCode: 200,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ success: true, deleted: deletedProject.title })
+            body: JSON.stringify(projects[projectIndex])
         };
 
     } catch (error) {
-        console.error('Delete project error:', error);
+        console.error('Update project error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to delete project.', details: error.message })
+            body: JSON.stringify({ error: 'Failed to update project.', details: error.message })
         };
     }
 };
