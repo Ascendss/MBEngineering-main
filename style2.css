@@ -266,7 +266,110 @@ footer {
   color: #dc3545;
 }
 
+/* ===== About Page Layout ===== */
+
+.about-card {
+  max-width: 1000px;
+  margin: 2.5rem auto;
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.about-photo img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Text column */
+
+.about-content {
+  max-width: 700px;
+}
+
+.about-content h1 {
+  margin-bottom: 0.25rem;
+}
+
+.about-tagline {
+  font-size: 0.95rem;
+  color: #777;
+  margin-bottom: 1.5rem;
+}
+
+/* Use same markdown typography rules as project/blog detail pages,
+   but tighten up for About specifically */
+
+.about-body {
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.about-body p + p {
+  margin-top: 0.75rem;
+}
+
+.about-body h2 {
+  margin-top: 1.8rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.about-body ul,
+.about-body ol {
+  margin-left: 1.25rem;
+}
+
+/* CTA buttons */
+
+.about-cta-row {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.about-btn {
+  display: inline-block;
+  padding: 0.65rem 1.4rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border: 1px solid #000;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.about-btn-primary {
+  background: #000;
+  color: #fff;
+}
+
+.about-btn-primary:hover {
+  background: #333;
+}
+
+.about-btn-secondary {
+  background: #fff;
+  color: #000;
+}
+
+.about-btn-secondary:hover {
+  background: #f3f3f3;
+}
+
 /* Responsive design */
+@media (max-width: 900px) {
+  .about-card {
+    margin: 1.5rem auto;
+  }
+}
+
 @media (max-width: 768px) {
   nav ul {
     flex-direction: column;
@@ -287,5 +390,18 @@ footer {
     width: 100%;
     height: auto;
     aspect-ratio: 16 / 9;
+  }
+
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-photo {
+    max-width: 320px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .about-content {
+    max-width: 100%;
   }
 } 

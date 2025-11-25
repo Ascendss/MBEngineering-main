@@ -25,10 +25,30 @@
   </header>
 
   <main>
-    <section id="about" class="card">
-      <h2 id="aboutTitle">About Me</h2>
-      <div id="aboutContentContainer" class="markdown-content">
-        <p>Loading...</p>
+    <section class="content">
+      <div class="card about-card">
+        <div class="about-layout">
+          <div class="about-photo">
+            <!-- Replace with your headshot image -->
+            <img src="assets/uploads/headshot.jpg" alt="Photo of Matt Banzhof">
+          </div>
+
+          <div class="about-content">
+            <h1 id="about-title">About Me</h1>
+            <p id="about-tagline" class="about-tagline">
+              Electrical Engineering Technologist · R&amp;D · Prototyping · PCB Design
+            </p>
+
+            <div id="about-body" class="markdown-content about-body">
+              <!-- Filled dynamically from content/about.json -->
+            </div>
+
+            <div class="about-cta-row">
+              <a href="resume.html" class="about-btn about-btn-primary">View Resume</a>
+              <a href="gallery.html" class="about-btn about-btn-secondary">View Project Gallery</a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -37,23 +57,8 @@
     <p>&copy; 2025 MB Engineering</p>
   </footer>
 
+  <!-- Markdown renderer + About loader -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    async function loadAbout() {
-      try {
-        const res = await fetch('/content/about.json');
-        if (!res.ok) throw new Error('Failed to load about data');
-        const data = await res.json();
-
-        document.getElementById('aboutTitle').textContent = data.title || 'About Me';
-        document.getElementById('aboutContentContainer').innerHTML = marked.parse(data.content || '');
-      } catch (error) {
-        console.error('Error loading about:', error);
-        document.getElementById('aboutContentContainer').innerHTML = '<p>Hello! I\'m an aspiring engineering technologist passionate about solving real-world problems through design, testing, and hands-on development. This site is a showcase of my work, resume, and reflections on school and job experiences.</p>';
-      }
-    }
-
-    loadAbout();
-  </script>
+  <script src="about.js"></script>
 </body>
 </html>
