@@ -5,8 +5,8 @@
     "slug": "test-blog-post-9pm-11-24-1764036621416",
     "summary": "this is my blog post",
     "heroImage": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764036619701-8d97a8.jpg",
-    "content": "\nhi this is the award i got at ACT\n\n\n\n\nI like videos from phils lab alot\nhttps://www.youtube.com/watch?v=B-CbDfrfJRk&t=1s\n\n\n\n![image description](https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764036591864-c49720.png)\n\nqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+    "content": "\nhi this is the award i got at ACT\n\n\n\n\nI like videos from phils lab alot\n\n\n<video controls width=\"100%\">\n  <source src=\"https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764038262895-bcfd34.mp4\" type=\"video/mp4\">\n  Your browser does not support the video tag.\n</video>\n\n\n\n\n\n![image description](https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764036591864-c49720.png)\n\nqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
     "createdAt": "2025-11-25T02:10:21.416Z",
-    "updatedAt": "2025-11-25T02:12:22.346Z"
+    "updatedAt": "2025-11-25T02:37:50.336Z"
   }
 ]
