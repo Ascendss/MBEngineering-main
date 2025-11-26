@@ -7,6 +7,22 @@
   --accent-color: #2563eb;
 }
 
+/* ===== Loading State (Prevent FOUC) ===== */
+[data-dynamic] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+[data-dynamic].loaded {
+  opacity: 1;
+}
+
+/* Prevent layout shift while loading */
+.site-title:empty,
+.site-subtitle:empty {
+  min-height: 1em;
+}
+
 /* Base styles */
 body {
   font-family: 'Inter', sans-serif;

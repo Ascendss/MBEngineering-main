@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  const contentWrapper = document.getElementById('aboutContentWrapper');
+  
   try {
     const res = await fetch('/content/about.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error('Failed to load about content');
@@ -16,13 +18,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bodyEl = document.getElementById('aboutBody');
 
     // Populate title
-    if (titleEl && data.title) {
-      titleEl.textContent = data.title;
+    if (titleEl) {
+      titleEl.textContent = data.title || 'About';
     }
     
     // Populate tagline
-    if (taglineEl && data.tagline) {
-      taglineEl.textContent = data.tagline;
+    if (taglineEl) {
+      taglineEl.textContent = data.tagline || '';
     }
 
     // Populate avatar - show wrapper only if image exists
@@ -42,11 +44,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         ? marked.parse(markdown) 
         : '<p>About content coming soon.</p>';
     }
+
+    // Fade in content after loading
+    if (contentWrapper) {
+      contentWrapper.classList.add('loaded');
+    }
   } catch (err) {
     console.error('Error loading about.json:', err);
     const bodyEl = document.getElementById('aboutBody');
     if (bodyEl) {
       bodyEl.innerHTML = '<p>Unable to load About content right now.</p>';
+    }
+    // Still show the content even on error
+    if (contentWrapper) {
+      contentWrapper.classList.add('loaded');
     }
   }
 });

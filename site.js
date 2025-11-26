@@ -1,6 +1,7 @@
 // Site-wide theme and settings loader
 document.addEventListener('DOMContentLoaded', async () => {
   const header = document.querySelector('header');
+  const homeLink = document.querySelector('.home-link');
   
   // ===== Scroll shadow effect =====
   if (header) {
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ===== Load site settings from JSON =====
   try {
     const res = await fetch('/content/site.json');
-    if (!res.ok) return;
+    if (!res.ok) throw new Error('Failed to load site settings');
     const data = await res.json();
 
     const root = document.documentElement;
@@ -50,10 +51,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const siteTitleEl = document.querySelector('.site-title');
     const siteSubtitleEl = document.querySelector('.site-subtitle');
 
-    if (siteTitleEl && data.siteTitle) siteTitleEl.textContent = data.siteTitle;
-    if (siteSubtitleEl && data.siteSubtitle) siteSubtitleEl.textContent = data.siteSubtitle;
+    if (siteTitleEl) siteTitleEl.textContent = data.siteTitle || 'MB Engineering';
+    if (siteSubtitleEl) siteSubtitleEl.textContent = data.siteSubtitle || '';
+
+    // Fade in header content after loading
+    if (homeLink) homeLink.classList.add('loaded');
   } catch (err) {
     console.error('Error loading site theme:', err);
+    // Still show header even on error with fallback text
+    const siteTitleEl = document.querySelector('.site-title');
+    const siteSubtitleEl = document.querySelector('.site-subtitle');
+    if (siteTitleEl && !siteTitleEl.textContent) siteTitleEl.textContent = 'MB Engineering';
+    if (siteSubtitleEl && !siteSubtitleEl.textContent) siteSubtitleEl.textContent = '';
+    if (homeLink) homeLink.classList.add('loaded');
   }
 });
 
