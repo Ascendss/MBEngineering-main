@@ -17,10 +17,11 @@ exports.handler = async function (event) {
         };
     }
 
-    const filePath = "content/about.json";
+    const filePath = "content/site.json";
 
     try {
-        const { title, tagline, content, profileImage } = JSON.parse(event.body);
+        const incoming = JSON.parse(event.body);
+        const { siteTitle, siteSubtitle, headerBg, headerText, pageBg, cardBg } = incoming;
 
         const getUrl = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`;
 
@@ -50,17 +51,18 @@ exports.handler = async function (event) {
         // Merge new values with existing data
         const updatedData = {
             ...existingData,
-            title: title || existingData.title || "About",
-            tagline: tagline !== undefined ? tagline : (existingData.tagline || ""),
-            content: content !== undefined ? content : (existingData.content || ""),
-            // Only override profileImage if a value is provided
-            ...(profileImage ? { profileImage } : {}),
+            ...(siteTitle !== undefined ? { siteTitle } : {}),
+            ...(siteSubtitle !== undefined ? { siteSubtitle } : {}),
+            ...(headerBg !== undefined ? { headerBg } : {}),
+            ...(headerText !== undefined ? { headerText } : {}),
+            ...(pageBg !== undefined ? { pageBg } : {}),
+            ...(cardBg !== undefined ? { cardBg } : {}),
             updatedAt: new Date().toISOString()
         };
 
         // Prepare the request body
         const requestBody = {
-            message: "Update About page content",
+            message: "Update site settings",
             content: Buffer.from(JSON.stringify(updatedData, null, 2)).toString("base64"),
             branch: 'main'
         };
@@ -88,14 +90,14 @@ exports.handler = async function (event) {
             return {
                 statusCode: updateRes.status,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ error: 'Failed to update about.json' })
+                body: JSON.stringify({ error: 'Failed to update site.json' })
             };
         }
 
         return {
             statusCode: 200,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ success: true, data: updatedData })
+            body: JSON.stringify({ success: true, ...updatedData })
         };
     } catch (error) {
         console.error('Error:', error);
@@ -106,3 +108,4 @@ exports.handler = async function (event) {
         };
     }
 };
+

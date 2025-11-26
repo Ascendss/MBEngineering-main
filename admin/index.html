@@ -10,6 +10,7 @@
             display: flex;
             gap: 1rem;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
         .admin-tab {
             padding: 0.75rem 1.5rem;
@@ -212,6 +213,52 @@
             background: #6c757d;
             cursor: not-allowed;
         }
+        /* Profile photo editor */
+        .profile-photo-editor {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .about-avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            background-color: #e9ecef;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            flex-shrink: 0;
+        }
+        .profile-photo-actions {
+            flex: 1;
+        }
+        .profile-photo-hint {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        /* Color picker rows */
+        .color-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .color-row > div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .color-row input[type="color"] {
+            width: 60px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -236,6 +283,7 @@
                 <button class="admin-tab active" data-tab="projects">Project Gallery</button>
                 <button class="admin-tab" data-tab="blog">Blog Posts</button>
                 <button class="admin-tab" data-tab="about">About Me</button>
+                <button class="admin-tab" data-tab="site">Site Settings</button>
             </div>
 
             <!-- ===================== PROJECTS TAB ===================== -->
@@ -277,22 +325,7 @@
                             <button type="button" id="projectInsertImageBtn" class="btn-insert-image">📷 Insert Inline Image...</button>
                             <button type="button" id="projectInsertVideoBtn" class="btn-insert-video">🎬 Insert Inline Video...</button>
                         </div>
-                        <textarea id="projectContent" rows="15" placeholder="Write a detailed breakdown here. You can use Markdown, images, and HTML for videos.
-
-Example:
-## Background
-This project measures vapor quality in a two-phase flow loop.
-
-## Key Features
-- 4-layer PCB with dedicated ground planes
-- Isolated analog front-end
-- UART digital interface
-
-## Additional Images
-![Close-up photo](https://your-image-url.png)
-
-## Demo Video
-<iframe width='560' height='315' src='https://www.youtube.com/embed/VIDEO_ID' frameborder='0' allowfullscreen></iframe>"></textarea>
+                        <textarea id="projectContent" rows="15" placeholder="Write a detailed breakdown here. You can use Markdown."></textarea>
 
                         <div class="form-actions">
                             <button type="submit" id="projectSubmitBtn">Create Project</button>
@@ -341,23 +374,7 @@ This project measures vapor quality in a two-phase flow loop.
                             <button type="button" id="blogInsertImageBtn" class="btn-insert-image">📷 Insert Inline Image...</button>
                             <button type="button" id="blogInsertVideoBtn" class="btn-insert-video">🎬 Insert Inline Video...</button>
                         </div>
-                        <textarea id="blogContent" rows="15" placeholder="Write your blog post here using Markdown.
-
-Example:
-## Introduction
-Today I want to share my experience with...
-
-## The Process
-Here's what I learned:
-- First thing
-- Second thing
-- Third thing
-
-## Photos
-![Project photo](https://your-image-url.png)
-
-## Conclusion
-Overall, this was a great learning experience..."></textarea>
+                        <textarea id="blogContent" rows="15" placeholder="Write your blog post here using Markdown."></textarea>
 
                         <div class="form-actions">
                             <button type="submit" id="blogSubmitBtn">Create Blog Post</button>
@@ -374,35 +391,78 @@ Overall, this was a great learning experience..."></textarea>
                     <p style="color: #666; margin-bottom: 1.5rem;">This content appears on your public About page.</p>
                     
                     <label for="aboutTitle">Page Title:</label>
-                    <input type="text" id="aboutTitle" value="About Me">
+                    <input type="text" id="aboutTitle" value="About">
+
+                    <label for="aboutTagline">Tagline:</label>
+                    <input type="text" id="aboutTagline" placeholder="e.g., Electrical Engineering Technologist · R&D · Prototyping">
+
+                    <label>Profile Photo:</label>
+                    <div class="profile-photo-editor">
+                        <div id="aboutProfilePreview" class="about-avatar-preview"></div>
+                        <div class="profile-photo-actions">
+                            <input type="file" id="aboutProfileInput" accept="image/*" style="display:none;">
+                            <button type="button" id="aboutProfileUploadBtn" class="btn-insert-image">📷 Upload Profile Photo</button>
+                            <p class="profile-photo-hint">This image appears as the circular portrait on the About page.</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="aboutProfileImageUrl">
 
                     <label for="aboutContent">Content (Markdown):</label>
                     <div class="textarea-toolbar">
                         <button type="button" id="aboutInsertImageBtn" class="btn-insert-image">📷 Insert Inline Image...</button>
                         <button type="button" id="aboutInsertVideoBtn" class="btn-insert-video">🎬 Insert Inline Video...</button>
                     </div>
-                    <textarea id="aboutContent" rows="15" placeholder="Write about yourself using Markdown.
-
-Example:
-## Background
-I'm an engineering technologist with a passion for...
-
-## Education
-- Degree from University
-- Certification in...
-
-## Skills
-- CAD Design
-- PCB Layout
-- Programming
-
-## Interests
-Outside of work, I enjoy..."></textarea>
+                    <textarea id="aboutContent" rows="15" placeholder="Write about yourself using Markdown."></textarea>
 
                     <div class="form-actions">
                         <button type="button" id="aboutSaveBtn" class="btn-primary">Save About Page</button>
                     </div>
                     <p id="aboutLastSaved" style="color: #666; font-size: 0.85rem; margin-top: 1rem;"></p>
+                </div>
+            </div>
+
+            <!-- ===================== SITE SETTINGS TAB ===================== -->
+            <div id="site-tab" class="tab-content">
+                <div class="form-container">
+                    <h2>Site Settings</h2>
+                    <p style="color: #666; margin-bottom: 1.5rem;">
+                        Control the site title, tagline, and theme colors used in the header and background.
+                    </p>
+
+                    <label for="siteTitle">Site Title (top header):</label>
+                    <input type="text" id="siteTitle" placeholder="MB Engineering">
+
+                    <label for="siteSubtitle">Site Subtitle:</label>
+                    <input type="text" id="siteSubtitle" placeholder="Your Name | Engineering Technologist">
+
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Theme Colors</h3>
+
+                    <div class="color-row">
+                        <div>
+                            <label for="headerBg">Header Background:</label>
+                            <input type="color" id="headerBg" value="#333333">
+                        </div>
+                        <div>
+                            <label for="headerText">Header Text:</label>
+                            <input type="color" id="headerText" value="#ffffff">
+                        </div>
+                    </div>
+
+                    <div class="color-row">
+                        <div>
+                            <label for="pageBg">Page Background:</label>
+                            <input type="color" id="pageBg" value="#f5f5f5">
+                        </div>
+                        <div>
+                            <label for="cardBg">Card Background:</label>
+                            <input type="color" id="cardBg" value="#ffffff">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="siteSaveBtn" class="btn-primary">Save Site Settings</button>
+                    </div>
+                    <p id="siteLastSaved" style="color: #666; font-size: 0.85rem; margin-top: 1rem;"></p>
                 </div>
             </div>
         </main>
@@ -423,7 +483,6 @@ Outside of work, I enjoy..."></textarea>
 
         // ==================== SHARED UTILITIES ====================
         
-        // Insert text at cursor position in a textarea
         function insertAtCursor(textarea, text) {
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
@@ -434,7 +493,6 @@ Outside of work, I enjoy..."></textarea>
             textarea.focus();
         }
 
-        // Upload file (image or video) and return URL
         async function uploadFile(file) {
             const base64 = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -446,31 +504,19 @@ Outside of work, I enjoy..."></textarea>
             const response = await fetch('/.netlify/functions/upload', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    filename: file.name,
-                    content: base64
-                })
+                body: JSON.stringify({ filename: file.name, content: base64 })
             });
             
             const result = await response.json();
-            if (!response.ok) {
-                throw new Error(result.error || 'Failed to upload file.');
-            }
+            if (!response.ok) throw new Error(result.error || 'Failed to upload file.');
             return result.imageUrl;
         }
 
-        // Alias for backwards compatibility
         const uploadImage = uploadFile;
 
-        // Get video MIME type from filename
         function getVideoMimeType(filename) {
             const ext = filename.split('.').pop().toLowerCase();
-            const mimeTypes = {
-                'mp4': 'video/mp4',
-                'webm': 'video/webm',
-                'mov': 'video/quicktime',
-                'ogg': 'video/ogg'
-            };
+            const mimeTypes = { 'mp4': 'video/mp4', 'webm': 'video/webm', 'mov': 'video/quicktime', 'ogg': 'video/ogg' };
             return mimeTypes[ext] || 'video/mp4';
         }
 
@@ -489,15 +535,10 @@ Outside of work, I enjoy..."></textarea>
             try {
                 btn.disabled = true;
                 btn.textContent = '⏳ Uploading...';
-                
                 const imageUrl = await uploadFile(file);
                 insertAtCursor(textarea, `\n\n![image description](${imageUrl})\n\n`);
-                
                 btn.textContent = '✅ Inserted!';
-                setTimeout(() => {
-                    btn.textContent = '📷 Insert Inline Image...';
-                    btn.disabled = false;
-                }, 1500);
+                setTimeout(() => { btn.textContent = '📷 Insert Inline Image...'; btn.disabled = false; }, 1500);
             } catch (error) {
                 console.error('Inline image upload error:', error);
                 alert(`Error: ${error.message}`);
@@ -515,8 +556,7 @@ Outside of work, I enjoy..."></textarea>
         const blogVideoInput = document.getElementById('blogVideoInput');
         let currentVideoTarget = null;
 
-        // Project video upload handler
-        projectVideoInput.addEventListener('change', async (e) => {
+        async function handleVideoUpload(e) {
             const file = e.target.files[0];
             if (!file || !currentVideoTarget) return;
 
@@ -526,22 +566,12 @@ Outside of work, I enjoy..."></textarea>
             try {
                 btn.disabled = true;
                 btn.textContent = '⏳ Uploading video...';
-                
                 const videoUrl = await uploadFile(file);
                 const mimeType = getVideoMimeType(file.name);
-                
-                const videoHtml = `\n\n<video controls width="100%">
-  <source src="${videoUrl}" type="${mimeType}">
-  Your browser does not support the video tag.
-</video>\n\n`;
-                
+                const videoHtml = `\n\n<video controls width="100%">\n  <source src="${videoUrl}" type="${mimeType}">\n  Your browser does not support the video tag.\n</video>\n\n`;
                 insertAtCursor(textarea, videoHtml);
-                
                 btn.textContent = '✅ Inserted!';
-                setTimeout(() => {
-                    btn.textContent = '🎬 Insert Inline Video...';
-                    btn.disabled = false;
-                }, 1500);
+                setTimeout(() => { btn.textContent = '🎬 Insert Inline Video...'; btn.disabled = false; }, 1500);
             } catch (error) {
                 console.error('Video upload error:', error);
                 alert(`Error: ${error.message}`);
@@ -549,47 +579,12 @@ Outside of work, I enjoy..."></textarea>
                 btn.disabled = false;
             }
             
-            projectVideoInput.value = '';
+            e.target.value = '';
             currentVideoTarget = null;
-        });
+        }
 
-        // Blog video upload handler
-        blogVideoInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file || !currentVideoTarget) return;
-
-            const btn = currentVideoTarget.btn;
-            const textarea = currentVideoTarget.textarea;
-            
-            try {
-                btn.disabled = true;
-                btn.textContent = '⏳ Uploading video...';
-                
-                const videoUrl = await uploadFile(file);
-                const mimeType = getVideoMimeType(file.name);
-                
-                const videoHtml = `\n\n<video controls width="100%">
-  <source src="${videoUrl}" type="${mimeType}">
-  Your browser does not support the video tag.
-</video>\n\n`;
-                
-                insertAtCursor(textarea, videoHtml);
-                
-                btn.textContent = '✅ Inserted!';
-                setTimeout(() => {
-                    btn.textContent = '🎬 Insert Inline Video...';
-                    btn.disabled = false;
-                }, 1500);
-            } catch (error) {
-                console.error('Video upload error:', error);
-                alert(`Error: ${error.message}`);
-                btn.textContent = '🎬 Insert Inline Video...';
-                btn.disabled = false;
-            }
-            
-            blogVideoInput.value = '';
-            currentVideoTarget = null;
-        });
+        projectVideoInput.addEventListener('change', handleVideoUpload);
+        blogVideoInput.addEventListener('change', handleVideoUpload);
 
         // ==================== PROJECTS ====================
         
@@ -612,13 +607,11 @@ Outside of work, I enjoy..."></textarea>
         let currentEditingProject = null;
         let allProjects = [];
 
-        // Project inline image button
         projectInsertImageBtn.addEventListener('click', () => {
             currentInlineTarget = { btn: projectInsertImageBtn, textarea: projectContentField };
             inlineImageInput.click();
         });
 
-        // Project inline video button
         projectInsertVideoBtn.addEventListener('click', () => {
             currentVideoTarget = { btn: projectInsertVideoBtn, textarea: projectContentField };
             projectVideoInput.click();
@@ -642,11 +635,7 @@ Outside of work, I enjoy..."></textarea>
                 projectsList.innerHTML = '<div class="no-items">No projects yet. Create your first one below!</div>';
                 return;
             }
-
-            const sorted = [...allProjects].sort((a, b) => 
-                new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-            );
-
+            const sorted = [...allProjects].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
             projectsList.innerHTML = sorted.map(project => {
                 const imageUrl = project.heroImage || project.imageUrl || project.image || '';
                 const summary = project.summary || project.description || 'No summary';
@@ -671,21 +660,14 @@ Outside of work, I enjoy..."></textarea>
         window.editProject = function(projectId) {
             const project = allProjects.find(p => p.id === projectId);
             if (!project) return;
-
             currentEditingProject = project;
             projectIdField.value = project.id;
             projectTitleField.value = project.title || '';
             projectSummaryField.value = project.summary || '';
             projectContentField.value = project.content || project.description || '';
-            
             const imageUrl = project.heroImage || project.imageUrl || project.image;
-            if (imageUrl) {
-                projectCurrentImage.src = imageUrl;
-                projectCurrentImagePreview.style.display = 'block';
-            } else {
-                projectCurrentImagePreview.style.display = 'none';
-            }
-
+            if (imageUrl) { projectCurrentImage.src = imageUrl; projectCurrentImagePreview.style.display = 'block'; }
+            else { projectCurrentImagePreview.style.display = 'none'; }
             projectFormMode.textContent = '✏️ Editing Project';
             projectFormMode.className = 'form-mode-indicator edit-mode';
             projectFormTitle.textContent = 'Edit Project';
@@ -709,24 +691,17 @@ Outside of work, I enjoy..."></textarea>
         projectCancelEditBtn.addEventListener('click', resetProjectForm);
 
         window.deleteProject = async function(projectId, projectTitle) {
-            if (!confirm(`Are you sure you want to delete "${projectTitle}"? This cannot be undone.`)) return;
-
+            if (!confirm(`Are you sure you want to delete "${projectTitle}"?`)) return;
             try {
                 const response = await fetch('/.netlify/functions/deleteProject', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: projectId })
                 });
                 if (!response.ok) throw new Error('Failed to delete project');
-                alert('Project deleted successfully!');
+                alert('Project deleted!');
                 loadProjects();
-                if (currentEditingProject && currentEditingProject.id === projectId) {
-                    resetProjectForm();
-                }
-            } catch (error) {
-                console.error('Error deleting project:', error);
-                alert(`Error: ${error.message}`);
-            }
+                if (currentEditingProject && currentEditingProject.id === projectId) resetProjectForm();
+            } catch (error) { console.error('Error:', error); alert(`Error: ${error.message}`); }
         };
 
         projectForm.addEventListener('submit', async (e) => {
@@ -736,50 +711,33 @@ Outside of work, I enjoy..."></textarea>
             const summary = projectSummaryField.value;
             const content = projectContentField.value;
             const imageFile = projectImageField.files[0];
-            
             let imageUrl = '';
             if (isEditing && !imageFile && currentEditingProject) {
                 imageUrl = currentEditingProject.heroImage || currentEditingProject.imageUrl || currentEditingProject.image || '';
             }
-
             try {
                 projectSubmitBtn.disabled = true;
                 projectSubmitBtn.textContent = isEditing ? 'Updating...' : 'Creating...';
-
-                if (imageFile) {
-                    imageUrl = await uploadImage(imageFile);
-                }
-
+                if (imageFile) imageUrl = await uploadImage(imageFile);
                 if (isEditing) {
                     const response = await fetch('/.netlify/functions/updateProject', {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
+                        method: 'PUT', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id: projectIdField.value, title, summary, content, heroImage: imageUrl })
                     });
-                    if (!response.ok) {
-                        const error = await response.json();
-                        throw new Error(error.error || 'Failed to update project.');
-                    }
-                    alert('Project updated successfully!');
+                    if (!response.ok) { const error = await response.json(); throw new Error(error.error || 'Failed to update.'); }
+                    alert('Project updated!');
                 } else {
                     const response = await fetch('/.netlify/functions/createProject', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ title, summary, content, imageUrl })
                     });
                     if (!response.ok) throw new Error('Failed to create project.');
-                    alert('Project created successfully!');
+                    alert('Project created!');
                 }
-
                 resetProjectForm();
                 loadProjects();
-            } catch (error) {
-                console.error('Error:', error);
-                alert(`Error: ${error.message}`);
-            } finally {
-                projectSubmitBtn.disabled = false;
-                projectSubmitBtn.textContent = isEditing ? 'Update Project' : 'Create Project';
-            }
+            } catch (error) { console.error('Error:', error); alert(`Error: ${error.message}`); }
+            finally { projectSubmitBtn.disabled = false; projectSubmitBtn.textContent = isEditing ? 'Update Project' : 'Create Project'; }
         });
 
         // ==================== BLOG POSTS ====================
@@ -803,13 +761,11 @@ Outside of work, I enjoy..."></textarea>
         let currentEditingBlog = null;
         let allBlogPosts = [];
 
-        // Blog inline image button
         blogInsertImageBtn.addEventListener('click', () => {
             currentInlineTarget = { btn: blogInsertImageBtn, textarea: blogContentField };
             inlineImageInput.click();
         });
 
-        // Blog inline video button
         blogInsertVideoBtn.addEventListener('click', () => {
             currentVideoTarget = { btn: blogInsertVideoBtn, textarea: blogContentField };
             blogVideoInput.click();
@@ -833,11 +789,7 @@ Outside of work, I enjoy..."></textarea>
                 blogList.innerHTML = '<div class="no-items">No blog posts yet. Create your first one below!</div>';
                 return;
             }
-
-            const sorted = [...allBlogPosts].sort((a, b) => 
-                new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-            );
-
+            const sorted = [...allBlogPosts].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
             blogList.innerHTML = sorted.map(post => {
                 const imageUrl = post.heroImage || '';
                 const summary = post.summary || 'No summary';
@@ -862,20 +814,13 @@ Outside of work, I enjoy..."></textarea>
         window.editBlogPost = function(postId) {
             const post = allBlogPosts.find(p => p.id === postId);
             if (!post) return;
-
             currentEditingBlog = post;
             blogIdField.value = post.id;
             blogTitleField.value = post.title || '';
             blogSummaryField.value = post.summary || '';
             blogContentField.value = post.content || '';
-            
-            if (post.heroImage) {
-                blogCurrentImage.src = post.heroImage;
-                blogCurrentImagePreview.style.display = 'block';
-            } else {
-                blogCurrentImagePreview.style.display = 'none';
-            }
-
+            if (post.heroImage) { blogCurrentImage.src = post.heroImage; blogCurrentImagePreview.style.display = 'block'; }
+            else { blogCurrentImagePreview.style.display = 'none'; }
             blogFormMode.textContent = '✏️ Editing Blog Post';
             blogFormMode.className = 'form-mode-indicator edit-mode';
             blogFormTitle.textContent = 'Edit Blog Post';
@@ -899,24 +844,17 @@ Outside of work, I enjoy..."></textarea>
         blogCancelEditBtn.addEventListener('click', resetBlogForm);
 
         window.deleteBlogPost = async function(postId, postTitle) {
-            if (!confirm(`Are you sure you want to delete "${postTitle}"? This cannot be undone.`)) return;
-
+            if (!confirm(`Are you sure you want to delete "${postTitle}"?`)) return;
             try {
                 const response = await fetch('/.netlify/functions/deleteBlogPost', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: postId })
                 });
                 if (!response.ok) throw new Error('Failed to delete blog post');
-                alert('Blog post deleted successfully!');
+                alert('Blog post deleted!');
                 loadBlogPosts();
-                if (currentEditingBlog && currentEditingBlog.id === postId) {
-                    resetBlogForm();
-                }
-            } catch (error) {
-                console.error('Error deleting blog post:', error);
-                alert(`Error: ${error.message}`);
-            }
+                if (currentEditingBlog && currentEditingBlog.id === postId) resetBlogForm();
+            } catch (error) { console.error('Error:', error); alert(`Error: ${error.message}`); }
         };
 
         blogForm.addEventListener('submit', async (e) => {
@@ -926,71 +864,78 @@ Outside of work, I enjoy..."></textarea>
             const summary = blogSummaryField.value;
             const content = blogContentField.value;
             const imageFile = blogHeroImageField.files[0];
-            
             let imageUrl = '';
-            if (isEditing && !imageFile && currentEditingBlog) {
-                imageUrl = currentEditingBlog.heroImage || '';
-            }
-
+            if (isEditing && !imageFile && currentEditingBlog) imageUrl = currentEditingBlog.heroImage || '';
             try {
                 blogSubmitBtn.disabled = true;
                 blogSubmitBtn.textContent = isEditing ? 'Updating...' : 'Creating...';
-
-                if (imageFile) {
-                    imageUrl = await uploadImage(imageFile);
-                }
-
+                if (imageFile) imageUrl = await uploadImage(imageFile);
                 if (isEditing) {
                     const response = await fetch('/.netlify/functions/updateBlogPost', {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
+                        method: 'PUT', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id: blogIdField.value, title, summary, content, heroImage: imageUrl })
                     });
-                    if (!response.ok) {
-                        const error = await response.json();
-                        throw new Error(error.error || 'Failed to update blog post.');
-                    }
-                    alert('Blog post updated successfully!');
+                    if (!response.ok) { const error = await response.json(); throw new Error(error.error || 'Failed to update.'); }
+                    alert('Blog post updated!');
                 } else {
                     const response = await fetch('/.netlify/functions/createBlogPost', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ title, summary, content, imageUrl })
                     });
                     if (!response.ok) throw new Error('Failed to create blog post.');
-                    alert('Blog post created successfully!');
+                    alert('Blog post created!');
                 }
-
                 resetBlogForm();
                 loadBlogPosts();
-            } catch (error) {
-                console.error('Error:', error);
-                alert(`Error: ${error.message}`);
-            } finally {
-                blogSubmitBtn.disabled = false;
-                blogSubmitBtn.textContent = isEditing ? 'Update Blog Post' : 'Create Blog Post';
-            }
+            } catch (error) { console.error('Error:', error); alert(`Error: ${error.message}`); }
+            finally { blogSubmitBtn.disabled = false; blogSubmitBtn.textContent = isEditing ? 'Update Blog Post' : 'Create Blog Post'; }
         });
 
         // ==================== ABOUT ME ====================
         
         const aboutTitleField = document.getElementById('aboutTitle');
+        const aboutTaglineField = document.getElementById('aboutTagline');
         const aboutContentField = document.getElementById('aboutContent');
+        const aboutProfilePreview = document.getElementById('aboutProfilePreview');
+        const aboutProfileInput = document.getElementById('aboutProfileInput');
+        const aboutProfileUploadBtn = document.getElementById('aboutProfileUploadBtn');
+        const aboutProfileImageUrl = document.getElementById('aboutProfileImageUrl');
         const aboutSaveBtn = document.getElementById('aboutSaveBtn');
         const aboutLastSaved = document.getElementById('aboutLastSaved');
         const aboutInsertImageBtn = document.getElementById('aboutInsertImageBtn');
         const aboutInsertVideoBtn = document.getElementById('aboutInsertVideoBtn');
 
-        // About inline image button
         aboutInsertImageBtn.addEventListener('click', () => {
             currentInlineTarget = { btn: aboutInsertImageBtn, textarea: aboutContentField };
             inlineImageInput.click();
         });
 
-        // About inline video button
         aboutInsertVideoBtn.addEventListener('click', () => {
             currentVideoTarget = { btn: aboutInsertVideoBtn, textarea: aboutContentField };
-            blogVideoInput.click(); // reuse video uploader
+            blogVideoInput.click();
+        });
+
+        // Profile photo upload
+        aboutProfileUploadBtn.addEventListener('click', () => aboutProfileInput.click());
+        
+        aboutProfileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                aboutProfileUploadBtn.disabled = true;
+                aboutProfileUploadBtn.textContent = '⏳ Uploading...';
+                const imageUrl = await uploadFile(file);
+                aboutProfileImageUrl.value = imageUrl;
+                aboutProfilePreview.style.backgroundImage = `url(${imageUrl})`;
+                aboutProfileUploadBtn.textContent = '✅ Uploaded!';
+                setTimeout(() => { aboutProfileUploadBtn.textContent = '📷 Upload Profile Photo'; aboutProfileUploadBtn.disabled = false; }, 1500);
+            } catch (error) {
+                console.error('Profile photo upload error:', error);
+                alert(`Error: ${error.message}`);
+                aboutProfileUploadBtn.textContent = '📷 Upload Profile Photo';
+                aboutProfileUploadBtn.disabled = false;
+            }
+            aboutProfileInput.value = '';
         });
 
         async function loadAbout() {
@@ -998,8 +943,13 @@ Outside of work, I enjoy..."></textarea>
                 const res = await fetch('/content/about.json');
                 if (!res.ok) throw new Error('Failed to load about data');
                 const data = await res.json();
-                aboutTitleField.value = data.title || 'About Me';
+                aboutTitleField.value = data.title || 'About';
+                aboutTaglineField.value = data.tagline || '';
                 aboutContentField.value = data.content || '';
+                aboutProfileImageUrl.value = data.profileImage || '';
+                if (data.profileImage) {
+                    aboutProfilePreview.style.backgroundImage = `url(${data.profileImage})`;
+                }
                 if (data.updatedAt) {
                     aboutLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
                 }
@@ -1010,7 +960,9 @@ Outside of work, I enjoy..."></textarea>
 
         aboutSaveBtn.addEventListener('click', async () => {
             const title = aboutTitleField.value;
+            const tagline = aboutTaglineField.value;
             const content = aboutContentField.value;
+            const profileImage = aboutProfileImageUrl.value || null;
 
             try {
                 aboutSaveBtn.disabled = true;
@@ -1019,10 +971,11 @@ Outside of work, I enjoy..."></textarea>
                 const res = await fetch('/.netlify/functions/updateAbout', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, content })
+                    body: JSON.stringify({ title, tagline, content, profileImage })
                 });
 
                 if (res.ok) {
+                    const data = await res.json();
                     alert('About Page Updated!');
                     aboutLastSaved.textContent = `Last saved: ${new Date().toLocaleString()}`;
                 } else {
@@ -1038,6 +991,73 @@ Outside of work, I enjoy..."></textarea>
             }
         });
 
+        // ==================== SITE SETTINGS ====================
+        
+        const siteTitleField = document.getElementById('siteTitle');
+        const siteSubtitleField = document.getElementById('siteSubtitle');
+        const headerBgField = document.getElementById('headerBg');
+        const headerTextField = document.getElementById('headerText');
+        const pageBgField = document.getElementById('pageBg');
+        const cardBgField = document.getElementById('cardBg');
+        const siteSaveBtn = document.getElementById('siteSaveBtn');
+        const siteLastSaved = document.getElementById('siteLastSaved');
+
+        async function loadSiteSettings() {
+            try {
+                const res = await fetch('/content/site.json');
+                if (!res.ok) return;
+                const data = await res.json();
+                siteTitleField.value = data.siteTitle || 'MB Engineering';
+                siteSubtitleField.value = data.siteSubtitle || '';
+                headerBgField.value = data.headerBg || '#333333';
+                headerTextField.value = data.headerText || '#ffffff';
+                pageBgField.value = data.pageBg || '#f5f5f5';
+                cardBgField.value = data.cardBg || '#ffffff';
+                if (data.updatedAt) {
+                    siteLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
+                }
+            } catch (err) {
+                console.error('Error loading site settings:', err);
+            }
+        }
+
+        siteSaveBtn.addEventListener('click', async () => {
+            try {
+                siteSaveBtn.disabled = true;
+                siteSaveBtn.textContent = 'Saving...';
+
+                const payload = {
+                    siteTitle: siteTitleField.value,
+                    siteSubtitle: siteSubtitleField.value,
+                    headerBg: headerBgField.value,
+                    headerText: headerTextField.value,
+                    pageBg: pageBgField.value,
+                    cardBg: cardBgField.value
+                };
+
+                const res = await fetch('/.netlify/functions/updateSiteSettings', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const error = await res.json().catch(() => ({}));
+                    throw new Error(error.error || 'Failed to update site settings');
+                }
+
+                const data = await res.json();
+                siteLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
+                alert('Site settings updated!');
+            } catch (err) {
+                console.error('Error saving site settings:', err);
+                alert(`Error: ${err.message}`);
+            } finally {
+                siteSaveBtn.disabled = false;
+                siteSaveBtn.textContent = 'Save Site Settings';
+            }
+        });
+
         // ==================== TAB SWITCHING ====================
         
         document.querySelectorAll('.admin-tab').forEach(tab => {
@@ -1047,12 +1067,9 @@ Outside of work, I enjoy..."></textarea>
                 tab.classList.add('active');
                 document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
                 
-                // Load data for the active tab
-                if (tab.dataset.tab === 'blog') {
-                    loadBlogPosts();
-                } else if (tab.dataset.tab === 'about') {
-                    loadAbout();
-                }
+                if (tab.dataset.tab === 'blog') loadBlogPosts();
+                else if (tab.dataset.tab === 'about') loadAbout();
+                else if (tab.dataset.tab === 'site') loadSiteSettings();
             });
         });
 
