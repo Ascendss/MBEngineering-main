@@ -1,5 +1,38 @@
 // Site-wide theme and settings loader
 document.addEventListener('DOMContentLoaded', async () => {
+  const header = document.querySelector('header');
+  
+  // ===== Scroll shadow effect =====
+  if (header) {
+    const updateHeaderShadow = () => {
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    };
+    updateHeaderShadow();
+    window.addEventListener('scroll', updateHeaderShadow, { passive: true });
+  }
+
+  // ===== Highlight active nav link =====
+  const navLinks = document.querySelectorAll('nav a');
+  const currentPath = window.location.pathname;
+  const currentPage = currentPath.split('/').pop() || 'index.html';
+  
+  navLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    
+    // Match current page or index
+    if (href === currentPage || 
+        (currentPage === '' && href === 'index.html') ||
+        (currentPage === 'index.html' && href === 'index.html')) {
+      link.classList.add('is-active');
+    }
+  });
+
+  // ===== Load site settings from JSON =====
   try {
     const res = await fetch('/content/site.json');
     if (!res.ok) return;

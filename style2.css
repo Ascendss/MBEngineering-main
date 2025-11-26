@@ -1,9 +1,10 @@
 /* CSS Variables for theming */
 :root {
-  --site-header-bg: #333333;
+  --site-header-bg: #1a1a1a;
   --site-header-text: #ffffff;
-  --site-page-bg: #f5f5f5;
+  --site-page-bg: #fafafa;
   --site-card-bg: #ffffff;
+  --accent-color: #2563eb;
 }
 
 /* Base styles */
@@ -16,76 +17,123 @@ body {
   color: #333;
 }
 
+/* ===== Global Header ===== */
 header {
   background-color: var(--site-header-bg);
   color: var(--site-header-text);
-  padding: 2rem;
+  padding: 2.5rem 2rem 2rem;
   text-align: center;
-  transition: box-shadow 0.2s ease-out, background-color 0.2s ease-out;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 header.scrolled {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .home-link {
   text-decoration: none;
   color: inherit;
+  display: inline-block;
+}
+
+.site-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.2;
+}
+
+.site-subtitle {
+  font-size: 0.9rem;
+  font-weight: 400;
+  opacity: 0.7;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* Navigation */
+nav {
+  margin-top: 1.5rem;
 }
 
 nav ul {
   list-style: none;
   padding: 0;
+  margin: 0;
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  margin-top: 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+nav li {
+  margin: 0;
 }
 
 nav a {
   position: relative;
-  color: white;
+  color: var(--site-header-text);
   text-decoration: none;
-  font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
-  letter-spacing: 0.03em;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  display: inline-block;
 }
 
 nav a::after {
   content: "";
   position: absolute;
-  left: 0;
-  bottom: -4px;
+  left: 50%;
+  bottom: 0;
   width: 0;
   height: 2px;
-  background: #ffffff;
-  transition: width 0.2s ease-out;
+  background: var(--site-header-text);
+  transition: width 0.25s ease, left 0.25s ease;
   opacity: 0.9;
+}
+
+nav a:hover,
+nav a.is-active {
+  opacity: 1;
 }
 
 nav a:hover::after,
 nav a.is-active::after {
-  width: 100%;
-}
-
-nav a:hover {
-  color: #fff;
+  width: calc(100% - 2rem);
+  left: 1rem;
 }
 
 main {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  min-height: calc(100vh - 300px);
+}
+
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .card {
   background: var(--site-card-bg);
   padding: 2rem;
   margin-bottom: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
 }
 
 /* Gallery styles */
@@ -97,15 +145,16 @@ main {
 }
 
 .project-card {
-  background: white;
-  border-radius: 8px;
+  background: var(--site-card-bg);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .project-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .project-card img {
@@ -115,21 +164,32 @@ main {
 }
 
 .project-card h3 {
-  margin: 1rem;
-  font-size: 1.2rem;
+  margin: 1.25rem 1.25rem 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 
 .project-card p {
-  margin: 0 1rem 1rem;
+  margin: 0 1.25rem 1.25rem;
   color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 /* Footer */
 footer {
   text-align: center;
-  padding: 2rem;
-  background: #333;
-  color: white;
+  padding: 2.5rem 1.5rem;
+  background: var(--site-header-bg);
+  color: var(--site-header-text);
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+
+footer p {
+  margin: 0;
+  opacity: 0.8;
 }
 
 /* Project Gallery Cards */
@@ -150,23 +210,37 @@ footer {
 /* Project Detail Page */
 .project-detail {
   max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: 2.5rem auto;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+}
+
+.project-detail h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #1a1a1a;
 }
 
 .back-btn {
   background: transparent;
-  border: 1px solid #333;
-  padding: 0.5rem 1rem;
+  border: 2px solid #1a1a1a;
+  padding: 0.6rem 1.2rem;
   cursor: pointer;
   margin-bottom: 1.5rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: background 0.2s;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  display: inline-block;
+  color: #1a1a1a;
 }
 
 .back-btn:hover {
-  background: #f0f0f0;
+  background: #1a1a1a;
+  color: #fff;
 }
 
 .project-summary-detail {
@@ -186,19 +260,34 @@ footer {
 
 /* Markdown content styling */
 .markdown-content {
-  line-height: 1.7;
+  line-height: 1.75;
+  color: #333;
+}
+
+.markdown-content h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
 }
 
 .markdown-content h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
   margin-top: 2rem;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #eee;
   padding-bottom: 0.5rem;
+  border-bottom: 2px solid #eee;
+  color: #1a1a1a;
 }
 
 .markdown-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
+  color: #222;
 }
 
 .markdown-content img {
@@ -302,111 +391,226 @@ footer {
   color: #dc3545;
 }
 
-/* ===== About Page Hero + Layout ===== */
+/* ===== About Page Layout ===== */
 
-.page-hero.about-hero {
-  background: var(--site-header-bg);
-  color: var(--site-header-text);
-  padding: 2.5rem 0;
-  margin-bottom: 0;
+.about-card {
+  max-width: 960px;
+  margin: 2.5rem auto 3.5rem auto;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
 }
 
-.page-hero-inner {
-  max-width: 900px;
+/* Hero band inside the card */
+.about-hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #fff;
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.about-hero-inner {
+  max-width: 700px;
   margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
 }
 
-.about-hero-text h1 {
-  margin-bottom: 0.3rem;
-  font-size: 2rem;
+.about-hero-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
 }
 
-.about-tagline {
+.about-hero-tagline {
+  font-size: 1rem;
   margin: 0;
-  font-size: 0.95rem;
-  opacity: 0.85;
+  opacity: 0.8;
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
-.about-hero-avatar-wrapper {
+/* Two-column layout */
+.about-layout {
+  display: flex;
+  gap: 2.5rem;
+  padding: 2.5rem;
+  align-items: flex-start;
+}
+
+/* Circular avatar */
+.about-avatar-wrapper {
   flex-shrink: 0;
+  display: block;
 }
 
 .about-avatar {
-  width: 150px;
-  height: 150px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-  border: 4px solid #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border: 5px solid #fff;
+  display: block;
 }
 
-.about-card {
-  max-width: 900px;
-  margin: 2rem auto 3rem auto;
+/* Content body */
+.about-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.about-body .markdown-content {
+  max-width: 700px;
+  line-height: 1.8;
+  font-size: 1rem;
+  color: #444;
+}
+
+.about-body .markdown-content p {
+  margin-bottom: 1.25rem;
+}
+
+.about-body .markdown-content p:last-child {
+  margin-bottom: 0;
+}
+
+.about-body .markdown-content h2 {
+  font-size: 1.35rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #222;
+}
+
+.about-body .markdown-content h3 {
+  font-size: 1.15rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.about-body .markdown-content ul,
+.about-body .markdown-content ol {
+  margin-left: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.about-body .markdown-content li {
+  margin-bottom: 0.5rem;
+}
+
+.about-body .markdown-content img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 1.5rem 0;
 }
 
 /* CTA buttons */
 .about-cta-row {
   display: flex;
-  justify-content: flex-start;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 2rem;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
 }
 
 .btn-primary-pill {
   display: inline-block;
-  background: #000;
+  background: #1a1a1a;
   color: #fff;
-  border: 1px solid #000;
-  padding: 0.6rem 1.4rem;
+  border: 2px solid #1a1a1a;
+  padding: 0.7rem 1.6rem;
   border-radius: 999px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .btn-primary-pill:hover {
   background: #333;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .btn-ghost {
   display: inline-block;
   background: transparent;
-  color: #333;
-  border: 1px solid #333;
-  padding: 0.6rem 1.4rem;
+  color: #444;
+  border: 2px solid #ddd;
+  padding: 0.7rem 1.6rem;
   border-radius: 999px;
   font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .btn-ghost:hover {
-  background: #333;
+  background: #1a1a1a;
   color: #fff;
+  border-color: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  header {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+
+  .site-title {
+    font-size: 1.5rem;
+  }
+
+  .site-subtitle {
+    font-size: 0.85rem;
+  }
+
+  nav {
+    margin-top: 1.25rem;
+  }
+
   nav ul {
-    flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.25rem;
   }
 
   nav a {
+    padding: 0.4rem 0.75rem;
     font-size: 0.8rem;
-    padding: 0.2rem 0.4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 1.75rem 1rem 1.25rem;
+  }
+
+  .site-title {
+    font-size: 1.35rem;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.1rem;
+  }
+
+  nav a {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+    letter-spacing: 0.02em;
+  }
+
+  nav a::after {
+    bottom: -2px;
+    height: 1.5px;
   }
   
   .gallery {
@@ -425,22 +629,113 @@ footer {
     aspect-ratio: 16 / 9;
   }
 
-  /* About page responsive */
-  .page-hero-inner {
+  /* About page responsive - stack layout on mobile */
+  .about-card {
+    margin: 1rem;
+  }
+
+  .about-hero {
+    padding: 2rem 1.5rem;
+  }
+
+  .about-hero-title {
+    font-size: 1.75rem;
+  }
+
+  .about-hero-tagline {
+    font-size: 0.9rem;
+  }
+
+  .about-layout {
     flex-direction: column;
-    text-align: center;
+    align-items: center;
+    padding: 2rem 1.5rem;
+    gap: 2rem;
+  }
+
+  .about-avatar-wrapper {
+    order: -1;
   }
 
   .about-avatar {
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
   }
 
-  .about-card {
-    margin: 1.5rem auto;
+  .about-body {
+    text-align: left;
+  }
+
+  .about-body .markdown-content {
+    font-size: 0.95rem;
   }
 
   .about-cta-row {
     justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 1.5rem 0.75rem 1rem;
+  }
+
+  .site-title {
+    font-size: 1.2rem;
+  }
+
+  .site-subtitle {
+    font-size: 0.8rem;
+  }
+
+  nav a {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  /* About page - small mobile */
+  .about-card {
+    margin: 0.75rem;
+    border-radius: 8px;
+  }
+
+  .about-hero {
+    padding: 1.5rem 1rem;
+  }
+
+  .about-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .about-hero-tagline {
+    font-size: 0.85rem;
+  }
+
+  .about-layout {
+    padding: 1.5rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .about-avatar {
+    width: 150px;
+    height: 150px;
+    border-width: 4px;
+  }
+
+  .about-body .markdown-content {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .about-cta-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-primary-pill,
+  .btn-ghost {
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem 1.2rem;
   }
 } 

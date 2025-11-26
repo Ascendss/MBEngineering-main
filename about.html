@@ -24,30 +24,32 @@
     </nav>
   </header>
 
-  <section class="page-hero about-hero">
-    <div class="page-hero-inner">
-      <div class="about-hero-text">
-        <h1 id="aboutPageTitle">About</h1>
-        <p id="aboutTagline" class="about-tagline">
-          Electrical Engineering Technologist · R&amp;D · Prototyping · PCB Design
-        </p>
-      </div>
-      <div class="about-hero-avatar-wrapper">
-        <img id="aboutHeroAvatar" class="about-avatar" alt="Portrait of Matt Banzhof" style="display:none;">
-      </div>
-    </div>
-  </section>
-
   <main>
     <section class="content">
       <div class="card about-card">
-        <div id="aboutBody" class="markdown-content"></div>
+        <!-- Hero band inside the card -->
+        <div class="about-hero">
+          <div class="about-hero-inner">
+            <h1 id="aboutPageTitle" class="about-hero-title">About</h1>
+            <p id="aboutTagline" class="about-hero-tagline">
+              Electrical Engineering Technologist · R&amp;D · Prototyping · PCB Design
+            </p>
+          </div>
+        </div>
 
-        <div class="about-cta-row">
-          <a href="resume.html" class="btn-primary-pill">View Resume</a>
-          <a href="gallery.html" class="btn-ghost">View Project Gallery</a>
-          <a href="blog.html" class="btn-ghost">Read Blog</a>
-          <a href="contact.html" class="btn-ghost">Contact Me</a>
+        <!-- Two-column layout: avatar + content -->
+        <div class="about-layout">
+          <div class="about-avatar-wrapper">
+            <img id="aboutAvatar" class="about-avatar" src="" alt="Portrait of Matt Banzhof">
+          </div>
+          <div class="about-body">
+            <div id="aboutBody" class="markdown-content"></div>
+
+            <div class="about-cta-row">
+              <a href="blog.html" class="btn-primary-pill">View Blog</a>
+              <a href="contact.html" class="btn-primary-pill">Contact Me</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
