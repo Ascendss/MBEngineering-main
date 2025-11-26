@@ -23,6 +23,122 @@
   min-height: 1em;
 }
 
+/* ===== Landing Page Hero ===== */
+.hero-landing {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #fff;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.hero-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.hero-headline {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.02em;
+}
+
+.hero-tagline {
+  font-size: 1.15rem;
+  opacity: 0.85;
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+}
+
+.hero-cta {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Quick Links Grid */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.quick-link-card {
+  background: var(--site-card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quick-link-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.quick-link-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.quick-link-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #1a1a1a;
+}
+
+.quick-link-card p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .hero-landing {
+    padding: 3rem 1.5rem;
+    border-radius: 12px;
+    margin: 0 -0.5rem 1.5rem;
+  }
+
+  .hero-headline {
+    font-size: 1.75rem;
+  }
+
+  .hero-tagline {
+    font-size: 1rem;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-cta .btn-primary-pill,
+  .hero-cta .btn-ghost {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .quick-links {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .quick-link-card {
+    padding: 1.5rem;
+  }
+}
+
 /* Base styles */
 body {
   font-family: 'Inter', sans-serif;
@@ -573,6 +689,32 @@ footer p {
   border-color: #1a1a1a;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Ghost button on dark backgrounds */
+.hero-landing .btn-ghost,
+.about-hero .btn-ghost {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.hero-landing .btn-ghost:hover,
+.about-hero .btn-ghost:hover {
+  background: #fff;
+  color: #1a1a1a;
+  border-color: #fff;
+}
+
+/* Primary pill on dark backgrounds - invert colors */
+.hero-landing .btn-primary-pill {
+  background: #fff;
+  color: #1a1a1a;
+  border-color: #fff;
+}
+
+.hero-landing .btn-primary-pill:hover {
+  background: #f0f0f0;
+  border-color: #f0f0f0;
 }
 
 /* Responsive design */
