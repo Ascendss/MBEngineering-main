@@ -25,10 +25,17 @@
   </header>
 
   <main>
-    <section id="resume" class="card">
-      <h2>Resume</h2>
-      <p>You can view or download my resume below.</p>
-      <a href="assets/uploads/YourName_Resume.pdf" target="_blank">Download Resume</a>
+    <section id="resumeContentWrapper" data-dynamic class="card resume-card">
+      <h1 id="resumePageTitle"></h1>
+      <p id="resumeIntroText" class="resume-intro"></p>
+
+      <div id="resumePreview" class="resume-preview"></div>
+
+      <div class="resume-download">
+        <a id="resumeDownloadLink" class="btn-primary-pill" href="#" target="_blank" rel="noopener" style="display:none;">
+          Download / Open Resume
+        </a>
+      </div>
     </section>
   </main>
 
@@ -38,5 +45,6 @@
 
   <script src="site.js"></script>
   <script src="script.js"></script>
+  <script src="resume.js"></script>
 </body>
 </html> 

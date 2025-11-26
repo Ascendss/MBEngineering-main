@@ -283,6 +283,7 @@
                 <button class="admin-tab active" data-tab="projects">Project Gallery</button>
                 <button class="admin-tab" data-tab="blog">Blog Posts</button>
                 <button class="admin-tab" data-tab="about">About Me</button>
+                <button class="admin-tab" data-tab="resume">Resume</button>
                 <button class="admin-tab" data-tab="site">Site Settings</button>
             </div>
 
@@ -418,6 +419,34 @@
                         <button type="button" id="aboutSaveBtn" class="btn-primary">Save About Page</button>
                     </div>
                     <p id="aboutLastSaved" style="color: #666; font-size: 0.85rem; margin-top: 1rem;"></p>
+                </div>
+            </div>
+
+            <!-- ===================== RESUME TAB ===================== -->
+            <div id="resume-tab" class="tab-content">
+                <div class="form-container">
+                    <h2>Edit Resume Page</h2>
+                    <p style="color: #666; margin-bottom: 1.5rem;">Upload your resume and customize the page content.</p>
+                    
+                    <label for="resumeTitle">Page Title:</label>
+                    <input type="text" id="resumeTitle" value="Resume">
+
+                    <label for="resumeIntro">Intro Text:</label>
+                    <textarea id="resumeIntro" rows="3" placeholder="You can view or download my resume below."></textarea>
+
+                    <label>Resume File:</label>
+                    <div id="resumeCurrentFile" class="current-image-preview" style="display:none;">
+                        <p><strong>Current resume file:</strong></p>
+                        <p id="resumeFileName" style="font-size:0.9rem; color:#333;"></p>
+                        <a id="resumeFileLink" href="#" target="_blank" rel="noopener" style="color:#0066cc;">Open in new tab →</a>
+                    </div>
+                    <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                    <p style="font-size:0.8rem; color:#666; margin-top:0.25rem;">Accepts PDF, DOC, or DOCX files</p>
+
+                    <div class="form-actions">
+                        <button type="button" id="resumeSaveBtn" class="btn-primary">Save Resume Page</button>
+                    </div>
+                    <p id="resumeLastSaved" style="color: #666; font-size: 0.85rem; margin-top: 1rem;"></p>
                 </div>
             </div>
 
@@ -991,6 +1020,101 @@
             }
         });
 
+        // ==================== RESUME ====================
+        
+        const resumeTitleField = document.getElementById('resumeTitle');
+        const resumeIntroField = document.getElementById('resumeIntro');
+        const resumeFileInput = document.getElementById('resumeFileInput');
+        const resumeCurrentFile = document.getElementById('resumeCurrentFile');
+        const resumeFileNameEl = document.getElementById('resumeFileName');
+        const resumeFileLinkEl = document.getElementById('resumeFileLink');
+        const resumeSaveBtn = document.getElementById('resumeSaveBtn');
+        const resumeLastSaved = document.getElementById('resumeLastSaved');
+
+        async function loadResume() {
+            try {
+                const res = await fetch('/content/resume.json');
+                if (!res.ok) throw new Error('Failed to load resume data');
+                const data = await res.json();
+                
+                resumeTitleField.value = data.title || 'Resume';
+                resumeIntroField.value = data.intro || '';
+                
+                if (data.fileUrl) {
+                    resumeCurrentFile.style.display = 'block';
+                    resumeFileNameEl.textContent = data.fileName || 'resume';
+                    resumeFileLinkEl.href = data.fileUrl;
+                } else {
+                    resumeCurrentFile.style.display = 'none';
+                }
+                
+                if (data.updatedAt) {
+                    resumeLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
+                }
+            } catch (error) {
+                console.error('Error loading resume:', error);
+            }
+        }
+
+        resumeSaveBtn.addEventListener('click', async () => {
+            try {
+                resumeSaveBtn.disabled = true;
+                resumeSaveBtn.textContent = 'Saving...';
+
+                let fileUrl = null;
+                let fileName = null;
+
+                // Upload new file if one is selected
+                const file = resumeFileInput.files[0];
+                if (file) {
+                    // Reuse the existing upload function used for images/videos
+                    const uploadedUrl = await uploadFile(file);
+                    fileUrl = uploadedUrl;
+                    fileName = file.name;
+                } else {
+                    // If no new file, use current data from resume.json
+                    try {
+                        const res = await fetch('/content/resume.json');
+                        const data = await res.json();
+                        fileUrl = data.fileUrl || '';
+                        fileName = data.fileName || '';
+                    } catch (e) {
+                        fileUrl = '';
+                        fileName = '';
+                    }
+                }
+
+                const body = {
+                    title: resumeTitleField.value || 'Resume',
+                    intro: resumeIntroField.value || '',
+                    fileUrl,
+                    fileName
+                };
+
+                const res = await fetch('/.netlify/functions/updateResume', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error || 'Failed to update resume.');
+                }
+
+                alert('Resume page updated!');
+                resumeLastSaved.textContent = 'Last saved: ' + new Date().toLocaleString();
+                resumeFileInput.value = '';
+                loadResume();
+            } catch (err) {
+                console.error('Error saving resume:', err);
+                alert('Error: ' + err.message);
+            } finally {
+                resumeSaveBtn.disabled = false;
+                resumeSaveBtn.textContent = 'Save Resume Page';
+            }
+        });
+
         // ==================== SITE SETTINGS ====================
         
         const siteTitleField = document.getElementById('siteTitle');
@@ -1069,6 +1193,7 @@
                 
                 if (tab.dataset.tab === 'blog') loadBlogPosts();
                 else if (tab.dataset.tab === 'about') loadAbout();
+                else if (tab.dataset.tab === 'resume') loadResume();
                 else if (tab.dataset.tab === 'site') loadSiteSettings();
             });
         });
