@@ -302,6 +302,18 @@
         .timeline-editor-remove:hover {
             text-decoration: underline;
         }
+        .btn-move {
+            background: #e5e7eb;
+            color: #374151;
+            border: none;
+            padding: 0.35rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .btn-move:hover {
+            background: #d1d5db;
+        }
         .btn-secondary {
             background: #6b7280;
             color: #fff;
@@ -1103,12 +1115,37 @@
                         <div class="timeline-editor-label">Body (Markdown)</div>
                         <textarea rows="3" class="timeline-body-input" placeholder="Description of this role or achievement...">${item.body || ''}</textarea>
                     </div>
-                    <button type="button" class="timeline-editor-remove">🗑 Remove Entry</button>
+                    <div style="display:flex; justify-content: space-between; align-items:center; margin-top:0.5rem;">
+                        <div style="display:flex; gap:0.5rem;">
+                            <button type="button" class="timeline-move-up btn-move">▲ Up</button>
+                            <button type="button" class="timeline-move-down btn-move">▼ Down</button>
+                        </div>
+                        <button type="button" class="timeline-editor-remove">🗑 Remove</button>
+                    </div>
                 `;
 
                 const removeBtn = wrapper.querySelector('.timeline-editor-remove');
+                const moveUpBtn = wrapper.querySelector('.timeline-move-up');
+                const moveDownBtn = wrapper.querySelector('.timeline-move-down');
+
                 removeBtn.addEventListener('click', () => {
                     aboutTimeline.splice(index, 1);
+                    renderAboutTimelineEditor();
+                });
+
+                moveUpBtn.addEventListener('click', () => {
+                    if (index === 0) return;
+                    const temp = aboutTimeline[index - 1];
+                    aboutTimeline[index - 1] = aboutTimeline[index];
+                    aboutTimeline[index] = temp;
+                    renderAboutTimelineEditor();
+                });
+
+                moveDownBtn.addEventListener('click', () => {
+                    if (index === aboutTimeline.length - 1) return;
+                    const temp = aboutTimeline[index + 1];
+                    aboutTimeline[index + 1] = aboutTimeline[index];
+                    aboutTimeline[index] = temp;
                     renderAboutTimelineEditor();
                 });
 

@@ -1,10 +1,3 @@
-// Helper to extract the first 4-digit year from a date string like "2019–2023" or "2023–Present"
-function extractStartYear(dateStr) {
-  if (!dateStr || typeof dateStr !== 'string') return 0;
-  const match = dateStr.match(/(\d{4})/); // first 4-digit year
-  return match ? parseInt(match[1], 10) : 0;
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
   const contentWrapper = document.getElementById('aboutContentWrapper');
   
@@ -55,16 +48,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ===== Render Timeline =====
     const timelineContainer = document.getElementById('aboutTimeline');
     const timelineSection = document.getElementById('aboutTimelineSection');
-    let timeline = Array.isArray(data.timeline) ? data.timeline : [];
+    const timeline = Array.isArray(data.timeline) ? data.timeline : [];
 
     if (timelineContainer && timeline.length > 0) {
-      // Sort by start year descending (newest first)
-      timeline = [...timeline].sort((a, b) => {
-        const yearA = extractStartYear(a.date);
-        const yearB = extractStartYear(b.date);
-        return yearB - yearA;
-      });
-
+      // Render in the order stored in about.json (no auto-sorting)
       timelineContainer.innerHTML = '';
 
       timeline.forEach((item, index) => {
