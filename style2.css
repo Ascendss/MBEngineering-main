@@ -1046,6 +1046,143 @@ footer p {
   }
 }
 
+/* ===== About Timeline ===== */
+
+.about-timeline-section {
+  margin-top: 3rem;
+  border-top: 1px solid #e5e7eb;
+  padding: 2.25rem 2.5rem 0.5rem;
+}
+
+.about-timeline-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: #111827;
+}
+
+.about-timeline-subtitle {
+  margin: 0 0 1.8rem 0;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.timeline {
+  position: relative;
+  margin-left: 1.2rem;
+  padding-left: 1.8rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0.25rem;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #d1d5db, #9ca3af);
+}
+
+/* Each item */
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.6rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -1.9rem;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #111827;
+  box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.12);
+}
+
+/* Content card */
+.timeline-content {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 1.1rem 1.4rem;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+  flex: 1;
+  margin-left: 0.5rem;
+}
+
+.timeline-date {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-headline {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
+  color: #111827;
+}
+
+.timeline-body p {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #4b5563;
+}
+
+.timeline-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Optional image inside card */
+.timeline-image {
+  display: block;
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+}
+
+/* Mobile tweaks for timeline */
+@media (max-width: 768px) {
+  .about-timeline-section {
+    padding: 1.75rem 1.5rem 0.5rem;
+  }
+
+  .timeline {
+    margin-left: 0.6rem;
+    padding-left: 1.5rem;
+  }
+
+  .timeline-dot {
+    left: -1.5rem;
+  }
+
+  .timeline-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-timeline-section {
+    padding: 1.5rem 1rem 0.5rem;
+  }
+
+  .about-timeline-title {
+    font-size: 1.25rem;
+  }
+
+  .timeline-headline {
+    font-size: 1rem;
+  }
+}
+
 /* ===== Contact Page ===== */
 .contact-card {
   max-width: 900px;

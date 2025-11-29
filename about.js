@@ -45,6 +45,73 @@ document.addEventListener('DOMContentLoaded', async () => {
         : '<p>About content coming soon.</p>';
     }
 
+    // ===== Render Timeline =====
+    const timelineContainer = document.getElementById('aboutTimeline');
+    const timelineSection = document.getElementById('aboutTimelineSection');
+    const timeline = Array.isArray(data.timeline) ? data.timeline : [];
+
+    if (timelineContainer && timeline.length > 0) {
+      timelineContainer.innerHTML = '';
+
+      timeline.forEach((item, index) => {
+        const wrapper = document.createElement('article');
+        wrapper.className = 'timeline-item';
+        if (index % 2 === 1) {
+          wrapper.classList.add('timeline-item--right');
+        }
+
+        const dot = document.createElement('div');
+        dot.className = 'timeline-dot';
+
+        const content = document.createElement('div');
+        content.className = 'timeline-content';
+
+        // Optional image inside card
+        if (item.imageUrl) {
+          const imageEl = document.createElement('img');
+          imageEl.className = 'timeline-image';
+          imageEl.src = item.imageUrl;
+          imageEl.alt = item.headline || item.date || 'Timeline image';
+          content.appendChild(imageEl);
+        }
+
+        const dateEl = document.createElement('div');
+        dateEl.className = 'timeline-date';
+        dateEl.textContent = item.date || '';
+
+        const headlineEl = document.createElement('h3');
+        headlineEl.className = 'timeline-headline';
+        headlineEl.textContent = item.headline || '';
+
+        const bodyEl = document.createElement('div');
+        bodyEl.className = 'timeline-body';
+        if (item.body) {
+          if (typeof marked !== 'undefined') {
+            bodyEl.innerHTML = marked.parse(item.body);
+          } else {
+            bodyEl.textContent = item.body;
+          }
+        }
+
+        content.appendChild(dateEl);
+        content.appendChild(headlineEl);
+        content.appendChild(bodyEl);
+
+        wrapper.appendChild(dot);
+        wrapper.appendChild(content);
+
+        timelineContainer.appendChild(wrapper);
+      });
+
+      // Show the timeline section
+      if (timelineSection) {
+        timelineSection.style.display = 'block';
+      }
+    } else if (timelineSection) {
+      // Hide timeline section if no entries
+      timelineSection.style.display = 'none';
+    }
+
     // Fade in content after loading
     if (contentWrapper) {
       contentWrapper.classList.add('loaded');

@@ -259,6 +259,61 @@
             border-radius: 4px;
             cursor: pointer;
         }
+        /* Admin timeline editor */
+        .timeline-editor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+        .timeline-editor-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 0.9rem 1rem;
+            background: #f9fafb;
+        }
+        .timeline-editor-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .timeline-editor-row input {
+            flex: 1;
+        }
+        .timeline-editor-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6b7280;
+            margin-bottom: 0.15rem;
+        }
+        .timeline-editor-item textarea {
+            width: 100%;
+            resize: vertical;
+        }
+        .timeline-editor-remove {
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            color: #b91c1c;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .timeline-editor-remove:hover {
+            text-decoration: underline;
+        }
+        .btn-secondary {
+            background: #6b7280;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
     </style>
 </head>
 <body>
@@ -416,7 +471,22 @@
                     </div>
                     <textarea id="aboutContent" rows="15" placeholder="Write about yourself using Markdown."></textarea>
 
-                    <div class="form-actions">
+                    <hr style="margin: 2rem 0;" />
+
+                    <h3>About Timeline</h3>
+                    <p style="color:#666; margin-bottom: 1rem;">
+                        Each entry becomes a step in the timeline on your About page.
+                    </p>
+
+                    <div id="aboutTimelineList" class="timeline-editor-list">
+                        <!-- timeline editor items injected by admin.js -->
+                    </div>
+
+                    <button type="button" id="aboutTimelineAddBtn" class="btn-secondary" style="margin-top: 1rem;">
+                        + Add Timeline Entry
+                    </button>
+
+                    <div class="form-actions" style="margin-top: 2rem;">
                         <button type="button" id="aboutSaveBtn" class="btn-primary">Save About Page</button>
                     </div>
                     <p id="aboutLastSaved" style="color: #666; font-size: 0.85rem; margin-top: 1rem;"></p>
@@ -964,6 +1034,9 @@
         const aboutInsertImageBtn = document.getElementById('aboutInsertImageBtn');
         const aboutInsertVideoBtn = document.getElementById('aboutInsertVideoBtn');
 
+        // Timeline state
+        let aboutTimeline = [];
+
         aboutInsertImageBtn.addEventListener('click', () => {
             currentInlineTarget = { btn: aboutInsertImageBtn, textarea: aboutContentField };
             inlineImageInput.click();
@@ -997,9 +1070,70 @@
             aboutProfileInput.value = '';
         });
 
+        // Timeline editor render function
+        function renderAboutTimelineEditor() {
+            const list = document.getElementById('aboutTimelineList');
+            if (!list) return;
+
+            list.innerHTML = '';
+
+            aboutTimeline.forEach((item, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'timeline-editor-item';
+                wrapper.dataset.index = index;
+
+                wrapper.innerHTML = `
+                    <div class="timeline-editor-row">
+                        <div style="flex: 0 0 140px;">
+                            <div class="timeline-editor-label">Date</div>
+                            <input type="text" class="timeline-date-input" value="${item.date || ''}" placeholder="e.g., 2019–2023" />
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="timeline-editor-label">Headline</div>
+                            <input type="text" class="timeline-headline-input" value="${item.headline || ''}" placeholder="Job title or milestone" />
+                        </div>
+                    </div>
+                    <div class="timeline-editor-row">
+                        <div style="flex: 1;">
+                            <div class="timeline-editor-label">Image URL (optional)</div>
+                            <input type="text" class="timeline-image-input" value="${item.imageUrl || ''}" placeholder="/assets/uploads/image.jpg" />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="timeline-editor-label">Body (Markdown)</div>
+                        <textarea rows="3" class="timeline-body-input" placeholder="Description of this role or achievement...">${item.body || ''}</textarea>
+                    </div>
+                    <button type="button" class="timeline-editor-remove">🗑 Remove Entry</button>
+                `;
+
+                const removeBtn = wrapper.querySelector('.timeline-editor-remove');
+                removeBtn.addEventListener('click', () => {
+                    aboutTimeline.splice(index, 1);
+                    renderAboutTimelineEditor();
+                });
+
+                list.appendChild(wrapper);
+            });
+        }
+
+        // Add timeline entry button
+        const timelineAddBtn = document.getElementById('aboutTimelineAddBtn');
+        if (timelineAddBtn) {
+            timelineAddBtn.addEventListener('click', () => {
+                aboutTimeline.push({
+                    id: 't' + Date.now(),
+                    date: '',
+                    headline: '',
+                    imageUrl: '',
+                    body: ''
+                });
+                renderAboutTimelineEditor();
+            });
+        }
+
         async function loadAbout() {
             try {
-                const res = await fetch('/content/about.json');
+                const res = await fetch('/content/about.json', { cache: 'no-cache' });
                 if (!res.ok) throw new Error('Failed to load about data');
                 const data = await res.json();
                 aboutTitleField.value = data.title || 'About';
@@ -1012,6 +1146,9 @@
                 if (data.updatedAt) {
                     aboutLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
                 }
+                // Load timeline
+                aboutTimeline = Array.isArray(data.timeline) ? data.timeline : [];
+                renderAboutTimelineEditor();
             } catch (error) {
                 console.error('Error loading about:', error);
             }
@@ -1023,6 +1160,21 @@
             const content = aboutContentField.value;
             const profileImage = aboutProfileImageUrl.value || null;
 
+            // Collect timeline values from editor
+            const timelineList = document.getElementById('aboutTimelineList');
+            if (timelineList) {
+                const items = Array.from(timelineList.querySelectorAll('.timeline-editor-item'));
+                aboutTimeline = items.map((el, idx) => {
+                    return {
+                        id: 't' + idx + '_' + Date.now(),
+                        date: el.querySelector('.timeline-date-input').value.trim(),
+                        headline: el.querySelector('.timeline-headline-input').value.trim(),
+                        imageUrl: el.querySelector('.timeline-image-input').value.trim(),
+                        body: el.querySelector('.timeline-body-input').value
+                    };
+                });
+            }
+
             try {
                 aboutSaveBtn.disabled = true;
                 aboutSaveBtn.textContent = 'Saving...';
@@ -1030,7 +1182,7 @@
                 const res = await fetch('/.netlify/functions/updateAbout', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, tagline, content, profileImage })
+                    body: JSON.stringify({ title, tagline, content, profileImage, timeline: aboutTimeline })
                 });
 
                 if (res.ok) {
