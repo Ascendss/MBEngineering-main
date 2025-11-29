@@ -25,9 +25,32 @@
   </header>
 
   <main>
-    <section id="contact" class="card">
-      <h2>Contact</h2>
-      <p>Email me at <a href="mailto:youremail@example.com">youremail@example.com</a></p>
+    <section class="content">
+      <div id="contactContentWrapper" data-dynamic class="card contact-card">
+        <!-- Hero band -->
+        <div class="contact-hero">
+          <div class="contact-hero-inner">
+            <h1 id="contactPageTitle" class="contact-hero-title"></h1>
+            <p id="contactIntro" class="contact-hero-tagline"></p>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="contact-layout">
+          <div class="contact-body">
+            <div id="contactBody" class="markdown-content"></div>
+
+            <div class="contact-email-block">
+              <span class="contact-email-label">Email</span>
+              <a id="contactEmailLink"
+                 href="mailto:youremail@example.com"
+                 class="contact-email-link">
+                youremail@example.com
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -35,7 +58,11 @@
     <p>&copy; 2025 MB Engineering</p>
   </footer>
 
+  <!-- Site-wide scripts -->
   <script src="site.js"></script>
   <script src="script.js"></script>
+  <!-- Markdown renderer + Contact loader -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="contact.js"></script>
 </body>
-</html> 
+</html>

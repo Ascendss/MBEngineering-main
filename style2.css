@@ -1044,4 +1044,114 @@ footer p {
     text-align: center;
     padding: 0.8rem 1.2rem;
   }
+}
+
+/* ===== Contact Page ===== */
+.contact-card {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 0;
+  overflow: hidden;
+}
+
+.contact-hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #fff;
+  padding: 2rem 2rem 1.75rem;
+  text-align: center;
+}
+
+.contact-hero-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.contact-hero-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem 0;
+}
+
+.contact-hero-tagline {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.contact-layout {
+  padding: 2.25rem 2.25rem 2.5rem;
+}
+
+.contact-body {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Markdown text same style as about */
+.contact-body .markdown-content p {
+  margin-bottom: 1rem;
+}
+
+/* Email block */
+.contact-email-block {
+  margin-top: 1.75rem;
+  padding: 1.1rem 1.4rem;
+  border-radius: 14px;
+  background: #111827;
+  color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contact-email-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.contact-email-link {
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #f9fafb;
+  word-break: break-all;
+}
+
+.contact-email-link:hover {
+  text-decoration: underline;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .contact-card {
+    margin: 1.5rem;
+  }
+
+  .contact-layout {
+    padding: 1.75rem 1.5rem 2rem;
+  }
+
+  .contact-hero-title {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-card {
+    margin: 1rem;
+  }
+
+  .contact-hero {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .contact-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .contact-layout {
+    padding: 1.5rem 1rem 1.75rem;
+  }
 } 

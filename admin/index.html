@@ -284,6 +284,7 @@
                 <button class="admin-tab" data-tab="blog">Blog Posts</button>
                 <button class="admin-tab" data-tab="about">About Me</button>
                 <button class="admin-tab" data-tab="resume">Resume</button>
+                <button class="admin-tab" data-tab="contact">Contact</button>
                 <button class="admin-tab" data-tab="site">Site Settings</button>
             </div>
 
@@ -447,6 +448,35 @@
                         <button type="button" id="resumeSaveBtn" class="btn-primary">Save Resume Page</button>
                     </div>
                     <p id="resumeLastSaved" style="color: #666; font-size: 0.85rem; margin-top: 1rem;"></p>
+                </div>
+            </div>
+
+            <!-- ===================== CONTACT TAB ===================== -->
+            <div id="contact-tab" class="tab-content">
+                <div class="form-container">
+                    <h2>Edit Contact Page</h2>
+                    <p style="color: #666; margin-bottom: 1.5rem;">
+                        Update your contact information and intro text.
+                    </p>
+
+                    <label for="contactTitle">Page Title:</label>
+                    <input type="text" id="contactTitle" value="Contact">
+
+                    <label for="contactIntroInput">Intro Text:</label>
+                    <textarea id="contactIntroInput" rows="2" placeholder="Let's connect."></textarea>
+
+                    <label for="contactEmail">Contact Email:</label>
+                    <input type="email" id="contactEmail" placeholder="youremail@example.com">
+
+                    <label for="contactBodyInput">Body Content (Markdown allowed):</label>
+                    <textarea id="contactBodyInput" rows="5" placeholder="Add any additional information..."></textarea>
+
+                    <div class="form-actions">
+                        <button type="button" id="contactSaveBtn" class="btn-primary">
+                            Save Contact Page
+                        </button>
+                    </div>
+                    <p id="contactLastSaved" style="color: #666; font-size: 0.85rem; margin-top: 1rem;"></p>
                 </div>
             </div>
 
@@ -1115,6 +1145,73 @@
             }
         });
 
+        // ==================== CONTACT ====================
+        
+        const contactTitleField = document.getElementById('contactTitle');
+        const contactIntroField = document.getElementById('contactIntroInput');
+        const contactEmailField = document.getElementById('contactEmail');
+        const contactBodyField = document.getElementById('contactBodyInput');
+        const contactSaveBtn = document.getElementById('contactSaveBtn');
+        const contactLastSaved = document.getElementById('contactLastSaved');
+
+        async function loadContact() {
+            try {
+                const res = await fetch('/content/contact.json', { cache: 'no-cache' });
+                if (!res.ok) throw new Error('Failed to load contact data');
+                const data = await res.json();
+                
+                contactTitleField.value = data.title || 'Contact';
+                contactIntroField.value = data.intro || '';
+                contactEmailField.value = data.email || '';
+                contactBodyField.value = data.body || '';
+                
+                if (data.updatedAt) {
+                    contactLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
+                }
+            } catch (error) {
+                console.error('Error loading contact:', error);
+            }
+        }
+
+        contactSaveBtn.addEventListener('click', async () => {
+            const payload = {
+                title: contactTitleField.value.trim() || 'Contact',
+                intro: contactIntroField.value.trim(),
+                email: contactEmailField.value.trim(),
+                body: contactBodyField.value
+            };
+
+            try {
+                contactSaveBtn.disabled = true;
+                contactSaveBtn.textContent = 'Saving...';
+
+                const res = await fetch('/.netlify/functions/updateContact', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || 'Failed to save contact page');
+                }
+
+                const data = await res.json();
+
+                if (data.data && data.data.updatedAt) {
+                    contactLastSaved.textContent = `Last saved: ${new Date(data.data.updatedAt).toLocaleString()}`;
+                }
+
+                alert('Contact page saved successfully!');
+            } catch (error) {
+                console.error('Error saving contact:', error);
+                alert('Failed to save contact page: ' + error.message);
+            } finally {
+                contactSaveBtn.disabled = false;
+                contactSaveBtn.textContent = 'Save Contact Page';
+            }
+        });
+
         // ==================== SITE SETTINGS ====================
         
         const siteTitleField = document.getElementById('siteTitle');
@@ -1194,6 +1291,7 @@
                 if (tab.dataset.tab === 'blog') loadBlogPosts();
                 else if (tab.dataset.tab === 'about') loadAbout();
                 else if (tab.dataset.tab === 'resume') loadResume();
+                else if (tab.dataset.tab === 'contact') loadContact();
                 else if (tab.dataset.tab === 'site') loadSiteSettings();
             });
         });
