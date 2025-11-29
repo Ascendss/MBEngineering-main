@@ -25,43 +25,45 @@
   </header>
 
   <main>
-    <section class="resume-page">
-      <div id="resumeContentWrapper" data-dynamic class="resume-content">
-        <h1 id="resumePageTitle">Resume</h1>
-        <p id="resumeIntroText" class="resume-intro">
-          You can view or download my resume below.
-        </p>
-
-        <!-- Meta line: file name + last updated -->
-        <p id="resumeMeta" class="resume-meta"></p>
-
-        <div class="resume-viewer-card">
-          <div id="resumePreview" class="resume-preview">
-            <!-- iframe or fallback message injected by JS -->
+    <section class="content">
+      <div id="resumeContentWrapper" data-dynamic class="card resume-card">
+        <!-- Hero band (mirrors About card style) -->
+        <div class="resume-hero">
+          <div class="resume-hero-inner">
+            <h1 id="resumePageTitle" class="resume-hero-title"></h1>
+            <p id="resumeIntroText" class="resume-hero-tagline"></p>
+            <p id="resumeMeta" class="resume-meta"></p>
           </div>
         </div>
 
-        <div class="resume-actions">
-          <a
-            id="resumeDownloadLink"
-            class="btn-pill primary"
-            href="#"
-            target="_blank"
-            rel="noopener"
-            style="display:none;"
-          >
-            Download / Open Resume
-          </a>
+        <!-- Document layout -->
+        <div class="resume-layout">
+          <div class="resume-viewer-card">
+            <div id="resumePreview" class="resume-preview">
+              <!-- iframe or fallback injected by resume.js -->
+            </div>
+          </div>
 
-          <!-- Full-screen button -->
-          <button
-            id="resumeFullscreenButton"
-            type="button"
-            class="btn-pill secondary"
-            disabled
-          >
-            View Full Screen
-          </button>
+          <div class="resume-actions">
+            <a
+              id="resumeDownloadLink"
+              class="btn-primary-pill"
+              href="#"
+              target="_blank"
+              rel="noopener"
+              style="display:none;"
+            >
+              Download / Open Resume
+            </a>
+
+            <button
+              id="resumeFullscreenButton"
+              type="button"
+              class="btn-ghost"
+            >
+              View Full Screen
+            </button>
+          </div>
         </div>
       </div>
     </section>

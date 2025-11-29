@@ -494,44 +494,59 @@ footer p {
 }
 
 /* ===== Resume Page ===== */
-.resume-page {
-  padding: 3rem 1.5rem 4rem;
+.resume-card {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 0;
+  overflow: hidden;
 }
 
-.resume-content {
-  max-width: 960px;
+/* Hero band at the top (similar to about-hero but slightly smaller) */
+.resume-hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #fff;
+  padding: 2rem 2rem 1.75rem;
+  text-align: center;
+}
+
+.resume-hero-inner {
+  max-width: 720px;
   margin: 0 auto;
 }
 
-.resume-content h1 {
+.resume-hero-title {
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #1a1a1a;
+  margin: 0 0 0.4rem 0;
 }
 
-.resume-intro {
-  color: #555;
-  font-size: 1.05rem;
-  margin-bottom: 0.35rem;
+.resume-hero-tagline {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
 }
 
 .resume-meta {
-  margin-top: 0.35rem;
-  margin-bottom: 1.5rem;
+  margin-top: 0.6rem;
   font-size: 0.9rem;
-  color: #6b7280;
+  opacity: 0.85;
 }
 
-/* Resume Viewer Card */
+/* Body of the card */
+.resume-layout {
+  padding: 2.25rem 2.25rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* PDF viewer "document" card */
 .resume-viewer-card {
   background: #ffffff;
   border-radius: 18px;
-  padding: 1.25rem;
+  padding: 1.4rem;
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
   overflow: hidden;
-  max-width: 1000px;
-  margin: 0 auto;
 }
 
 .resume-preview {
@@ -539,6 +554,7 @@ footer p {
   min-height: 900px;
 }
 
+/* Embedded PDF iframe */
 .resume-iframe {
   width: 100%;
   height: 100%;
@@ -547,72 +563,38 @@ footer p {
   border-radius: 12px;
 }
 
+/* Fallback / error text */
 .resume-no-preview,
 .resume-error {
-  color: #6b7280;
   text-align: center;
   font-size: 0.95rem;
+  color: #4b5563;
   padding: 3rem 1.5rem;
 }
 
-.resume-error {
-  color: #dc2626;
-  background: #fef2f2;
-  border-radius: 12px;
-}
-
-/* Resume Action Buttons */
+/* Actions row */
 .resume-actions {
-  margin-top: 1.75rem;
   display: flex;
   justify-content: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  margin-top: 0.5rem;
 }
 
-.btn-pill {
-  border-radius: 999px;
-  padding: 0.75rem 1.9rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.25s ease;
-  font-family: inherit;
+/* Reuse existing button styles; just ensure spacing */
+.resume-actions .btn-primary-pill,
+.resume-actions .btn-ghost {
+  min-width: 190px;
 }
 
-.btn-pill.primary {
-  background: #111827;
-  color: #f9fafb;
-}
-
-.btn-pill.primary:hover {
-  background: #1f2937;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.btn-pill.secondary {
-  background: #e5e7eb;
-  color: #111827;
-}
-
-.btn-pill.secondary:hover:not(:disabled) {
-  background: #d1d5db;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.btn-pill:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-/* Resume Mobile Tweaks */
+/* Mobile tweaks */
 @media (max-width: 768px) {
-  .resume-page {
-    padding: 2rem 1rem 3rem;
+  .resume-card {
+    margin: 1.5rem;
+  }
+
+  .resume-layout {
+    padding: 1.75rem 1.5rem 2rem;
   }
 
   .resume-preview,
@@ -620,9 +602,31 @@ footer p {
     min-height: 600px;
   }
 
-  .resume-viewer-card {
-    border-radius: 12px;
-    padding: 0.75rem;
+  .resume-hero-title {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .resume-card {
+    margin: 1rem;
+  }
+
+  .resume-hero {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .resume-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .resume-layout {
+    padding: 1.5rem 1rem 1.75rem;
+  }
+
+  .resume-preview,
+  .resume-iframe {
+    min-height: 500px;
   }
 
   .resume-actions {
@@ -630,29 +634,10 @@ footer p {
     align-items: center;
   }
 
-  .btn-pill {
+  .resume-actions .btn-primary-pill,
+  .resume-actions .btn-ghost {
     width: 100%;
     max-width: 280px;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .resume-page {
-    padding: 1.5rem 0.75rem 2.5rem;
-  }
-
-  .resume-content h1 {
-    font-size: 1.75rem;
-  }
-
-  .resume-intro {
-    font-size: 1rem;
-  }
-
-  .resume-preview,
-  .resume-iframe {
-    min-height: 500px;
   }
 }
 
