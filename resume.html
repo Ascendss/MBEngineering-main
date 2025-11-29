@@ -25,16 +25,44 @@
   </header>
 
   <main>
-    <section id="resumeContentWrapper" data-dynamic class="card resume-card">
-      <h1 id="resumePageTitle"></h1>
-      <p id="resumeIntroText" class="resume-intro"></p>
+    <section class="resume-page">
+      <div id="resumeContentWrapper" data-dynamic class="resume-content">
+        <h1 id="resumePageTitle">Resume</h1>
+        <p id="resumeIntroText" class="resume-intro">
+          You can view or download my resume below.
+        </p>
 
-      <div id="resumePreview" class="resume-preview"></div>
+        <!-- Meta line: file name + last updated -->
+        <p id="resumeMeta" class="resume-meta"></p>
 
-      <div class="resume-download">
-        <a id="resumeDownloadLink" class="btn-primary-pill" href="#" target="_blank" rel="noopener" style="display:none;">
-          Download / Open Resume
-        </a>
+        <div class="resume-viewer-card">
+          <div id="resumePreview" class="resume-preview">
+            <!-- iframe or fallback message injected by JS -->
+          </div>
+        </div>
+
+        <div class="resume-actions">
+          <a
+            id="resumeDownloadLink"
+            class="btn-pill primary"
+            href="#"
+            target="_blank"
+            rel="noopener"
+            style="display:none;"
+          >
+            Download / Open Resume
+          </a>
+
+          <!-- Full-screen button -->
+          <button
+            id="resumeFullscreenButton"
+            type="button"
+            class="btn-pill secondary"
+            disabled
+          >
+            View Full Screen
+          </button>
+        </div>
       </div>
     </section>
   </main>
@@ -47,4 +75,4 @@
   <script src="script.js"></script>
   <script src="resume.js"></script>
 </body>
-</html> 
+</html>

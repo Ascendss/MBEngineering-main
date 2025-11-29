@@ -494,65 +494,164 @@ footer p {
 }
 
 /* ===== Resume Page ===== */
-.resume-card {
-  max-width: 900px;
-  margin: 2rem auto;
+.resume-page {
+  padding: 3rem 1.5rem 4rem;
 }
 
-.resume-card h1 {
+.resume-content {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.resume-content h1 {
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   color: #1a1a1a;
 }
 
 .resume-intro {
   color: #555;
   font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+}
+
+.resume-meta {
+  margin-top: 0.35rem;
   margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Resume Viewer Card */
+.resume-viewer-card {
+  background: #111827;
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
 }
 
 .resume-preview {
-  margin: 1.5rem 0;
+  width: 100%;
+  min-height: 680px;
 }
 
 .resume-iframe {
   width: 100%;
-  height: 800px;
+  height: 100%;
+  min-height: 680px;
   border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: #fff;
 }
 
-.resume-no-preview {
-  color: #555;
-  font-style: italic;
-  padding: 2rem;
-  background: #f9f9f9;
-  border-radius: 8px;
+.resume-no-preview,
+.resume-error {
+  color: #e5e7eb;
   text-align: center;
+  font-size: 0.95rem;
+  padding: 3rem 1.5rem;
 }
 
 .resume-error {
-  color: #c00;
-  padding: 2rem;
-  background: #fff5f5;
-  border-radius: 8px;
-  text-align: center;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 12px;
 }
 
-.resume-download {
-  margin-top: 1.5rem;
-  text-align: center;
+/* Resume Action Buttons */
+.resume-actions {
+  margin-top: 1.75rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
+.btn-pill {
+  border-radius: 999px;
+  padding: 0.75rem 1.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.btn-pill.primary {
+  background: #111827;
+  color: #f9fafb;
+}
+
+.btn-pill.primary:hover {
+  background: #1f2937;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-pill.secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.btn-pill.secondary:hover:not(:disabled) {
+  background: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-pill:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Resume Mobile Tweaks */
 @media (max-width: 768px) {
-  .resume-iframe {
-    height: 500px;
+  .resume-page {
+    padding: 2rem 1rem 3rem;
   }
 
-  .resume-card {
-    margin: 1rem;
+  .resume-preview,
+  .resume-iframe {
+    min-height: 520px;
+  }
+
+  .resume-viewer-card {
+    border-radius: 12px;
+    padding: 0.75rem;
+  }
+
+  .resume-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-pill {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .resume-page {
+    padding: 1.5rem 0.75rem 2.5rem;
+  }
+
+  .resume-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .resume-intro {
+    font-size: 1rem;
+  }
+
+  .resume-preview,
+  .resume-iframe {
+    min-height: 450px;
   }
 }
 

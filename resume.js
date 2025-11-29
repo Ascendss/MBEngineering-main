@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const introEl = document.getElementById('resumeIntroText');
   const previewContainer = document.getElementById('resumePreview');
   const downloadLink = document.getElementById('resumeDownloadLink');
+  const metaEl = document.getElementById('resumeMeta');
+  const fullscreenBtn = document.getElementById('resumeFullscreenButton');
 
   try {
     const res = await fetch('/content/resume.json');
@@ -30,6 +32,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (titleEl) titleEl.textContent = title;
     if (introEl) introEl.textContent = intro;
+
+    // Show file name + last updated if available
+    if (metaEl) {
+      const updated = data.updatedAt ? new Date(data.updatedAt) : null;
+      const parts = [];
+
+      if (fileName) parts.push(fileName);
+      if (updated && !isNaN(updated)) {
+        parts.push(
+          'Last updated: ' +
+            updated.toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            })
+        );
+      }
+
+      metaEl.textContent = parts.length
+        ? parts.join(' • ')
+        : 'Resume details coming soon.';
+    }
 
     if (fileUrl) {
       if (downloadLink) {
@@ -59,6 +83,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           previewContainer.appendChild(msg);
         }
       }
+
+      // Full screen button: open the PDF in a new tab if available
+      if (fullscreenBtn) {
+        fullscreenBtn.disabled = false;
+        fullscreenBtn.addEventListener('click', () => {
+          window.open(fileUrl, '_blank', 'noopener');
+        });
+      }
     } else {
       if (previewContainer) {
         previewContainer.innerHTML =
@@ -66,6 +98,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       if (downloadLink) {
         downloadLink.style.display = 'none';
+      }
+      if (fullscreenBtn) {
+        fullscreenBtn.disabled = true;
       }
     }
 
