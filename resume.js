@@ -33,26 +33,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (titleEl) titleEl.textContent = title;
     if (introEl) introEl.textContent = intro;
 
-    // Show file name + last updated if available
+    // Only show the file name, no date
     if (metaEl) {
-      const updated = data.updatedAt ? new Date(data.updatedAt) : null;
-      const parts = [];
-
-      if (fileName) parts.push(fileName);
-      if (updated && !isNaN(updated)) {
-        parts.push(
-          'Last updated: ' +
-            updated.toLocaleDateString(undefined, {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric'
-            })
-        );
+      if (fileName) {
+        metaEl.textContent = fileName;
+      } else {
+        metaEl.textContent = '';
       }
-
-      metaEl.textContent = parts.length
-        ? parts.join(' • ')
-        : 'Resume details coming soon.';
     }
 
     if (fileUrl) {
@@ -70,7 +57,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ext = fileUrl.split('.').pop().toLowerCase();
         if (ext === 'pdf') {
           const iframe = document.createElement('iframe');
-          iframe.src = fileUrl;
+
+          // Hint the browser to zoom to page width so it's easier to read
+          // (Chrome respects #zoom=page-width)
+          const viewerUrl = fileUrl.includes('#')
+            ? fileUrl
+            : fileUrl + '#zoom=page-width';
+
+          iframe.src = viewerUrl;
           iframe.className = 'resume-iframe';
           iframe.title = 'Resume Preview';
           iframe.loading = 'lazy';

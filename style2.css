@@ -525,10 +525,10 @@ footer p {
 
 /* Resume Viewer Card */
 .resume-viewer-card {
-  background: #111827;
+  background: #ffffff;
   border-radius: 18px;
   padding: 1.25rem;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
   overflow: hidden;
 }
 
@@ -548,15 +548,15 @@ footer p {
 
 .resume-no-preview,
 .resume-error {
-  color: #e5e7eb;
+  color: #6b7280;
   text-align: center;
   font-size: 0.95rem;
   padding: 3rem 1.5rem;
 }
 
 .resume-error {
-  color: #fca5a5;
-  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  background: #fef2f2;
   border-radius: 12px;
 }
 
