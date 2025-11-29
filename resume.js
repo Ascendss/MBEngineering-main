@@ -12,8 +12,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const title = data.title || 'Resume';
     const intro = data.intro || 'You can view or download my resume below.';
-    const fileUrl = data.fileUrl || '';
+    let fileUrl = data.fileUrl || '';
     const fileName = data.fileName || 'resume';
+
+    // If the URL is a raw.githubusercontent.com link, convert it
+    // to a site-relative asset path on the Netlify site.
+    // Example:
+    //   https://raw.githubusercontent.com/.../main/assets/uploads/xyz.pdf
+    // becomes:
+    //   /assets/uploads/xyz.pdf
+    if (fileUrl && fileUrl.startsWith('https://raw.githubusercontent.com/')) {
+      const parts = fileUrl.split('/main/');
+      if (parts.length === 2 && parts[1]) {
+        fileUrl = '/' + parts[1]; // "assets/uploads/..." -> "/assets/uploads/..."
+      }
+    }
 
     if (titleEl) titleEl.textContent = title;
     if (introEl) introEl.textContent = intro;
@@ -22,6 +35,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (downloadLink) {
         downloadLink.href = fileUrl;
         downloadLink.style.display = 'inline-block';
+        // Optional: suggest a filename for the browser
+        downloadLink.download = fileName || 'resume';
       }
 
       // Clear preview container and add content
@@ -34,17 +49,20 @@ document.addEventListener('DOMContentLoaded', async () => {
           iframe.src = fileUrl;
           iframe.className = 'resume-iframe';
           iframe.title = 'Resume Preview';
+          iframe.loading = 'lazy';
           previewContainer.appendChild(iframe);
         } else {
           const msg = document.createElement('p');
-          msg.textContent = 'Inline preview is not available for this file type. Use the button below to download or open the resume.';
+          msg.textContent =
+            'Inline preview is only available for PDF files. Use the button below to download or open the resume.';
           msg.className = 'resume-no-preview';
           previewContainer.appendChild(msg);
         }
       }
     } else {
       if (previewContainer) {
-        previewContainer.innerHTML = '<p class="resume-no-preview">Resume file not uploaded yet.</p>';
+        previewContainer.innerHTML =
+          '<p class="resume-no-preview">Resume file not uploaded yet.</p>';
       }
       if (downloadLink) {
         downloadLink.style.display = 'none';
@@ -58,7 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     console.error('Error loading resume:', err);
     if (previewContainer) {
-      previewContainer.innerHTML = '<p class="resume-error">Unable to load resume at this time.</p>';
+      previewContainer.innerHTML =
+        '<p class="resume-error">Unable to load resume at this time.</p>';
     }
     // Still show content on error
     if (contentWrapper) {
@@ -66,4 +85,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 });
-
