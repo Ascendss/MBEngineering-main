@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const bodyEl = document.getElementById('contactBody');
   const emailLinkEl = document.getElementById('contactEmailLink');
 
+  // If the wrapper isn't found, just bail out gracefully.
+  if (!wrapper) {
+    console.warn('contact.js: #contactContentWrapper not found');
+    return;
+  }
+
   try {
     const res = await fetch('/content/contact.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error('Failed to load contact content');

@@ -1052,6 +1052,7 @@ footer p {
   margin: 3rem auto;
   padding: 0;
   overflow: hidden;
+  opacity: 1 !important;
 }
 
 .contact-hero {
