@@ -1155,4 +1155,152 @@ footer p {
   .contact-layout {
     padding: 1.5rem 1rem 1.75rem;
   }
+}
+
+/* ===== Project Gallery Page ===== */
+.gallery-card {
+  max-width: 1100px;
+  margin: 3rem auto;
+  padding: 0;
+  overflow: hidden;
+  opacity: 1 !important;
+}
+
+.gallery-hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #fff;
+  padding: 2rem 2rem 1.75rem;
+}
+
+.gallery-hero-inner {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.gallery-hero-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem 0;
+}
+
+.gallery-hero-tagline {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.gallery-layout {
+  padding: 2.25rem 2.25rem 2.5rem;
+}
+
+/* Keep existing project grid styles; this just ensures spacing inside card */
+.gallery-layout .gallery {
+  margin-top: 0.75rem;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .gallery-card {
+    margin: 1.5rem;
+  }
+
+  .gallery-layout {
+    padding: 1.75rem 1.5rem 2rem;
+  }
+
+  .gallery-hero-title {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-card {
+    margin: 1rem;
+  }
+
+  .gallery-hero {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .gallery-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .gallery-layout {
+    padding: 1.5rem 1rem 1.75rem;
+  }
+}
+
+/* ===== Blog Page ===== */
+.blog-card {
+  max-width: 1100px;
+  margin: 3rem auto;
+  padding: 0;
+  overflow: hidden;
+  opacity: 1 !important;
+}
+
+.blog-hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #fff;
+  padding: 2rem 2rem 1.75rem;
+}
+
+.blog-hero-inner {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.blog-hero-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem 0;
+}
+
+.blog-hero-tagline {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.blog-layout {
+  padding: 2.25rem 2.25rem 2.5rem;
+}
+
+/* Keep existing blog grid styles; just spacing inside card */
+.blog-layout .gallery {
+  margin-top: 0.75rem;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .blog-card {
+    margin: 1.5rem;
+  }
+
+  .blog-layout {
+    padding: 1.75rem 1.5rem 2rem;
+  }
+
+  .blog-hero-title {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-card {
+    margin: 1rem;
+  }
+
+  .blog-hero {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .blog-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .blog-layout {
+    padding: 1.5rem 1rem 1.75rem;
+  }
 } 

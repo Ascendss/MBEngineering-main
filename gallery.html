@@ -25,10 +25,24 @@
   </header>
 
   <main>
-    <section id="gallery" class="card">
-      <h2>Project Gallery</h2>
-      <div class="gallery" id="gallery-container">
-        <!-- Projects will be dynamically inserted here -->
+    <section class="content">
+      <div id="galleryContentWrapper" class="card gallery-card">
+        <!-- Hero band -->
+        <div class="gallery-hero">
+          <div class="gallery-hero-inner">
+            <h1 class="gallery-hero-title">Project Gallery</h1>
+            <p class="gallery-hero-tagline">
+              Selected projects from my engineering work and experiments.
+            </p>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="gallery-layout">
+          <div id="gallery-container" class="gallery">
+            <!-- Projects will be dynamically inserted here -->
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -40,4 +54,4 @@
   <script src="site.js"></script>
   <script src="script.js"></script>
 </body>
-</html> 
+</html>
