@@ -1105,12 +1105,17 @@
                             <input type="text" class="timeline-headline-input" value="${item.headline || ''}" placeholder="Job title or milestone" />
                         </div>
                     </div>
-                    <div class="timeline-editor-row">
+                    <div class="timeline-editor-row" style="align-items: flex-end;">
                         <div style="flex: 1;">
                             <div class="timeline-editor-label">Image URL (optional)</div>
                             <input type="text" class="timeline-image-input" value="${item.imageUrl || ''}" placeholder="/assets/uploads/image.jpg" />
                         </div>
+                        <div style="flex: 0 0 auto; margin-left: 0.5rem;">
+                            <button type="button" class="timeline-upload-btn btn-insert-image">📷 Upload</button>
+                            <input type="file" class="timeline-image-file" accept="image/*" style="display:none;" />
+                        </div>
                     </div>
+                    ${item.imageUrl ? `<div class="timeline-image-preview"><img src="${item.imageUrl}" alt="Preview" style="max-width:150px; max-height:100px; border-radius:6px; margin-top:0.5rem;" /></div>` : ''}
                     <div>
                         <div class="timeline-editor-label">Body (Markdown)</div>
                         <textarea rows="3" class="timeline-body-input" placeholder="Description of this role or achievement...">${item.body || ''}</textarea>
@@ -1127,6 +1132,9 @@
                 const removeBtn = wrapper.querySelector('.timeline-editor-remove');
                 const moveUpBtn = wrapper.querySelector('.timeline-move-up');
                 const moveDownBtn = wrapper.querySelector('.timeline-move-down');
+                const uploadBtn = wrapper.querySelector('.timeline-upload-btn');
+                const imageFileInput = wrapper.querySelector('.timeline-image-file');
+                const imageUrlInput = wrapper.querySelector('.timeline-image-input');
 
                 removeBtn.addEventListener('click', () => {
                     aboutTimeline.splice(index, 1);
@@ -1147,6 +1155,41 @@
                     aboutTimeline[index + 1] = aboutTimeline[index];
                     aboutTimeline[index] = temp;
                     renderAboutTimelineEditor();
+                });
+
+                // Image upload handler
+                uploadBtn.addEventListener('click', () => {
+                    imageFileInput.click();
+                });
+
+                imageFileInput.addEventListener('change', async (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+
+                    try {
+                        uploadBtn.disabled = true;
+                        uploadBtn.textContent = '⏳ Uploading...';
+
+                        const uploadedUrl = await uploadFile(file);
+
+                        if (uploadedUrl) {
+                            imageUrlInput.value = uploadedUrl;
+                            // Update the timeline array so preview shows on re-render
+                            aboutTimeline[index].imageUrl = uploadedUrl;
+                            // Re-render to show preview
+                            renderAboutTimelineEditor();
+                        }
+
+                        uploadBtn.disabled = false;
+                        uploadBtn.textContent = '📷 Upload';
+                    } catch (err) {
+                        console.error('Timeline image upload failed:', err);
+                        alert('Failed to upload image: ' + err.message);
+                        uploadBtn.disabled = false;
+                        uploadBtn.textContent = '📷 Upload';
+                    } finally {
+                        imageFileInput.value = '';
+                    }
                 });
 
                 list.appendChild(wrapper);
