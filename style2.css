@@ -530,20 +530,21 @@ footer p {
   padding: 1.25rem;
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
   overflow: hidden;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .resume-preview {
   width: 100%;
-  min-height: 680px;
+  min-height: 900px;
 }
 
 .resume-iframe {
   width: 100%;
   height: 100%;
-  min-height: 680px;
+  min-height: 900px;
   border: none;
   border-radius: 12px;
-  background: #fff;
 }
 
 .resume-no-preview,
@@ -616,7 +617,7 @@ footer p {
 
   .resume-preview,
   .resume-iframe {
-    min-height: 520px;
+    min-height: 600px;
   }
 
   .resume-viewer-card {
@@ -651,7 +652,7 @@ footer p {
 
   .resume-preview,
   .resume-iframe {
-    min-height: 450px;
+    min-height: 500px;
   }
 }
 
