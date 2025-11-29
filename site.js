@@ -47,6 +47,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (data.pageBg) root.style.setProperty('--site-page-bg', data.pageBg);
     if (data.cardBg) root.style.setProperty('--site-card-bg', data.cardBg);
 
+    // Apply animated background GIF
+    if (data.backgroundGifEnabled && data.backgroundGifUrl) {
+      root.style.setProperty('--page-bg-gif', `url('${data.backgroundGifUrl}')`);
+      document.body.classList.remove('no-bg-gif');
+    } else {
+      root.style.setProperty('--page-bg-gif', 'none');
+      document.body.classList.add('no-bg-gif');
+    }
+
     // Update site title and subtitle
     const siteTitleEl = document.querySelector('.site-title');
     const siteSubtitleEl = document.querySelector('.site-subtitle');

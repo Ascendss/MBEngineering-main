@@ -600,6 +600,38 @@
                         </div>
                     </div>
 
+                    <hr style="margin: 2rem 0;" />
+
+                    <h3>Animated Background</h3>
+                    <p style="color:#666; margin-bottom: 0.75rem;">
+                        Optional subtle GIF background behind all pages. Keep it calm and low-contrast for best results.
+                    </p>
+
+                    <div style="margin-bottom: 0.75rem;">
+                        <label style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.9rem;">
+                            <input type="checkbox" id="bgGifEnabledInput" />
+                            Enable animated background
+                        </label>
+                    </div>
+
+                    <div style="margin-bottom: 0.75rem;">
+                        <label for="bgGifUrlInput">Background GIF URL:</label>
+                        <input type="text" id="bgGifUrlInput" placeholder="/assets/uploads/background.gif" />
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label>Upload GIF:</label>
+                        <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.25rem;">
+                            <button type="button" id="bgGifUploadBtn" class="btn-insert-image">📷 Upload GIF</button>
+                            <input type="file" id="bgGifFileInput" accept="image/gif,image/webp" style="display:none;" />
+                        </div>
+                    </div>
+
+                    <div id="bgGifPreview" style="display:none; margin-bottom:1rem;">
+                        <p style="font-size:0.85rem; color:#666; margin-bottom:0.25rem;">Preview:</p>
+                        <img id="bgGifPreviewImg" src="" alt="GIF Preview" style="max-width:200px; max-height:120px; border-radius:8px; border:1px solid #ddd;" />
+                    </div>
+
                     <div class="form-actions">
                         <button type="button" id="siteSaveBtn" class="btn-primary">Save Site Settings</button>
                     </div>
@@ -1455,9 +1487,56 @@
         const siteSaveBtn = document.getElementById('siteSaveBtn');
         const siteLastSaved = document.getElementById('siteLastSaved');
 
+        // GIF background controls
+        const bgGifEnabledInput = document.getElementById('bgGifEnabledInput');
+        const bgGifUrlInput = document.getElementById('bgGifUrlInput');
+        const bgGifUploadBtn = document.getElementById('bgGifUploadBtn');
+        const bgGifFileInput = document.getElementById('bgGifFileInput');
+        const bgGifPreview = document.getElementById('bgGifPreview');
+        const bgGifPreviewImg = document.getElementById('bgGifPreviewImg');
+
+        // GIF upload handler
+        if (bgGifUploadBtn && bgGifFileInput) {
+            bgGifUploadBtn.addEventListener('click', () => bgGifFileInput.click());
+
+            bgGifFileInput.addEventListener('change', async (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+
+                try {
+                    bgGifUploadBtn.disabled = true;
+                    bgGifUploadBtn.textContent = '⏳ Uploading...';
+
+                    const uploadedUrl = await uploadFile(file);
+
+                    if (uploadedUrl) {
+                        bgGifUrlInput.value = uploadedUrl;
+                        // Show preview
+                        if (bgGifPreviewImg && bgGifPreview) {
+                            bgGifPreviewImg.src = uploadedUrl;
+                            bgGifPreview.style.display = 'block';
+                        }
+                    }
+
+                    bgGifUploadBtn.textContent = '✅ Uploaded!';
+                    setTimeout(() => {
+                        bgGifUploadBtn.textContent = '📷 Upload GIF';
+                        bgGifUploadBtn.disabled = false;
+                    }, 1500);
+                } catch (err) {
+                    console.error('Background GIF upload failed:', err);
+                    alert('Failed to upload GIF: ' + err.message);
+                    bgGifUploadBtn.textContent = '📷 Upload GIF';
+                    bgGifUploadBtn.disabled = false;
+                } finally {
+                    bgGifFileInput.value = '';
+                }
+            });
+        }
+
         async function loadSiteSettings() {
             try {
-                const res = await fetch('/content/site.json');
+                const res = await fetch('/content/site.json', { cache: 'no-cache' });
                 if (!res.ok) return;
                 const data = await res.json();
                 siteTitleField.value = data.siteTitle || 'MB Engineering';
@@ -1466,6 +1545,22 @@
                 headerTextField.value = data.headerText || '#ffffff';
                 pageBgField.value = data.pageBg || '#f5f5f5';
                 cardBgField.value = data.cardBg || '#ffffff';
+
+                // Load GIF settings
+                if (bgGifEnabledInput) {
+                    bgGifEnabledInput.checked = !!data.backgroundGifEnabled;
+                }
+                if (bgGifUrlInput) {
+                    bgGifUrlInput.value = data.backgroundGifUrl || '';
+                }
+                // Show preview if URL exists
+                if (data.backgroundGifUrl && bgGifPreviewImg && bgGifPreview) {
+                    bgGifPreviewImg.src = data.backgroundGifUrl;
+                    bgGifPreview.style.display = 'block';
+                } else if (bgGifPreview) {
+                    bgGifPreview.style.display = 'none';
+                }
+
                 if (data.updatedAt) {
                     siteLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
                 }
@@ -1485,7 +1580,9 @@
                     headerBg: headerBgField.value,
                     headerText: headerTextField.value,
                     pageBg: pageBgField.value,
-                    cardBg: cardBgField.value
+                    cardBg: cardBgField.value,
+                    backgroundGifEnabled: bgGifEnabledInput ? bgGifEnabledInput.checked : false,
+                    backgroundGifUrl: bgGifUrlInput ? bgGifUrlInput.value.trim() : ''
                 };
 
                 const res = await fetch('/.netlify/functions/updateSiteSettings', {

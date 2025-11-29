@@ -5,5 +5,7 @@
   "headerText": "#ffffff",
   "pageBg": "#5f5858",
   "cardBg": "#ffffff",
+  "backgroundGifEnabled": false,
+  "backgroundGifUrl": "",
   "updatedAt": "2025-11-29T19:46:41.229Z"
 }

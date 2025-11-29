@@ -5,6 +5,7 @@
   --site-page-bg: #fafafa;
   --site-card-bg: #ffffff;
   --accent-color: #2563eb;
+  --page-bg-gif: none;
 }
 
 /* ===== Loading State (Prevent FOUC) ===== */
@@ -147,6 +148,37 @@ body {
   padding: 0;
   background-color: var(--site-page-bg);
   color: #333;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Animated background overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--page-bg-gif);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  opacity: 0.18;
+  filter: blur(1px);
+  transform: scale(1.02);
+  pointer-events: none;
+}
+
+/* Hide GIF overlay when disabled */
+body.no-bg-gif::before {
+  background-image: none;
+}
+
+/* Reduce GIF intensity on mobile */
+@media (max-width: 768px) {
+  body::before {
+    opacity: 0.12;
+    filter: blur(0.5px);
+  }
 }
 
 /* ===== Global Header ===== */
