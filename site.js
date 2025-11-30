@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function runCycle() {
       const current = phrases[phraseIndex];
 
-      // REST: center "|" solid with current phrase
+      // REST: center "|" solid with current phrase (no blinking)
       setCursorBlink(false);
       setRestText(current);
 
@@ -252,9 +252,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const restTime = isFirstPhrase ? FIRST_REST_MS : REST_MS;
       isFirstPhrase = false;
 
+      // Rest period (solid cursor at center)
       await new Promise((resolve) => setTimeout(resolve, restTime));
 
-      // ANIMATION: cursor blinks and moves through text
+      // ANIMATION: cursor "wakes up" and starts blinking
       setCursorBlink(true);
 
       // Scan right through current phrase (cursor moves left to right)
@@ -273,11 +274,16 @@ document.addEventListener('DOMContentLoaded', function () {
       // Scan cursor back to center letter-by-letter (no teleport!)
       await scanBackToCenter(next);
 
-      // Now cursor is back at center - turn off blinking and set clean REST text
+      // Cursor is back at center and still blinking
+      // Let it blink for a short "settle" moment at center...
+      setRestText(next);
+      await new Promise((resolve) => setTimeout(resolve, 600)); // ~0.6s extra blink
+
+      // ...then "fall asleep" -> solid center bar again
       setCursorBlink(false);
       setRestText(next);
 
-      // Schedule next cycle
+      // Schedule next cycle (solid rest with new phrase)
       setTimeout(runCycle, REST_MS);
     }
 
