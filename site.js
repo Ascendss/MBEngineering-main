@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// === About page header animation (center '|' moves through text and returns) ===
+// === About page header animation (center '|' moves and returns) ===
 document.addEventListener('DOMContentLoaded', function () {
   // Only run on the About page
   const isAboutPage =
@@ -129,13 +129,15 @@ document.addEventListener('DOMContentLoaded', function () {
     let isFirstPhrase = true;
 
     // Timing configuration
-    const FIRST_REST_MS = 5000;       // 5s solid before first animation
-    const REST_MS = 10000;            // 10s solid for each phrase thereafter
-    const SCAN_INTERVAL_MS = 60;      // speed of cursor scanning through letters
-    const DELETE_INTERVAL_MS = 45;    // speed of deleting
-    const TYPE_INTERVAL_MS = 80;      // speed of typing
-    const PAUSE_AFTER_SCAN_MS = 300;  // small pause at end of scan
-    const PAUSE_AFTER_DELETE_MS = 200;// pause before typing next phrase
+    const FIRST_REST_MS = 5000;        // 5s solid before first animation
+    const REST_MS = 10000;             // 10s solid for each phrase thereafter
+    const SCAN_INTERVAL_MS = 60;       // speed of cursor scanning right
+    const DELETE_INTERVAL_MS = 45;     // speed of deleting
+    const TYPE_INTERVAL_MS = 80;       // speed of typing
+    const PAUSE_AFTER_SCAN_MS = 300;   // small pause at end of scan-right
+    const PAUSE_AFTER_DELETE_MS = 200; // pause before typing next phrase
+    const PAUSE_AFTER_TYPE_MS = 300;   // pause before scanning back to center
+    const SCAN_BACK_INTERVAL_MS = 60;  // speed for scan back to center
 
     // REST state: "| Phrase" with center bar, no blinking
     function setRestText(phrase) {
@@ -151,9 +153,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    // SCAN: move cursor from center through the phrase
+    // Phase 1: SCAN RIGHT - move cursor from center through the phrase
     // "| Electrical" -> " E|lectrical" -> " El|ectrical" -> ... -> " Electrical|"
-    function scanPhrase(phrase) {
+    function scanPhraseRight(phrase) {
       return new Promise((resolve) => {
         let i = 0;
         const total = phrase.length;
@@ -174,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    // DELETE: remove phrase from right with cursor at end
+    // Phase 2: DELETE - remove phrase from right with cursor at end
     // " Electrical|" -> " Electrica|" -> ... -> " |"
     function deletePhrase(phrase) {
       return new Promise((resolve) => {
@@ -195,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    // TYPE: type new phrase from left with cursor at end
+    // Phase 3: TYPE - type new phrase from left with cursor at end
     // " |" -> " I|" -> " In|" -> ... -> " Innovator|"
     function typePhrase(phrase) {
       return new Promise((resolve) => {
@@ -203,13 +205,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function step() {
           if (len > phrase.length) {
-            resolve();
+            setTimeout(resolve, PAUSE_AFTER_TYPE_MS);
             return;
           }
           const visible = phrase.slice(0, len);
           roleBlock.textContent = ` ${visible}|`;
           len++;
           setTimeout(step, TYPE_INTERVAL_MS);
+        }
+
+        step();
+      });
+    }
+
+    // Phase 4: SCAN BACK - cursor walks back from right edge to center
+    // " Innovator|" -> " Innovato|r" -> ... -> " |Innovator"
+    function scanBackToCenter(phrase) {
+      return new Promise((resolve) => {
+        let i = phrase.length;
+
+        function step() {
+          if (i < 0) {
+            resolve();
+            return;
+          }
+          const left = phrase.slice(0, i);
+          const right = phrase.slice(i);
+          roleBlock.textContent = ` ${left}|${right}`;
+          i--;
+          setTimeout(step, SCAN_BACK_INTERVAL_MS);
         }
 
         step();
@@ -233,8 +257,8 @@ document.addEventListener('DOMContentLoaded', function () {
       // ANIMATION: cursor blinks and moves through text
       setCursorBlink(true);
 
-      // Scan through current phrase (cursor moves left to right)
-      await scanPhrase(current);
+      // Scan right through current phrase (cursor moves left to right)
+      await scanPhraseRight(current);
 
       // Delete current phrase (cursor stays at end)
       await deletePhrase(current);
@@ -246,7 +270,10 @@ document.addEventListener('DOMContentLoaded', function () {
       // Type next phrase (cursor at end)
       await typePhrase(next);
 
-      // Return cursor to center, make it solid
+      // Scan cursor back to center letter-by-letter (no teleport!)
+      await scanBackToCenter(next);
+
+      // Now cursor is back at center - turn off blinking and set clean REST text
       setCursorBlink(false);
       setRestText(next);
 
@@ -258,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setCursorBlink(false);
     setRestText(phrases[0]);
 
-    // Start the animation cycle after initial delay
-    setTimeout(runCycle, FIRST_REST_MS);
+    // Start the animation cycle
+    runCycle();
   }, 500);
 });
