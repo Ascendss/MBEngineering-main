@@ -3,11 +3,11 @@
   "siteSubtitle": "",
   "headerBg": "#1a1a1a",
   "headerText": "#ffffff",
-  "pageBg": "#5f5588",
+  "pageBg": "#56535f",
   "cardBg": "#ffffff",
   "backgroundGifEnabled": true,
   "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764461919264-f356ea.gif",
   "backgroundGifOpacity": 0.06,
-  "backgroundGifBlur": 19,
-  "updatedAt": "2025-11-30T02:05:33.955Z"
+  "backgroundGifBlur": 16,
+  "updatedAt": "2025-11-30T02:06:19.771Z"
 }
