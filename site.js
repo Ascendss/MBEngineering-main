@@ -73,13 +73,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (siteTitleEl) {
       const title = data.siteTitle || 'MB Engineering';
-      // If title contains a pipe, create structured markup with center separator as cursor
+      // If title contains a pipe, create a single role block for animation
       if (title.includes('|')) {
         const parts = title.split('|');
         const name = parts[0].trim();
         const role = parts.slice(1).join('|').trim();
-        // Single center bar that acts as both separator AND cursor (no extra cursor at end)
-        siteTitleEl.innerHTML = `${name} <span id="site-role-separator" class="site-title-separator">|</span> <span id="site-role-text">${role}</span>`;
+        // Single span containing "| Role" that the animation will manipulate
+        siteTitleEl.innerHTML = `${name} <span id="site-role-block">| ${role}</span>`;
       } else {
         siteTitleEl.textContent = title;
       }
@@ -94,14 +94,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const siteTitleEl = document.querySelector('.site-title');
     const siteSubtitleEl = document.querySelector('.site-subtitle');
     if (siteTitleEl && !siteTitleEl.textContent) {
-      siteTitleEl.innerHTML = 'Matt Banzhof <span id="site-role-separator" class="site-title-separator">|</span> <span id="site-role-text">Electrical Engineer</span>';
+      siteTitleEl.innerHTML = 'Matt Banzhof <span id="site-role-block">| Electrical Engineer</span>';
     }
     if (siteSubtitleEl && !siteSubtitleEl.textContent) siteSubtitleEl.textContent = '';
     if (homeLink) homeLink.classList.add('loaded');
   }
 });
 
-// === About page header role animation (center '|' as cursor) ===
+// === About page header animation (center '|' moves through text and returns) ===
 document.addEventListener('DOMContentLoaded', function () {
   // Only run on the About page
   const isAboutPage =
@@ -114,12 +114,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Small delay to ensure site.js has populated the title
   setTimeout(() => {
-    const roleEl = document.getElementById('site-role-text');
-    const separatorEl = document.getElementById('site-role-separator');
+    const roleBlock = document.getElementById('site-role-block');
+    if (!roleBlock) return;
 
-    if (!roleEl || !separatorEl) return;
-
-    // Phrases to cycle through (edit as desired)
+    // Phrases to cycle through
     const phrases = [
       'Electrical Engineer',
       'Innovator',
@@ -127,86 +125,140 @@ document.addEventListener('DOMContentLoaded', function () {
       'R&D Technologist'
     ];
 
-    // Start showing the first phrase immediately
     let phraseIndex = 0;
-    let charIndex = phrases[0].length;
-    let deleting = false;
-    let holdTimeout = null;
+    let isFirstPhrase = true;
 
-    const INITIAL_SOLID_DELAY = 5000;     // 5s solid bar before any blinking/typing
-    const HOLD_EACH_PHRASE = 10000;       // 10s each full phrase is visible
-    const TYPE_SPEED = 80;                // typing speed (ms per char)
-    const DELETE_SPEED = 50;              // deleting speed (ms per char)
-    const BETWEEN_PHRASES_DELAY = 800;    // small pause after deleting before next phrase
+    // Timing configuration
+    const FIRST_REST_MS = 5000;       // 5s solid before first animation
+    const REST_MS = 10000;            // 10s solid for each phrase thereafter
+    const SCAN_INTERVAL_MS = 60;      // speed of cursor scanning through letters
+    const DELETE_INTERVAL_MS = 45;    // speed of deleting
+    const TYPE_INTERVAL_MS = 80;      // speed of typing
+    const PAUSE_AFTER_SCAN_MS = 300;  // small pause at end of scan
+    const PAUSE_AFTER_DELETE_MS = 200;// pause before typing next phrase
 
-    // Ensure initial visible phrase is correct
-    roleEl.textContent = phrases[0];
+    // REST state: "| Phrase" with center bar, no blinking
+    function setRestText(phrase) {
+      roleBlock.textContent = `| ${phrase}`;
+    }
 
-    function setCursorActive(active) {
+    // Blink on/off control
+    function setCursorBlink(active) {
       if (active) {
-        separatorEl.classList.add('is-active');
+        roleBlock.classList.add('is-active');
       } else {
-        separatorEl.classList.remove('is-active');
+        roleBlock.classList.remove('is-active');
       }
     }
 
-    function typeLoop() {
-      const currentPhrase = phrases[phraseIndex];
+    // SCAN: move cursor from center through the phrase
+    // "| Electrical" -> " E|lectrical" -> " El|ectrical" -> ... -> " Electrical|"
+    function scanPhrase(phrase) {
+      return new Promise((resolve) => {
+        let i = 0;
+        const total = phrase.length;
 
-      if (!deleting && charIndex < currentPhrase.length) {
-        // Typing characters forward
-        charIndex++;
-        roleEl.textContent = currentPhrase.slice(0, charIndex);
-        setTimeout(typeLoop, TYPE_SPEED);
-        return;
-      }
-
-      if (!deleting && charIndex === currentPhrase.length) {
-        // Phrase is fully typed; keep cursor blinking and hold the phrase for a bit
-        if (!holdTimeout) {
-          holdTimeout = setTimeout(() => {
-            deleting = true;
-            holdTimeout = null;
-            typeLoop();
-          }, HOLD_EACH_PHRASE);
+        function step() {
+          if (i > total) {
+            setTimeout(resolve, PAUSE_AFTER_SCAN_MS);
+            return;
+          }
+          const left = phrase.slice(0, i);
+          const right = phrase.slice(i);
+          roleBlock.textContent = ` ${left}|${right}`;
+          i++;
+          setTimeout(step, SCAN_INTERVAL_MS);
         }
-        return;
-      }
 
-      if (deleting && charIndex > 0) {
-        // Deleting characters
-        charIndex--;
-        roleEl.textContent = currentPhrase.slice(0, charIndex);
-        setTimeout(typeLoop, DELETE_SPEED);
-        return;
-      }
-
-      if (deleting && charIndex === 0) {
-        // Finished deleting current phrase – advance to next
-        deleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-
-        // Brief pause before typing next phrase
-        setTimeout(() => {
-          charIndex = 0;
-          roleEl.textContent = '';
-          typeLoop();
-        }, BETWEEN_PHRASES_DELAY);
-
-        return;
-      }
+        step();
+      });
     }
 
-    // Initial behavior:
-    // 1. Show "Matt Banzhof | Electrical Engineer" with solid (non-blinking) bar for 5 seconds.
-    // 2. After 5 seconds, bar begins blinking and we start deleting the first phrase.
-    setCursorActive(false); // solid, non-blinking
+    // DELETE: remove phrase from right with cursor at end
+    // " Electrical|" -> " Electrica|" -> ... -> " |"
+    function deletePhrase(phrase) {
+      return new Promise((resolve) => {
+        let len = phrase.length;
 
-    setTimeout(() => {
-      // Start blinking and begin deletion/typing cycle
-      setCursorActive(true);
-      deleting = true; // we start by deleting the first phrase
-      typeLoop();
-    }, INITIAL_SOLID_DELAY);
-  }, 500); // Small delay to ensure DOM is ready
+        function step() {
+          if (len < 0) {
+            setTimeout(resolve, PAUSE_AFTER_DELETE_MS);
+            return;
+          }
+          const visible = phrase.slice(0, len);
+          roleBlock.textContent = ` ${visible}|`;
+          len--;
+          setTimeout(step, DELETE_INTERVAL_MS);
+        }
+
+        step();
+      });
+    }
+
+    // TYPE: type new phrase from left with cursor at end
+    // " |" -> " I|" -> " In|" -> ... -> " Innovator|"
+    function typePhrase(phrase) {
+      return new Promise((resolve) => {
+        let len = 0;
+
+        function step() {
+          if (len > phrase.length) {
+            resolve();
+            return;
+          }
+          const visible = phrase.slice(0, len);
+          roleBlock.textContent = ` ${visible}|`;
+          len++;
+          setTimeout(step, TYPE_INTERVAL_MS);
+        }
+
+        step();
+      });
+    }
+
+    // Main animation cycle
+    async function runCycle() {
+      const current = phrases[phraseIndex];
+
+      // REST: center "|" solid with current phrase
+      setCursorBlink(false);
+      setRestText(current);
+
+      // Different rest time for first phrase vs subsequent
+      const restTime = isFirstPhrase ? FIRST_REST_MS : REST_MS;
+      isFirstPhrase = false;
+
+      await new Promise((resolve) => setTimeout(resolve, restTime));
+
+      // ANIMATION: cursor blinks and moves through text
+      setCursorBlink(true);
+
+      // Scan through current phrase (cursor moves left to right)
+      await scanPhrase(current);
+
+      // Delete current phrase (cursor stays at end)
+      await deletePhrase(current);
+
+      // Move to next phrase
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      const next = phrases[phraseIndex];
+
+      // Type next phrase (cursor at end)
+      await typePhrase(next);
+
+      // Return cursor to center, make it solid
+      setCursorBlink(false);
+      setRestText(next);
+
+      // Schedule next cycle
+      setTimeout(runCycle, REST_MS);
+    }
+
+    // Initialize with first phrase in REST state
+    setCursorBlink(false);
+    setRestText(phrases[0]);
+
+    // Start the animation cycle after initial delay
+    setTimeout(runCycle, FIRST_REST_MS);
+  }, 500);
 });

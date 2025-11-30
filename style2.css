@@ -202,24 +202,24 @@ header.scrolled {
   line-height: 1.2;
 }
 
-/* Center separator bar (also acts as cursor on About page) */
-.site-title-separator {
-  display: inline-block;
-  margin: 0 6px;
-  opacity: 0.9;
+/* Role block containing "| Phrase" that animates on About page */
+#site-role-block {
+  margin-left: 4px;
+  white-space: pre; /* preserve spaces during animation */
+  font-family: inherit;
 }
 
-/* When active, the separator blinks like a text cursor */
-.site-title-separator.is-active {
-  animation: headerCursorBlink 0.8s steps(1, end) infinite;
+/* When active (animating), add subtle pulse effect without obscuring text */
+#site-role-block.is-active {
+  animation: siteHeaderCursorPulse 0.6s ease-in-out infinite;
 }
 
-@keyframes headerCursorBlink {
-  0%, 45% {
+@keyframes siteHeaderCursorPulse {
+  0%, 100% {
     opacity: 1;
   }
-  50%, 100% {
-    opacity: 0;
+  50% {
+    opacity: 0.85;
   }
 }
 
