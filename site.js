@@ -106,21 +106,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// === About page header animation (center '|' moves and returns) ===
+// === Header animation (center '|' moves and returns) - runs on all pages ===
 document.addEventListener('DOMContentLoaded', function () {
-  // Only run on the About page
-  const isAboutPage =
-    document.body.classList.contains('about-page') ||
-    window.location.pathname === '/about' ||
-    window.location.pathname === '/about.html' ||
-    window.location.pathname.endsWith('/about.html');
-
-  if (!isAboutPage) return;
-
   // Small delay to ensure site.js has populated the title
   setTimeout(() => {
     const roleBlock = document.getElementById('site-role-block');
-    if (!roleBlock) return;
+    if (!roleBlock) return; // no header on this page, do nothing
 
     // Phrases to cycle through (from site config or fallback)
     const phrases = (Array.isArray(window.SITE_HEADER_ROLES) && window.SITE_HEADER_ROLES.length > 0)
