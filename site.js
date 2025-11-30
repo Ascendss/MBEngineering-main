@@ -138,19 +138,43 @@ document.addEventListener('DOMContentLoaded', function () {
     const PAUSE_AFTER_DELETE_MS = 200; // pause before typing next phrase
     const PAUSE_AFTER_TYPE_MS = 300;   // pause before scanning back to center
     const SCAN_BACK_INTERVAL_MS = 60;  // speed for scan back to center
+    const SETTLE_BLINK_MS = 1500;      // total settle period duration
+    const CURSOR_BLINK_INTERVAL = 400; // cursor on/off toggle speed
 
-    // REST state: "| Phrase" with center bar, no blinking
+    // REST state: "| Phrase" with center bar, solid
     function setRestText(phrase) {
       roleBlock.textContent = `| ${phrase}`;
     }
 
-    // Blink on/off control
-    function setCursorBlink(active) {
-      if (active) {
-        roleBlock.classList.add('is-active');
-      } else {
-        roleBlock.classList.remove('is-active');
-      }
+    // Blink just the "|" cursor at center for a duration (text stays solid)
+    function blinkCursorAtCenter(phrase, duration) {
+      return new Promise((resolve) => {
+        let cursorVisible = true;
+        const startTime = Date.now();
+
+        function toggle() {
+          const elapsed = Date.now() - startTime;
+          if (elapsed >= duration) {
+            // Ensure cursor is visible when done
+            roleBlock.textContent = `| ${phrase}`;
+            resolve();
+            return;
+          }
+
+          cursorVisible = !cursorVisible;
+          if (cursorVisible) {
+            roleBlock.textContent = `| ${phrase}`;  // cursor ON
+          } else {
+            roleBlock.textContent = `  ${phrase}`;  // cursor OFF (space instead)
+          }
+
+          setTimeout(toggle, CURSOR_BLINK_INTERVAL);
+        }
+
+        // Start with cursor visible, then begin toggling
+        roleBlock.textContent = `| ${phrase}`;
+        setTimeout(toggle, CURSOR_BLINK_INTERVAL);
+      });
     }
 
     // Phase 1: SCAN RIGHT - move cursor from center through the phrase
@@ -244,8 +268,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function runCycle() {
       const current = phrases[phraseIndex];
 
-      // REST: center "|" solid with current phrase (no blinking)
-      setCursorBlink(false);
+      // REST: center "|" solid with current phrase
       setRestText(current);
 
       // Different rest time for first phrase vs subsequent
@@ -255,10 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // Rest period (solid cursor at center)
       await new Promise((resolve) => setTimeout(resolve, restTime));
 
-      // ANIMATION: cursor "wakes up" and starts blinking
-      setCursorBlink(true);
-
-      // Scan right through current phrase (cursor moves left to right)
+      // ANIMATION: scan right through current phrase
       await scanPhraseRight(current);
 
       // Delete current phrase (cursor stays at end)
@@ -274,13 +294,10 @@ document.addEventListener('DOMContentLoaded', function () {
       // Scan cursor back to center letter-by-letter (no teleport!)
       await scanBackToCenter(next);
 
-      // Cursor is back at center and still blinking
-      // Let it blink for a "settle" moment at center (visible blinking!)
-      setRestText(next);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // ~1.5s of blinking at center
+      // SETTLE: cursor blinks on/off at center while text stays solid
+      await blinkCursorAtCenter(next, SETTLE_BLINK_MS);
 
-      // ...then "fall asleep" -> solid center bar again
-      setCursorBlink(false);
+      // Cursor is now solid at center
       setRestText(next);
 
       // Schedule next cycle (solid rest with new phrase)
@@ -288,7 +305,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Initialize with first phrase in REST state
-    setCursorBlink(false);
     setRestText(phrases[0]);
 
     // Start the animation cycle
