@@ -7,7 +7,7 @@
   "cardBg": "#ffffff",
   "backgroundGifEnabled": true,
   "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764468634034-b09da4.gif",
-  "backgroundGifOpacity": 0.3,
-  "backgroundGifBlur": 4,
-  "updatedAt": "2025-11-30T02:12:05.518Z"
+  "backgroundGifOpacity": 0.15,
+  "backgroundGifBlur": 10,
+  "updatedAt": "2025-11-30T02:12:59.118Z"
 }
