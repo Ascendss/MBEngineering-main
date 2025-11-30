@@ -71,7 +71,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const siteTitleEl = document.querySelector('.site-title');
     const siteSubtitleEl = document.querySelector('.site-subtitle');
 
-    if (siteTitleEl) siteTitleEl.textContent = data.siteTitle || 'MB Engineering';
+    if (siteTitleEl) {
+      const title = data.siteTitle || 'MB Engineering';
+      // If title contains a pipe, wrap it in an animated cursor span
+      if (title.includes('|')) {
+        const parts = title.split('|');
+        siteTitleEl.innerHTML = `${parts[0].trim()} <span class="site-title-cursor">|</span> ${parts.slice(1).join('|').trim()}`;
+      } else {
+        siteTitleEl.textContent = title;
+      }
+    }
     if (siteSubtitleEl) siteSubtitleEl.textContent = data.siteSubtitle || '';
 
     // Fade in header content after loading
@@ -81,7 +90,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Still show header even on error with fallback text
     const siteTitleEl = document.querySelector('.site-title');
     const siteSubtitleEl = document.querySelector('.site-subtitle');
-    if (siteTitleEl && !siteTitleEl.textContent) siteTitleEl.textContent = 'MB Engineering';
+    if (siteTitleEl && !siteTitleEl.textContent) {
+      siteTitleEl.innerHTML = 'Matt Banzhof <span class="site-title-cursor">|</span> Electrical Engineer';
+    }
     if (siteSubtitleEl && !siteSubtitleEl.textContent) siteSubtitleEl.textContent = '';
     if (homeLink) homeLink.classList.add('loaded');
   }

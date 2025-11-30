@@ -202,6 +202,22 @@ header.scrolled {
   line-height: 1.2;
 }
 
+/* Animated cursor in site title */
+.site-title-cursor {
+  display: inline-block;
+  margin: 0 4px;
+  animation: headerCursorBlink 1.1s steps(1, end) infinite;
+}
+
+@keyframes headerCursorBlink {
+  0%, 45% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
 .site-subtitle {
   font-size: 0.9rem;
   font-weight: 400;
