@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isFirstPhrase = true;
 
     // Timing configuration
-    const FIRST_REST_MS = 5000;        // 5s solid before first animation
+    const FIRST_REST_MS = 2000;        // 2s solid before first animation
     const REST_MS = 7000;              // 7s solid for each phrase thereafter
     const SCAN_INTERVAL_MS = 60;       // speed of cursor scanning right
     const DELETE_INTERVAL_MS = 45;     // speed of deleting
