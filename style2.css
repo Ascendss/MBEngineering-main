@@ -584,10 +584,31 @@ footer p {
 
 .resume-preview {
   width: 100%;
-  min-height: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Embedded PDF iframe */
+/* PDF canvas rendered by PDF.js */
+.resume-canvas {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+  background: #f8f8f8;
+}
+
+/* Fallback message */
+.resume-fallback {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #666;
+  padding: 3rem 1.5rem;
+}
+
+/* Legacy iframe (kept for compatibility) */
 .resume-iframe {
   width: 100%;
   height: 100%;
@@ -630,9 +651,16 @@ footer p {
     padding: 1.75rem 1.5rem 2rem;
   }
 
-  .resume-preview,
+  .resume-preview {
+    min-height: auto;
+  }
+
   .resume-iframe {
     min-height: 600px;
+  }
+
+  .resume-canvas {
+    border-radius: 6px;
   }
 
   .resume-hero-title {
@@ -657,9 +685,16 @@ footer p {
     padding: 1.5rem 1rem 1.75rem;
   }
 
-  .resume-preview,
+  .resume-preview {
+    min-height: auto;
+  }
+
   .resume-iframe {
     min-height: 500px;
+  }
+
+  .resume-canvas {
+    border-radius: 4px;
   }
 
   .resume-actions {
