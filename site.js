@@ -56,6 +56,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.body.classList.add('no-bg-gif');
     }
 
+    // Apply GIF opacity and blur from settings
+    const opacity = (typeof data.backgroundGifOpacity === 'number')
+      ? data.backgroundGifOpacity
+      : 0.12;
+    const blur = (typeof data.backgroundGifBlur === 'number')
+      ? data.backgroundGifBlur
+      : 7;
+
+    root.style.setProperty('--page-bg-gif-opacity', String(opacity));
+    root.style.setProperty('--page-bg-gif-blur', `${blur}px`);
+
     // Update site title and subtitle
     const siteTitleEl = document.querySelector('.site-title');
     const siteSubtitleEl = document.querySelector('.site-subtitle');

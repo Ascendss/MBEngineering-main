@@ -632,6 +632,34 @@
                         <img id="bgGifPreviewImg" src="" alt="GIF Preview" style="max-width:200px; max-height:120px; border-radius:8px; border:1px solid #ddd;" />
                     </div>
 
+                    <div style="margin-top: 1rem;">
+                        <label for="bgGifOpacityRange">Background Opacity:</label>
+                        <input type="range"
+                               id="bgGifOpacityRange"
+                               min="0"
+                               max="30"
+                               step="1"
+                               value="12"
+                               style="width:100%; margin-top:0.25rem;" />
+                        <div style="font-size: 0.85rem; color:#555; margin-top:0.25rem;">
+                            <span id="bgGifOpacityValue">12%</span> (0–30%)
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 0.75rem; margin-bottom: 1.5rem;">
+                        <label for="bgGifBlurRange">Background Blur:</label>
+                        <input type="range"
+                               id="bgGifBlurRange"
+                               min="0"
+                               max="20"
+                               step="1"
+                               value="7"
+                               style="width:100%; margin-top:0.25rem;" />
+                        <div style="font-size: 0.85rem; color:#555; margin-top:0.25rem;">
+                            <span id="bgGifBlurValue">7px</span> (0–20 px)
+                        </div>
+                    </div>
+
                     <div class="form-actions">
                         <button type="button" id="siteSaveBtn" class="btn-primary">Save Site Settings</button>
                     </div>
@@ -1494,6 +1522,25 @@
         const bgGifFileInput = document.getElementById('bgGifFileInput');
         const bgGifPreview = document.getElementById('bgGifPreview');
         const bgGifPreviewImg = document.getElementById('bgGifPreviewImg');
+        const bgGifOpacityRange = document.getElementById('bgGifOpacityRange');
+        const bgGifOpacityValue = document.getElementById('bgGifOpacityValue');
+        const bgGifBlurRange = document.getElementById('bgGifBlurRange');
+        const bgGifBlurValue = document.getElementById('bgGifBlurValue');
+
+        // Live slider label updates
+        if (bgGifOpacityRange && bgGifOpacityValue) {
+            bgGifOpacityRange.addEventListener('input', () => {
+                const percent = parseInt(bgGifOpacityRange.value, 10) || 0;
+                bgGifOpacityValue.textContent = `${percent}%`;
+            });
+        }
+
+        if (bgGifBlurRange && bgGifBlurValue) {
+            bgGifBlurRange.addEventListener('input', () => {
+                const px = parseInt(bgGifBlurRange.value, 10) || 0;
+                bgGifBlurValue.textContent = `${px}px`;
+            });
+        }
 
         // GIF upload handler
         if (bgGifUploadBtn && bgGifFileInput) {
@@ -1561,6 +1608,21 @@
                     bgGifPreview.style.display = 'none';
                 }
 
+                // Load opacity and blur sliders
+                const opacity = typeof data.backgroundGifOpacity === 'number' ? data.backgroundGifOpacity : 0.12;
+                const blur = typeof data.backgroundGifBlur === 'number' ? data.backgroundGifBlur : 7;
+
+                if (bgGifOpacityRange && bgGifOpacityValue) {
+                    const percent = Math.round(opacity * 100);
+                    bgGifOpacityRange.value = String(percent);
+                    bgGifOpacityValue.textContent = `${percent}%`;
+                }
+
+                if (bgGifBlurRange && bgGifBlurValue) {
+                    bgGifBlurRange.value = String(blur);
+                    bgGifBlurValue.textContent = `${blur}px`;
+                }
+
                 if (data.updatedAt) {
                     siteLastSaved.textContent = `Last saved: ${new Date(data.updatedAt).toLocaleString()}`;
                 }
@@ -1574,6 +1636,11 @@
                 siteSaveBtn.disabled = true;
                 siteSaveBtn.textContent = 'Saving...';
 
+                // Get opacity and blur values
+                const opacityPercent = bgGifOpacityRange ? parseInt(bgGifOpacityRange.value, 10) || 0 : 12;
+                const opacityValue = opacityPercent / 100; // convert percent to 0.xx
+                const blurValue = bgGifBlurRange ? parseInt(bgGifBlurRange.value, 10) || 0 : 7;
+
                 const payload = {
                     siteTitle: siteTitleField.value,
                     siteSubtitle: siteSubtitleField.value,
@@ -1582,7 +1649,9 @@
                     pageBg: pageBgField.value,
                     cardBg: cardBgField.value,
                     backgroundGifEnabled: bgGifEnabledInput ? bgGifEnabledInput.checked : false,
-                    backgroundGifUrl: bgGifUrlInput ? bgGifUrlInput.value.trim() : ''
+                    backgroundGifUrl: bgGifUrlInput ? bgGifUrlInput.value.trim() : '',
+                    backgroundGifOpacity: opacityValue,
+                    backgroundGifBlur: blurValue
                 };
 
                 const res = await fetch('/.netlify/functions/updateSiteSettings', {

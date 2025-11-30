@@ -6,6 +6,8 @@
   --site-card-bg: #ffffff;
   --accent-color: #2563eb;
   --page-bg-gif: none;
+  --page-bg-gif-opacity: 0.12;
+  --page-bg-gif-blur: 7px;
 }
 
 /* ===== Loading State (Prevent FOUC) ===== */
@@ -162,8 +164,8 @@ body::before {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  opacity: 0.18;
-  filter: blur(1px);
+  opacity: var(--page-bg-gif-opacity, 0.12);
+  filter: blur(var(--page-bg-gif-blur, 7px));
   transform: scale(1.02);
   pointer-events: none;
 }
@@ -171,14 +173,6 @@ body::before {
 /* Hide GIF overlay when disabled */
 body.no-bg-gif::before {
   background-image: none;
-}
-
-/* Reduce GIF intensity on mobile */
-@media (max-width: 768px) {
-  body::before {
-    opacity: 0.12;
-    filter: blur(0.5px);
-  }
 }
 
 /* ===== Global Header ===== */
