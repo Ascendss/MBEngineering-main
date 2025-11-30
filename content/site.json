@@ -3,11 +3,11 @@
   "siteSubtitle": "",
   "headerBg": "#1a1a1a",
   "headerText": "#ffffff",
-  "pageBg": "#164616",
+  "pageBg": "#0e2a0e",
   "cardBg": "#ffffff",
   "backgroundGifEnabled": true,
-  "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764461919264-f356ea.gif",
-  "backgroundGifOpacity": 0.06,
+  "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764468634034-b09da4.gif",
+  "backgroundGifOpacity": 0.05,
   "backgroundGifBlur": 10,
-  "updatedAt": "2025-11-30T02:08:15.775Z"
+  "updatedAt": "2025-11-30T02:11:07.280Z"
 }
