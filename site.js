@@ -73,12 +73,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (siteTitleEl) {
       const title = data.siteTitle || 'MB Engineering';
-      // If title contains a pipe, create structured markup for animation support
+      // If title contains a pipe, create structured markup with center separator as cursor
       if (title.includes('|')) {
         const parts = title.split('|');
         const name = parts[0].trim();
         const role = parts.slice(1).join('|').trim();
-        siteTitleEl.innerHTML = `${name} <span class="site-title-separator">|</span> <span id="site-role-text">${role}</span><span class="site-title-cursor">|</span>`;
+        // Single center bar that acts as both separator AND cursor (no extra cursor at end)
+        siteTitleEl.innerHTML = `${name} <span id="site-role-separator" class="site-title-separator">|</span> <span id="site-role-text">${role}</span>`;
       } else {
         siteTitleEl.textContent = title;
       }
@@ -93,14 +94,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const siteTitleEl = document.querySelector('.site-title');
     const siteSubtitleEl = document.querySelector('.site-subtitle');
     if (siteTitleEl && !siteTitleEl.textContent) {
-      siteTitleEl.innerHTML = 'Matt Banzhof <span class="site-title-separator">|</span> <span id="site-role-text">Electrical Engineer</span><span class="site-title-cursor">|</span>';
+      siteTitleEl.innerHTML = 'Matt Banzhof <span id="site-role-separator" class="site-title-separator">|</span> <span id="site-role-text">Electrical Engineer</span>';
     }
     if (siteSubtitleEl && !siteSubtitleEl.textContent) siteSubtitleEl.textContent = '';
     if (homeLink) homeLink.classList.add('loaded');
   }
 });
 
-// === About page header role animation ===
+// === About page header role animation (center '|' as cursor) ===
 document.addEventListener('DOMContentLoaded', function () {
   // Only run on the About page
   const isAboutPage =
@@ -114,10 +115,11 @@ document.addEventListener('DOMContentLoaded', function () {
   // Small delay to ensure site.js has populated the title
   setTimeout(() => {
     const roleEl = document.getElementById('site-role-text');
-    const cursorEl = document.querySelector('.site-title-cursor');
-    if (!roleEl || !cursorEl) return;
+    const separatorEl = document.getElementById('site-role-separator');
 
-    // Phrases to cycle through (edit this list as needed)
+    if (!roleEl || !separatorEl) return;
+
+    // Phrases to cycle through (edit as desired)
     const phrases = [
       'Electrical Engineer',
       'Innovator',
@@ -125,27 +127,26 @@ document.addEventListener('DOMContentLoaded', function () {
       'R&D Technologist'
     ];
 
+    // Start showing the first phrase immediately
     let phraseIndex = 0;
-    let charIndex = phrases[0].length; // first phrase already "typed"
+    let charIndex = phrases[0].length;
     let deleting = false;
     let holdTimeout = null;
 
-    // Configurable timings
-    const INITIAL_SOLID_DELAY = 10000;   // 10s before any blinking/typing
-    const HOLD_AFTER_EACH_PHRASE = 30000; // 30s solid separator between animations
-    const TYPE_SPEED = 80;                // ms per char when typing
-    const DELETE_SPEED = 45;              // ms per char when deleting
-    const BETWEEN_PHRASES_DELAY = 1000;   // small pause after deleting before typing next
+    const INITIAL_SOLID_DELAY = 5000;     // 5s solid bar before any blinking/typing
+    const HOLD_EACH_PHRASE = 10000;       // 10s each full phrase is visible
+    const TYPE_SPEED = 80;                // typing speed (ms per char)
+    const DELETE_SPEED = 50;              // deleting speed (ms per char)
+    const BETWEEN_PHRASES_DELAY = 800;    // small pause after deleting before next phrase
 
-    // Ensure initial text matches the first phrase
+    // Ensure initial visible phrase is correct
     roleEl.textContent = phrases[0];
 
-    // Helper to activate/deactivate the cursor
     function setCursorActive(active) {
       if (active) {
-        cursorEl.classList.add('is-active');
+        separatorEl.classList.add('is-active');
       } else {
-        cursorEl.classList.remove('is-active');
+        separatorEl.classList.remove('is-active');
       }
     }
 
@@ -153,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const currentPhrase = phrases[phraseIndex];
 
       if (!deleting && charIndex < currentPhrase.length) {
-        // Typing forward
+        // Typing characters forward
         charIndex++;
         roleEl.textContent = currentPhrase.slice(0, charIndex);
         setTimeout(typeLoop, TYPE_SPEED);
@@ -161,15 +162,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       if (!deleting && charIndex === currentPhrase.length) {
-        // Fully typed – hide cursor and hold phrase solid for a while
-        setCursorActive(false);
+        // Phrase is fully typed; keep cursor blinking and hold the phrase for a bit
         if (!holdTimeout) {
           holdTimeout = setTimeout(() => {
             deleting = true;
             holdTimeout = null;
-            setCursorActive(true); // cursor returns at end, ready to delete
             typeLoop();
-          }, HOLD_AFTER_EACH_PHRASE);
+          }, HOLD_EACH_PHRASE);
         }
         return;
       }
@@ -183,11 +182,11 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       if (deleting && charIndex === 0) {
-        // Finished deleting – move to next phrase
+        // Finished deleting current phrase – advance to next
         deleting = false;
         phraseIndex = (phraseIndex + 1) % phrases.length;
 
-        // Small pause before typing the next phrase
+        // Brief pause before typing next phrase
         setTimeout(() => {
           charIndex = 0;
           roleEl.textContent = '';
@@ -199,14 +198,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Initial behavior:
-    // 1. For the first 10 seconds: show "Matt Banzhof | Electrical Engineer" with NO blinking cursor
-    // 2. After 10 seconds: cursor appears at the right, starts blinking and begins the delete+type cycle
-    setCursorActive(false); // solid header, no cursor animation
+    // 1. Show "Matt Banzhof | Electrical Engineer" with solid (non-blinking) bar for 5 seconds.
+    // 2. After 5 seconds, bar begins blinking and we start deleting the first phrase.
+    setCursorActive(false); // solid, non-blinking
 
     setTimeout(() => {
-      // Begin by deleting the first phrase (cursor at right, blinking)
+      // Start blinking and begin deletion/typing cycle
       setCursorActive(true);
-      deleting = true;
+      deleting = true; // we start by deleting the first phrase
       typeLoop();
     }, INITIAL_SOLID_DELAY);
   }, 500); // Small delay to ensure DOM is ready
