@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MB Engineering Portfolio</title>
+  <title>Matt Banzhof - Electrical Engineer</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style2.css" />
 </head>
-<body>
+<body class="about-page">
   <header>
     <a href="index.html" class="home-link" data-dynamic>
       <h1 class="site-title"></h1>
@@ -15,7 +15,7 @@
     </a>
     <nav>
       <ul>
-        <li><a href="about.html">About</a></li>
+        <li><a href="index.html">About</a></li>
         <li><a href="resume.html">Resume</a></li>
         <li><a href="gallery.html">Project Gallery</a></li>
         <li><a href="blog.html">Blog</a></li>
@@ -25,51 +25,55 @@
   </header>
 
   <main>
-    <!-- Hero Section -->
-    <section class="hero-landing">
-      <div class="hero-content">
-        <h2 class="hero-headline">Engineering Technologist</h2>
-        <p class="hero-tagline">
-          Specializing in R&D, prototyping, PCB design, and turning concepts into working systems.
-        </p>
-        <div class="hero-cta">
-          <a href="about.html" class="btn-primary-pill">Learn More About Me</a>
-          <a href="gallery.html" class="btn-ghost">View My Projects</a>
+    <section class="content">
+      <div id="aboutContentWrapper" data-dynamic class="card about-card">
+        <!-- Hero band inside the card -->
+        <div class="about-hero">
+          <div class="about-hero-inner">
+            <h1 id="aboutPageTitle" class="about-hero-title"></h1>
+            <p id="aboutTagline" class="about-hero-tagline"></p>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Quick Links Grid -->
-    <section class="quick-links">
-      <a href="gallery.html" class="quick-link-card">
-        <span class="quick-link-icon">🔧</span>
-        <h3>Project Gallery</h3>
-        <p>Explore my engineering projects and prototypes</p>
-      </a>
-      <a href="blog.html" class="quick-link-card">
-        <span class="quick-link-icon">📝</span>
-        <h3>Blog</h3>
-        <p>Insights and updates from my engineering journey</p>
-      </a>
-      <a href="resume.html" class="quick-link-card">
-        <span class="quick-link-icon">📄</span>
-        <h3>Resume</h3>
-        <p>View my professional experience and skills</p>
-      </a>
-      <a href="contact.html" class="quick-link-card">
-        <span class="quick-link-icon">✉️</span>
-        <h3>Contact</h3>
-        <p>Get in touch for opportunities or questions</p>
-      </a>
+        <!-- Two-column layout: avatar + content -->
+        <div class="about-layout">
+          <div class="about-avatar-wrapper">
+            <img id="aboutAvatar" class="about-avatar" src="" alt="Portrait">
+          </div>
+          <div class="about-body">
+            <div id="aboutBody" class="markdown-content"></div>
+
+            <div class="about-cta-row">
+              <a href="blog.html" class="btn-primary-pill">View Blog</a>
+              <a href="contact.html" class="btn-primary-pill">Contact Me</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline section -->
+        <section id="aboutTimelineSection" class="about-timeline-section">
+          <h2 class="about-timeline-title">Timeline</h2>
+          <p class="about-timeline-subtitle">
+            A quick look at where I've been and what I've worked on.
+          </p>
+          <div id="aboutTimeline" class="timeline">
+            <!-- Timeline items injected by JS -->
+          </div>
+        </section>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 MB Engineering</p>
+    <p>&copy; 2025 MB Engineering</p>
   </footer>
 
+  <!-- Site-wide scripts -->
   <script src="site.js"></script>
   <script src="script.js"></script>
+  <!-- Markdown renderer + About loader -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="about.js"></script>
   <!-- Netlify Identity Widget -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
