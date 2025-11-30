@@ -21,7 +21,7 @@ exports.handler = async function (event) {
 
     try {
         const incoming = JSON.parse(event.body);
-        const { siteTitle, siteSubtitle, headerBg, headerText, pageBg, cardBg, backgroundGifEnabled, backgroundGifUrl, backgroundGifOpacity, backgroundGifBlur } = incoming;
+        const { siteTitle, siteSubtitle, headerBg, headerText, pageBg, cardBg, backgroundGifEnabled, backgroundGifUrl, backgroundGifOpacity, backgroundGifBlur, headerRoles } = incoming;
 
         const getUrl = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`;
 
@@ -61,6 +61,7 @@ exports.handler = async function (event) {
             ...(backgroundGifUrl !== undefined ? { backgroundGifUrl } : {}),
             ...(backgroundGifOpacity !== undefined ? { backgroundGifOpacity } : {}),
             ...(backgroundGifBlur !== undefined ? { backgroundGifBlur } : {}),
+            ...(Array.isArray(headerRoles) ? { headerRoles } : {}),
             updatedAt: new Date().toISOString()
         };
 

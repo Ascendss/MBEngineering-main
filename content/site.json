@@ -9,5 +9,11 @@
   "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764468634034-b09da4.gif",
   "backgroundGifOpacity": 0.15,
   "backgroundGifBlur": 18,
+  "headerRoles": [
+    "Electrical Engineer",
+    "Innovator",
+    "Problem Solver",
+    "R&D Technologist"
+  ],
   "updatedAt": "2025-11-30T02:17:24.065Z"
 }

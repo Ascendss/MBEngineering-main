@@ -86,6 +86,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (siteSubtitleEl) siteSubtitleEl.textContent = data.siteSubtitle || '';
 
+    // Make header roles available globally for the About page animation
+    window.SITE_HEADER_ROLES = Array.isArray(data.headerRoles) && data.headerRoles.length > 0
+      ? data.headerRoles.slice()
+      : ['Electrical Engineer'];
+
     // Fade in header content after loading
     if (homeLink) homeLink.classList.add('loaded');
   } catch (err) {
@@ -117,13 +122,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const roleBlock = document.getElementById('site-role-block');
     if (!roleBlock) return;
 
-    // Phrases to cycle through
-    const phrases = [
-      'Electrical Engineer',
-      'Innovator',
-      'Problem Solver',
-      'R&D Technologist'
-    ];
+    // Phrases to cycle through (from site config or fallback)
+    const phrases = (Array.isArray(window.SITE_HEADER_ROLES) && window.SITE_HEADER_ROLES.length > 0)
+      ? window.SITE_HEADER_ROLES
+      : ['Electrical Engineer'];
 
     let phraseIndex = 0;
     let isFirstPhrase = true;
