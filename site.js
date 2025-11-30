@@ -275,9 +275,9 @@ document.addEventListener('DOMContentLoaded', function () {
       await scanBackToCenter(next);
 
       // Cursor is back at center and still blinking
-      // Let it blink for a short "settle" moment at center...
+      // Let it blink for a "settle" moment at center (visible blinking!)
       setRestText(next);
-      await new Promise((resolve) => setTimeout(resolve, 600)); // ~0.6s extra blink
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // ~1.5s of blinking at center
 
       // ...then "fall asleep" -> solid center bar again
       setCursorBlink(false);
