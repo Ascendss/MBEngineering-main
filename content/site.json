@@ -7,7 +7,7 @@
   "cardBg": "#ffffff",
   "backgroundGifEnabled": true,
   "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764887264296-5a8040.gif",
-  "backgroundGifOpacity": 0.03,
+  "backgroundGifOpacity": 0.18,
   "backgroundGifBlur": 13,
   "headerRoles": [
     "Electrical Engineer",
@@ -15,6 +15,6 @@
     "Problem Solver",
     "Prototype Developer"
   ],
-  "updatedAt": "2025-12-04T22:29:31.089Z",
+  "updatedAt": "2025-12-04T22:30:06.535Z",
   "backgroundVideoUrl": ""
 }
