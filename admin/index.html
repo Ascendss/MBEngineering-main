@@ -1244,7 +1244,11 @@
                     ${item.imageUrl ? `<div class="timeline-image-preview"><img src="${item.imageUrl}" alt="Preview" style="max-width:150px; max-height:100px; border-radius:6px; margin-top:0.5rem;" /></div>` : ''}
                     <div>
                         <div class="timeline-editor-label">Body (Markdown)</div>
-                        <textarea rows="3" class="timeline-body-input" placeholder="Description of this role or achievement...">${item.body || ''}</textarea>
+                        <div class="textarea-toolbar">
+                            <button type="button" class="timeline-body-insert-image btn-insert-image">📷 Insert Inline Image...</button>
+                            <button type="button" class="timeline-body-insert-video btn-insert-video">🎬 Insert Video...</button>
+                        </div>
+                        <textarea rows="5" class="timeline-body-input" placeholder="Description of this role or achievement. You can add images, links, and bullet points using Markdown.">${item.body || ''}</textarea>
                     </div>
                     <div style="display:flex; justify-content: space-between; align-items:center; margin-top:0.5rem;">
                         <div style="display:flex; gap:0.5rem;">
@@ -1317,6 +1321,27 @@
                         imageFileInput.value = '';
                     }
                 });
+
+                // Inline image insert for timeline body
+                const bodyInsertImageBtn = wrapper.querySelector('.timeline-body-insert-image');
+                const bodyTextarea = wrapper.querySelector('.timeline-body-input');
+                
+                if (bodyInsertImageBtn && bodyTextarea) {
+                    bodyInsertImageBtn.addEventListener('click', () => {
+                        currentInlineTarget = { btn: bodyInsertImageBtn, textarea: bodyTextarea };
+                        inlineImageInput.click();
+                    });
+                }
+
+                // Inline video insert for timeline body
+                const bodyInsertVideoBtn = wrapper.querySelector('.timeline-body-insert-video');
+                
+                if (bodyInsertVideoBtn && bodyTextarea) {
+                    bodyInsertVideoBtn.addEventListener('click', () => {
+                        currentVideoTarget = { btn: bodyInsertVideoBtn, textarea: bodyTextarea };
+                        blogVideoInput.click();
+                    });
+                }
 
                 list.appendChild(wrapper);
             });
