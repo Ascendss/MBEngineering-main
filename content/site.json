@@ -6,8 +6,8 @@
   "pageBg": "#000000",
   "cardBg": "#ffffff",
   "backgroundGifEnabled": true,
-  "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764823867450-b09da4.gif",
-  "backgroundGifOpacity": 0.16,
+  "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764877579479-b69c5f.gif",
+  "backgroundGifOpacity": 0.3,
   "backgroundGifBlur": 8,
   "headerRoles": [
     "Electrical Engineer",
@@ -15,6 +15,6 @@
     "Problem Solver",
     "Prototype Developer"
   ],
-  "updatedAt": "2025-12-04T19:41:59.212Z",
+  "updatedAt": "2025-12-04T19:46:32.234Z",
   "backgroundVideoUrl": ""
 }
