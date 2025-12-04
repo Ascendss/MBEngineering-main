@@ -1285,6 +1285,63 @@ footer p {
   margin-bottom: 0;
 }
 
+/* Inline images within timeline body */
+.timeline-body-inner img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+  display: block;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Side-by-side images if wrapped in a paragraph together */
+.timeline-body-inner p img {
+  display: inline-block;
+  max-width: 48%;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+  vertical-align: top;
+}
+
+/* Single image in its own paragraph - full width */
+.timeline-body-inner p:has(> img:only-child) img {
+  display: block;
+  max-width: 100%;
+  margin: 0.75rem auto;
+}
+
+/* Video embeds in timeline body */
+.timeline-body-inner video,
+.timeline-body-inner iframe {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+}
+
+/* Links in timeline body */
+.timeline-body-inner a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.timeline-body-inner a:hover {
+  text-decoration: underline;
+}
+
+/* Lists in timeline body */
+.timeline-body-inner ul,
+.timeline-body-inner ol {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+  padding: 0;
+}
+
+.timeline-body-inner li {
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
 /* Optional image inside card */
 .timeline-image {
   max-height: 120px;
