@@ -47,16 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (data.pageBg) root.style.setProperty('--site-page-bg', data.pageBg);
     if (data.cardBg) root.style.setProperty('--site-card-bg', data.cardBg);
 
-    // Apply animated background GIF
-    if (data.backgroundGifEnabled && data.backgroundGifUrl) {
-      root.style.setProperty('--page-bg-gif', `url('${data.backgroundGifUrl}')`);
-      document.body.classList.remove('no-bg-gif');
-    } else {
-      root.style.setProperty('--page-bg-gif', 'none');
-      document.body.classList.add('no-bg-gif');
-    }
-
-    // Apply GIF opacity and blur from settings
+    // Apply opacity and blur from settings (used by both GIF and video)
     const opacity = (typeof data.backgroundGifOpacity === 'number')
       ? data.backgroundGifOpacity
       : 0.12;
@@ -66,6 +57,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     root.style.setProperty('--page-bg-gif-opacity', String(opacity));
     root.style.setProperty('--page-bg-gif-blur', `${blur}px`);
+
+    // Get background video element
+    const bgVideo = document.getElementById('bg-video');
+
+    // Determine if we should use video or GIF
+    const hasVideo = data.backgroundVideoUrl && data.backgroundVideoUrl.trim().length > 0;
+    const hasGif = data.backgroundGifUrl && data.backgroundGifUrl.trim().length > 0;
+
+    if (data.backgroundGifEnabled && hasVideo) {
+      // Use VIDEO background (priority over GIF)
+      if (bgVideo) {
+        bgVideo.src = data.backgroundVideoUrl;
+        bgVideo.style.display = 'block';
+        bgVideo.style.opacity = String(opacity);
+        bgVideo.style.filter = `blur(${blur}px)`;
+        document.body.classList.add('has-bg-video');
+        document.body.classList.add('no-bg-gif'); // Hide GIF pseudo-element
+      }
+    } else if (data.backgroundGifEnabled && hasGif) {
+      // Use GIF background (fallback)
+      root.style.setProperty('--page-bg-gif', `url('${data.backgroundGifUrl}')`);
+      document.body.classList.remove('no-bg-gif');
+      document.body.classList.remove('has-bg-video');
+      if (bgVideo) bgVideo.style.display = 'none';
+    } else {
+      // No animated background
+      root.style.setProperty('--page-bg-gif', 'none');
+      document.body.classList.add('no-bg-gif');
+      document.body.classList.remove('has-bg-video');
+      if (bgVideo) bgVideo.style.display = 'none';
+    }
 
     // Update site title and subtitle
     const siteTitleEl = document.querySelector('.site-title');

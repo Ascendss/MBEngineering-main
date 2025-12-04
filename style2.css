@@ -175,6 +175,29 @@ body.no-bg-gif::before {
   background-image: none;
 }
 
+/* ===== Video Background ===== */
+.animated-bg-video {
+  display: none; /* Hidden by default, shown via JS */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  object-fit: cover;
+  opacity: var(--page-bg-gif-opacity, 0.12);
+  filter: blur(var(--page-bg-gif-blur, 7px));
+  pointer-events: none;
+}
+
+/* When video is active, hide the GIF pseudo-element */
+body.has-bg-video::before {
+  display: none;
+}
+
 /* ===== Global Header ===== */
 header {
   background-color: var(--site-header-bg);

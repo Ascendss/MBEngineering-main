@@ -683,6 +683,33 @@
                         <img id="bgGifPreviewImg" src="" alt="GIF Preview" style="max-width:200px; max-height:120px; border-radius:8px; border:1px solid #ddd;" />
                     </div>
 
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px dashed #ddd;" />
+
+                    <h4 style="margin-bottom: 0.5rem;">🎬 Video Background (Optional - Overrides GIF)</h4>
+                    <p style="color:#666; font-size:0.85rem; margin-bottom: 0.75rem;">
+                        MP4 videos give smoother animation and smaller file sizes. If set, video takes priority over GIF.
+                    </p>
+
+                    <div style="margin-bottom: 0.75rem;">
+                        <label for="bgVideoUrlInput">Background Video URL:</label>
+                        <input type="text" id="bgVideoUrlInput" placeholder="/assets/uploads/background.mp4" />
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label>Upload Video:</label>
+                        <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.25rem;">
+                            <button type="button" id="bgVideoUploadBtn" class="btn-insert-video">🎬 Upload MP4</button>
+                            <input type="file" id="bgVideoFileInput" accept="video/mp4,video/webm" style="display:none;" />
+                        </div>
+                        <p style="font-size:0.75rem; color:#888; margin-top:0.25rem;">Tip: Keep videos short (3-10 sec loop), 720p, under 5MB for best performance.</p>
+                    </div>
+
+                    <div id="bgVideoPreview" style="display:none; margin-bottom:1rem;">
+                        <p style="font-size:0.85rem; color:#666; margin-bottom:0.25rem;">Video Preview:</p>
+                        <video id="bgVideoPreviewEl" src="" autoplay muted loop playsinline style="max-width:200px; max-height:120px; border-radius:8px; border:1px solid #ddd;"></video>
+                        <button type="button" id="bgVideoClearBtn" style="display:block; margin-top:0.5rem; font-size:0.8rem; color:#b91c1c; background:none; border:none; cursor:pointer;">✕ Remove video</button>
+                    </div>
+
                     <div style="margin-top: 1rem;">
                         <label for="bgGifOpacityRange">Background Opacity:</label>
                         <input type="range"
@@ -1711,40 +1738,95 @@
         if (bgGifUploadBtn && bgGifFileInput) {
             bgGifUploadBtn.addEventListener('click', () => bgGifFileInput.click());
 
-            bgGifFileInput.addEventListener('change', async (e) => {
-                const file = e.target.files && e.target.files[0];
-                if (!file) return;
+                    bgGifFileInput.addEventListener('change', async (e) => {
+                        const file = e.target.files && e.target.files[0];
+                        if (!file) return;
 
-                try {
-                    bgGifUploadBtn.disabled = true;
-                    bgGifUploadBtn.textContent = '⏳ Uploading...';
+                        try {
+                            bgGifUploadBtn.disabled = true;
+                            bgGifUploadBtn.textContent = '⏳ Uploading...';
 
-                    const uploadedUrl = await uploadFile(file);
+                            const uploadedUrl = await uploadFile(file);
 
-                    if (uploadedUrl) {
-                        bgGifUrlInput.value = uploadedUrl;
-                        // Show preview
-                        if (bgGifPreviewImg && bgGifPreview) {
-                            bgGifPreviewImg.src = uploadedUrl;
-                            bgGifPreview.style.display = 'block';
+                            if (uploadedUrl) {
+                                bgGifUrlInput.value = uploadedUrl;
+                                // Show preview
+                                if (bgGifPreviewImg && bgGifPreview) {
+                                    bgGifPreviewImg.src = uploadedUrl;
+                                    bgGifPreview.style.display = 'block';
+                                }
+                            }
+
+                            bgGifUploadBtn.textContent = '✅ Uploaded!';
+                            setTimeout(() => {
+                                bgGifUploadBtn.textContent = '📷 Upload GIF';
+                                bgGifUploadBtn.disabled = false;
+                            }, 1500);
+                        } catch (err) {
+                            console.error('Background GIF upload failed:', err);
+                            alert('Failed to upload GIF: ' + err.message);
+                            bgGifUploadBtn.textContent = '📷 Upload GIF';
+                            bgGifUploadBtn.disabled = false;
+                        } finally {
+                            bgGifFileInput.value = '';
                         }
-                    }
-
-                    bgGifUploadBtn.textContent = '✅ Uploaded!';
-                    setTimeout(() => {
-                        bgGifUploadBtn.textContent = '📷 Upload GIF';
-                        bgGifUploadBtn.disabled = false;
-                    }, 1500);
-                } catch (err) {
-                    console.error('Background GIF upload failed:', err);
-                    alert('Failed to upload GIF: ' + err.message);
-                    bgGifUploadBtn.textContent = '📷 Upload GIF';
-                    bgGifUploadBtn.disabled = false;
-                } finally {
-                    bgGifFileInput.value = '';
+                    });
                 }
-            });
-        }
+
+                // Video background controls
+                const bgVideoUrlInput = document.getElementById('bgVideoUrlInput');
+                const bgVideoUploadBtn = document.getElementById('bgVideoUploadBtn');
+                const bgVideoFileInput = document.getElementById('bgVideoFileInput');
+                const bgVideoPreview = document.getElementById('bgVideoPreview');
+                const bgVideoPreviewEl = document.getElementById('bgVideoPreviewEl');
+                const bgVideoClearBtn = document.getElementById('bgVideoClearBtn');
+
+                if (bgVideoUploadBtn && bgVideoFileInput) {
+                    bgVideoUploadBtn.addEventListener('click', () => bgVideoFileInput.click());
+
+                    bgVideoFileInput.addEventListener('change', async (e) => {
+                        const file = e.target.files && e.target.files[0];
+                        if (!file) return;
+
+                        try {
+                            bgVideoUploadBtn.disabled = true;
+                            bgVideoUploadBtn.textContent = '⏳ Uploading video...';
+
+                            const uploadedUrl = await uploadFile(file);
+
+                            if (uploadedUrl) {
+                                bgVideoUrlInput.value = uploadedUrl;
+                                // Show preview
+                                if (bgVideoPreviewEl && bgVideoPreview) {
+                                    bgVideoPreviewEl.src = uploadedUrl;
+                                    bgVideoPreview.style.display = 'block';
+                                }
+                            }
+
+                            bgVideoUploadBtn.textContent = '✅ Uploaded!';
+                            setTimeout(() => {
+                                bgVideoUploadBtn.textContent = '🎬 Upload MP4';
+                                bgVideoUploadBtn.disabled = false;
+                            }, 1500);
+                        } catch (err) {
+                            console.error('Background video upload failed:', err);
+                            alert('Failed to upload video: ' + err.message);
+                            bgVideoUploadBtn.textContent = '🎬 Upload MP4';
+                            bgVideoUploadBtn.disabled = false;
+                        } finally {
+                            bgVideoFileInput.value = '';
+                        }
+                    });
+                }
+
+                // Clear video button
+                if (bgVideoClearBtn) {
+                    bgVideoClearBtn.addEventListener('click', () => {
+                        if (bgVideoUrlInput) bgVideoUrlInput.value = '';
+                        if (bgVideoPreview) bgVideoPreview.style.display = 'none';
+                        if (bgVideoPreviewEl) bgVideoPreviewEl.src = '';
+                    });
+                }
 
         async function loadSiteSettings() {
             try {
@@ -1771,6 +1853,18 @@
                     bgGifPreview.style.display = 'block';
                 } else if (bgGifPreview) {
                     bgGifPreview.style.display = 'none';
+                }
+
+                // Load video URL
+                if (bgVideoUrlInput) {
+                    bgVideoUrlInput.value = data.backgroundVideoUrl || '';
+                }
+                // Show video preview if URL exists
+                if (data.backgroundVideoUrl && bgVideoPreviewEl && bgVideoPreview) {
+                    bgVideoPreviewEl.src = data.backgroundVideoUrl;
+                    bgVideoPreview.style.display = 'block';
+                } else if (bgVideoPreview) {
+                    bgVideoPreview.style.display = 'none';
                 }
 
                 // Load opacity and blur sliders
@@ -1833,6 +1927,7 @@
                     cardBg: cardBgField.value,
                     backgroundGifEnabled: bgGifEnabledInput ? bgGifEnabledInput.checked : false,
                     backgroundGifUrl: bgGifUrlInput ? bgGifUrlInput.value.trim() : '',
+                    backgroundVideoUrl: bgVideoUrlInput ? bgVideoUrlInput.value.trim() : '',
                     backgroundGifOpacity: opacityValue,
                     backgroundGifBlur: blurValue,
                     headerRoles: headerRoles
