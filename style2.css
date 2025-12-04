@@ -1196,14 +1196,92 @@ footer p {
   color: #111827;
 }
 
-.timeline-body p {
+/* Timeline body collapse/expand */
+.timeline-body {
+  margin-top: 0.6rem;
+}
+
+/* Container that holds the markdown text */
+.timeline-body-inner {
+  position: relative;
+  max-height: 3.5rem; /* ~2 lines */
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+/* Expanded state */
+.timeline-body-inner.expanded {
+  max-height: 600px;
+}
+
+/* Subtle fade when collapsed to hint at more text */
+.timeline-body-inner.collapsed::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2rem;
+  background: linear-gradient(to bottom, rgba(249, 250, 251, 0), rgba(249, 250, 251, 1));
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.timeline-body-inner.expanded::after {
+  opacity: 0;
+}
+
+/* Toggle button */
+.timeline-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f0f1f3;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.timeline-toggle:hover {
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.timeline-toggle:active {
+  transform: translateY(0);
+}
+
+.timeline-toggle .toggle-icon {
+  font-size: 0.7rem;
+  transition: transform 0.25s ease;
+}
+
+/* Rotate arrow when open */
+.timeline-toggle.open .toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Hide toggle entirely when not needed */
+.timeline-toggle.hidden {
+  display: none;
+}
+
+.timeline-body-inner p {
   margin: 0 0 0.6rem 0;
   font-size: 0.95rem;
   line-height: 1.7;
   color: #4b5563;
 }
 
-.timeline-body p:last-child {
+.timeline-body-inner p:last-child {
   margin-bottom: 0;
 }
 

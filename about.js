@@ -84,24 +84,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         headlineEl.className = 'timeline-headline';
         headlineEl.textContent = item.headline || '';
 
-        const bodyEl = document.createElement('div');
-        bodyEl.className = 'timeline-body';
+        // Create the body wrapper with expand/collapse structure
+        const bodyWrapper = document.createElement('div');
+        bodyWrapper.className = 'timeline-body';
+
+        const bodyInner = document.createElement('div');
+        bodyInner.className = 'timeline-body-inner collapsed';
+        
         if (item.body) {
           if (typeof marked !== 'undefined') {
-            bodyEl.innerHTML = marked.parse(item.body);
+            bodyInner.innerHTML = marked.parse(item.body);
           } else {
-            bodyEl.textContent = item.body;
+            bodyInner.textContent = item.body;
           }
         }
 
+        // Create the toggle button
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'timeline-toggle';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.innerHTML = '<span class="toggle-label">Show details</span><span class="toggle-icon">▼</span>';
+
+        bodyWrapper.appendChild(bodyInner);
+        bodyWrapper.appendChild(toggleBtn);
+
         content.appendChild(dateEl);
         content.appendChild(headlineEl);
-        content.appendChild(bodyEl);
+        content.appendChild(bodyWrapper);
 
         wrapper.appendChild(dot);
         wrapper.appendChild(content);
 
         timelineContainer.appendChild(wrapper);
+      });
+
+      // Initialize expand/collapse functionality for timeline items
+      const timelineItems = timelineContainer.querySelectorAll('.timeline-item');
+      timelineItems.forEach((item) => {
+        const bodyInner = item.querySelector('.timeline-body-inner');
+        const toggle = item.querySelector('.timeline-toggle');
+        if (!bodyInner || !toggle) return;
+
+        // If the content is short, hide the toggle and show everything
+        const textLength = (bodyInner.textContent || '').trim().length;
+        if (textLength < 160) {
+          bodyInner.classList.remove('collapsed');
+          bodyInner.classList.add('expanded');
+          toggle.classList.add('hidden');
+          return;
+        }
+
+        // Start collapsed
+        bodyInner.classList.add('collapsed');
+        bodyInner.classList.remove('expanded');
+        toggle.setAttribute('aria-expanded', 'false');
+
+        const labelSpan = toggle.querySelector('.toggle-label');
+
+        toggle.addEventListener('click', () => {
+          const isExpanded = bodyInner.classList.toggle('expanded');
+          bodyInner.classList.toggle('collapsed', !isExpanded);
+          toggle.classList.toggle('open', isExpanded);
+          toggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+
+          if (labelSpan) {
+            labelSpan.textContent = isExpanded ? 'Hide details' : 'Show details';
+          }
+        });
       });
 
       // Show the timeline section
