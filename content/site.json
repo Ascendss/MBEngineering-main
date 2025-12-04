@@ -6,7 +6,7 @@
   "pageBg": "#000000",
   "cardBg": "#ffffff",
   "backgroundGifEnabled": true,
-  "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764877579479-b69c5f.gif",
+  "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764877677756-87aa0a.gif",
   "backgroundGifOpacity": 0.3,
   "backgroundGifBlur": 8,
   "headerRoles": [
@@ -15,6 +15,6 @@
     "Problem Solver",
     "Prototype Developer"
   ],
-  "updatedAt": "2025-12-04T19:46:32.234Z",
+  "updatedAt": "2025-12-04T19:48:01.807Z",
   "backgroundVideoUrl": ""
 }
