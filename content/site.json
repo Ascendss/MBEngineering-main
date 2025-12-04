@@ -8,13 +8,13 @@
   "backgroundGifEnabled": true,
   "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764823867450-b09da4.gif",
   "backgroundGifOpacity": 0.3,
-  "backgroundGifBlur": 0,
+  "backgroundGifBlur": 8,
   "headerRoles": [
     "Electrical Engineer",
     "Innovator",
     "Problem Solver",
     "Prototype Developer"
   ],
-  "updatedAt": "2025-12-04T05:20:12.990Z",
+  "updatedAt": "2025-12-04T05:20:22.214Z",
   "backgroundVideoUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764825608042-58bcaf.mp4"
 }
