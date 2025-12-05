@@ -8,7 +8,14 @@
     "content": "\nhi this is the award i got at ACT\n\n\n\n\nI like videos from phils lab alot\n\n\n<video controls width=\"100%\">\n  <source src=\"https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764038262895-bcfd34.mp4\" type=\"video/mp4\">\n  Your browser does not support the video tag.\n</video>\n\n\n\n\n\n![image description](https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764036591864-c49720.png)\n\nqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
     "createdAt": "2025-11-25T02:10:21.416Z",
     "updatedAt": "2025-11-25T02:37:50.336Z"
+  },
+  {
+    "id": "1764957760569",
+    "title": "Tuning our racing kart at Penn State! ",
+    "slug": "tuning-our-racing-kart-at-penn-state-1764957760569",
+    "summary": " (FSAE) Formula Society of Automotive Engineers",
+    "heroImage": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764957758751-eb0029.png",
+    "content": "To begin, its important to know what engine we're using--> we have the Honda cbr 600rr engine. with a 1-2-4-3 firing order. \n\n![image description](https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764957487835-c8fee6.jpg)\n\n1.) I defined the engine configuration in Haltech NSP\n\n\n![image description](https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764957693841-703b0b.png)\n\n\n\n",
+    "createdAt": "2025-12-05T18:02:40.569Z"
   }
 ]
-
-
