@@ -6,15 +6,15 @@
   "pageBg": "#000000",
   "cardBg": "#ffffff",
   "backgroundGifEnabled": true,
-  "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764468634034-b09da4.gif",
-  "backgroundGifOpacity": 0.3,
-  "backgroundGifBlur": 0,
+  "backgroundGifUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764887264296-5a8040.gif",
+  "backgroundGifOpacity": 0.13,
+  "backgroundGifBlur": 13,
   "headerRoles": [
     "Electrical Engineer",
     "Innovator",
     "Problem Solver",
     "Prototype Developer"
   ],
-  "updatedAt": "2025-12-04T04:38:56.315Z",
-  "backgroundVideoUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764822862025-a6aa69.mp4"
+  "updatedAt": "2025-12-04T22:30:47.542Z",
+  "backgroundVideoUrl": ""
 }
