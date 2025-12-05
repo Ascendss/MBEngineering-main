@@ -1,44 +1,40 @@
 {
-  "title": "About Me",
+  "title": "---------------------------------------------------------------------",
   "tagline": "Electrical Engineer · R&D · Prototyping · PCB Design",
   "profileImage": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764164114943-303caf.jpg",
   "content": "Hi, I'm Matt — an Electrical Engineer with six years of experience in PCB troubleshooting, manufacturing, and R&D and prototyping experience. My standout achievement: named as an inventor on a U.S. patent application for a Vapor Quality & Vapor Volume Fraction Sensor developed under a Navy Phase II contract (N6833522C0445) at Advanced Cooling Technologies (ACT). I designed and prototyped the custom PCBs that made the sensor possible, supporting next-generation cooling systems for Navy and data center applications.\n\nAt ACT, I also built high-impact hardware for DOE projects, including a vacuum-chamber test system for radiation-shielding CubeSat materials, a plasma power-supply prototype for advanced coatings, and cryogenic/vacuum setups for neutron optics research.\n\nIf you're looking for someone who can take a technical concept from idea to bench-tested prototype, let's connect",
   "timeline": [
     {
-      "id": "t0_1764911403739",
+      "id": "t0_1764911522820",
       "date": "2019–2023",
       "headline": "Electronics Technician – EMSG",
       "imageUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764458714375-37d4e3.png",
       "body": "Worked on PCB troubleshooting, quality assurance, and process improvements for electronics manufacturing. "
     },
     {
-      "id": "t1_1764911403739",
+      "id": "t1_1764911522820",
       "date": "2019-2022",
       "headline": "A.S. in Electrical Engineering Technology – HACC",
       "imageUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764458731036-a8ccd1.jpg",
       "body": "Received my associates in Electrical Engineering Technology while working full time at EMSG (electronics manufacturing)."
     },
     {
-      "id": "t2_1764911403739",
+      "id": "t2_1764911522820",
       "date": "2023–2025",
       "headline": "R&D Technician – Advanced Cooling Technologies (ACT)",
       "imageUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764458743462-93413a.jpg",
       "body": "Contributed to R&D projects for Navy and DOE, including the vapor-quality sensor patent, vacuum test systems, and cryogenic setups. Named inventor on U.S. patent application.\n\nWas awarded an innovation in action:\n\n![image description](https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764820584738-8d97a8.jpg)\n\n\n\n\n\n\n\n\n\n\n"
     },
     {
-      "id": "t3_1764911403739",
+      "id": "t3_1764911522820",
       "date": "2023–Present",
       "headline": "B.S. in Electrical Engineering Technology – Penn State",
       "imageUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764458750565-368fe0.jpg",
       "body": "Pursuing my degree while working on embedded systems, PCB design, and smart device projects."
     }
   ],
-  "updatedAt": "2025-12-05T05:10:05.611Z",
+  "updatedAt": "2025-12-05T05:12:04.551Z",
   "headerRoles": [
-    {
-      "label": "Electrical Engineer",
-      "iconUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764911107740-6d98c4.png"
-    },
     {
       "label": "PCB Design",
       "iconUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764910776892-e3521e.png"
@@ -50,6 +46,10 @@
     {
       "label": "R&D",
       "iconUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764911284042-46bf21.png"
+    },
+    {
+      "label": "Troubleshooting",
+      "iconUrl": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764911107740-6d98c4.png"
     }
   ]
 }
