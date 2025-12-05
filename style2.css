@@ -801,99 +801,104 @@ footer p {
   letter-spacing: 0.01em;
 }
 
-/* ===== Header Roles: Icon Strip + Tag Pills ===== */
+/* ===== Header Roles: Icons + Tag Pills (Paired) ===== */
 
-/* Icon strip row */
-.about-icons {
-  margin: 0.9rem 0 1rem;
-  display: flex;
-  justify-content: center;
-  gap: 1.4rem;
-  opacity: 0.9;
-}
-
-.about-icon-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.about-icon-item img {
-  width: 28px;
-  height: 28px;
-  /* For white/light icons on dark bg, no filter needed */
-  /* For dark icons, uncomment: filter: brightness(0) invert(1); */
-  opacity: 0.9;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-.about-icon-item img:hover {
-  transform: scale(1.15);
-  opacity: 1;
-}
-
-/* Tag pills row */
-.about-tags {
+/* Grid of role items */
+.about-roles-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 1.5rem;
+  margin-top: 1.2rem;
 }
 
+/* Each role item: icon above, tag below */
+.about-role-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Icon container */
+.about-role-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.about-role-icon:hover {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.about-role-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Tag pill */
 .about-tag {
   padding: 0.35rem 0.8rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(4px);
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease;
+  white-space: nowrap;
 }
 
-.about-tag:hover {
-  background: rgba(255, 255, 255, 0.12);
-  transform: translateY(-1px);
+.about-role-item:hover .about-tag {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .about-icons {
+  .about-roles-grid {
     gap: 1rem;
   }
   
-  .about-icon-item img {
-    width: 22px;
-    height: 22px;
-  }
-  
-  .about-tags {
-    gap: 0.4rem;
+  .about-role-icon {
+    width: 48px;
+    height: 48px;
+    padding: 6px;
   }
   
   .about-tag {
-    font-size: 0.68rem;
-    padding: 0.3rem 0.65rem;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.6rem;
   }
 }
 
 @media (max-width: 480px) {
-  .about-icons {
-    gap: 0.8rem;
+  .about-roles-grid {
+    gap: 0.75rem;
   }
   
-  .about-icon-item img {
-    width: 20px;
-    height: 20px;
+  .about-role-icon {
+    width: 42px;
+    height: 42px;
+    padding: 5px;
+    border-radius: 10px;
   }
   
   .about-tag {
-    font-size: 0.62rem;
-    padding: 0.25rem 0.55rem;
+    font-size: 0.58rem;
+    padding: 0.25rem 0.5rem;
   }
 }
 

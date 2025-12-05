@@ -27,33 +27,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     if (taglineEl) {
       if (headerRoles.length > 0) {
-        // Build icons strip + tag pills
-        let iconsHtml = '';
-        let tagsHtml = '';
+        // Build role cards - each icon paired with its tag
+        let rolesHtml = '<div class="about-roles-grid">';
         
-        // Check if any roles have icons
-        const hasIcons = headerRoles.some(role => role.iconUrl && role.iconUrl.trim());
-        
-        if (hasIcons) {
-          iconsHtml = '<div class="about-icons">';
-          headerRoles.forEach(role => {
-            if (role.iconUrl && role.iconUrl.trim()) {
-              iconsHtml += `<div class="about-icon-item"><img src="${role.iconUrl}" alt="${role.label || ''} icon"></div>`;
-            }
-          });
-          iconsHtml += '</div>';
-        }
-        
-        // Build tag pills
-        tagsHtml = '<div class="about-tags">';
         headerRoles.forEach(role => {
           if (role.label && role.label.trim()) {
-            tagsHtml += `<span class="about-tag">${role.label}</span>`;
+            const hasIcon = role.iconUrl && role.iconUrl.trim();
+            rolesHtml += `
+              <div class="about-role-item">
+                ${hasIcon ? `<div class="about-role-icon"><img src="${role.iconUrl}" alt="${role.label} icon"></div>` : ''}
+                <span class="about-tag">${role.label}</span>
+              </div>
+            `;
           }
         });
-        tagsHtml += '</div>';
         
-        taglineEl.innerHTML = iconsHtml + tagsHtml;
+        rolesHtml += '</div>';
+        taglineEl.innerHTML = rolesHtml;
       } else {
         // Fallback to plain tagline text
         taglineEl.textContent = data.tagline || '';
