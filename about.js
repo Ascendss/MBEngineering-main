@@ -43,6 +43,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         
         rolesHtml += '</div>';
+        
+        // Add "experienced in" line below the roles
+        rolesHtml += '<p class="about-experienced-in">Experienced in</p>';
+        
         taglineEl.innerHTML = rolesHtml;
       } else {
         // Fallback to plain tagline text
