@@ -819,10 +819,11 @@ footer p {
 }
 
 .about-icon-item img {
-  width: 26px;
-  height: 26px;
-  filter: brightness(0) invert(1);
-  opacity: 0.85;
+  width: 28px;
+  height: 28px;
+  /* For white/light icons on dark bg, no filter needed */
+  /* For dark icons, uncomment: filter: brightness(0) invert(1); */
+  opacity: 0.9;
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
