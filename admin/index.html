@@ -536,6 +536,21 @@
 
                     <hr style="margin: 2rem 0;" />
 
+                    <h3>Header Roles (Icons + Tags)</h3>
+                    <p style="color:#666; margin-bottom: 1rem;">
+                        These appear as icons and pill-shaped tags under "About Me". Add labels and optional icons.
+                    </p>
+
+                    <div id="headerRolesAboutList" class="header-roles-editor-list">
+                        <!-- header role items injected by JS -->
+                    </div>
+
+                    <button type="button" id="headerRolesAboutAddBtn" class="btn-secondary" style="margin-top: 1rem;">
+                        + Add Role
+                    </button>
+
+                    <hr style="margin: 2rem 0;" />
+
                     <h3>About Timeline</h3>
                     <p style="color:#666; margin-bottom: 1rem;">
                         Each entry becomes a step in the timeline on your About page.
@@ -1201,6 +1216,9 @@
 
         // Timeline state
         let aboutTimeline = [];
+        
+        // Header Roles state (for About page icons + tags)
+        let aboutHeaderRoles = [];
 
         aboutInsertImageBtn.addEventListener('click', () => {
             currentInlineTarget = { btn: aboutInsertImageBtn, textarea: aboutContentField };
@@ -1389,6 +1407,129 @@
             });
         }
 
+        // ===== Header Roles Editor (for About page icons + tags) =====
+        function renderAboutHeaderRolesEditor() {
+            const list = document.getElementById('headerRolesAboutList');
+            if (!list) return;
+
+            list.innerHTML = '';
+
+            aboutHeaderRoles.forEach((role, index) => {
+                const item = document.createElement('div');
+                item.className = 'header-role-item';
+                item.dataset.index = index;
+
+                item.innerHTML = `
+                    <div class="header-role-top-row">
+                        <input
+                            type="text"
+                            class="header-role-input header-role-label"
+                            value="${role.label || ''}"
+                            placeholder="e.g. Electrical Engineer"
+                        />
+                        <div class="header-role-controls">
+                            <button type="button" class="header-role-up">▲</button>
+                            <button type="button" class="header-role-down">▼</button>
+                            <button type="button" class="header-role-remove">Remove</button>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem;">
+                        <input
+                            type="text"
+                            class="header-role-input header-role-icon-url"
+                            value="${role.iconUrl || ''}"
+                            placeholder="Icon URL (optional)"
+                            style="flex:1;"
+                        />
+                        <button type="button" class="header-role-upload-icon btn-insert-image" style="white-space:nowrap;">📷 Upload Icon</button>
+                        <input type="file" class="header-role-icon-file" accept="image/*" style="display:none;" />
+                    </div>
+                    ${role.iconUrl ? `<div class="header-role-icon-preview" style="margin-top:0.5rem;"><img src="${role.iconUrl}" alt="Icon" style="width:28px; height:28px; filter:invert(1); background:#333; padding:4px; border-radius:4px;" /></div>` : ''}
+                `;
+
+                const labelInput = item.querySelector('.header-role-label');
+                const iconUrlInput = item.querySelector('.header-role-icon-url');
+                const upBtn = item.querySelector('.header-role-up');
+                const downBtn = item.querySelector('.header-role-down');
+                const removeBtn = item.querySelector('.header-role-remove');
+                const uploadBtn = item.querySelector('.header-role-upload-icon');
+                const fileInput = item.querySelector('.header-role-icon-file');
+
+                labelInput.addEventListener('input', () => {
+                    aboutHeaderRoles[index].label = labelInput.value;
+                });
+
+                iconUrlInput.addEventListener('input', () => {
+                    aboutHeaderRoles[index].iconUrl = iconUrlInput.value;
+                });
+
+                upBtn.addEventListener('click', () => {
+                    if (index === 0) return;
+                    const tmp = aboutHeaderRoles[index - 1];
+                    aboutHeaderRoles[index - 1] = aboutHeaderRoles[index];
+                    aboutHeaderRoles[index] = tmp;
+                    renderAboutHeaderRolesEditor();
+                });
+
+                downBtn.addEventListener('click', () => {
+                    if (index === aboutHeaderRoles.length - 1) return;
+                    const tmp = aboutHeaderRoles[index + 1];
+                    aboutHeaderRoles[index + 1] = aboutHeaderRoles[index];
+                    aboutHeaderRoles[index] = tmp;
+                    renderAboutHeaderRolesEditor();
+                });
+
+                removeBtn.addEventListener('click', () => {
+                    aboutHeaderRoles.splice(index, 1);
+                    renderAboutHeaderRolesEditor();
+                });
+
+                uploadBtn.addEventListener('click', () => fileInput.click());
+
+                fileInput.addEventListener('change', async (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+
+                    try {
+                        uploadBtn.disabled = true;
+                        uploadBtn.textContent = '⏳...';
+
+                        const uploadedUrl = await uploadFile(file);
+
+                        if (uploadedUrl) {
+                            iconUrlInput.value = uploadedUrl;
+                            aboutHeaderRoles[index].iconUrl = uploadedUrl;
+                            renderAboutHeaderRolesEditor();
+                        }
+
+                        uploadBtn.disabled = false;
+                        uploadBtn.textContent = '📷 Upload Icon';
+                    } catch (err) {
+                        console.error('Icon upload failed:', err);
+                        alert('Failed to upload icon: ' + err.message);
+                        uploadBtn.disabled = false;
+                        uploadBtn.textContent = '📷 Upload Icon';
+                    } finally {
+                        fileInput.value = '';
+                    }
+                });
+
+                list.appendChild(item);
+            });
+        }
+
+        // Add header role button
+        const headerRolesAboutAddBtn = document.getElementById('headerRolesAboutAddBtn');
+        if (headerRolesAboutAddBtn) {
+            headerRolesAboutAddBtn.addEventListener('click', () => {
+                aboutHeaderRoles.push({
+                    label: '',
+                    iconUrl: ''
+                });
+                renderAboutHeaderRolesEditor();
+            });
+        }
+
         async function loadAbout() {
             try {
                 const res = await fetch('/content/about.json', { cache: 'no-cache' });
@@ -1407,6 +1548,10 @@
                 // Load timeline
                 aboutTimeline = Array.isArray(data.timeline) ? data.timeline : [];
                 renderAboutTimelineEditor();
+                
+                // Load header roles
+                aboutHeaderRoles = Array.isArray(data.headerRoles) ? data.headerRoles : [];
+                renderAboutHeaderRolesEditor();
             } catch (error) {
                 console.error('Error loading about:', error);
             }
@@ -1440,7 +1585,7 @@
                 const res = await fetch('/.netlify/functions/updateAbout', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, tagline, content, profileImage, timeline: aboutTimeline })
+                    body: JSON.stringify({ title, tagline, content, profileImage, timeline: aboutTimeline, headerRoles: aboutHeaderRoles })
                 });
 
                 if (res.ok) {

@@ -801,6 +801,101 @@ footer p {
   letter-spacing: 0.01em;
 }
 
+/* ===== Header Roles: Icon Strip + Tag Pills ===== */
+
+/* Icon strip row */
+.about-icons {
+  margin: 0.9rem 0 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.4rem;
+  opacity: 0.9;
+}
+
+.about-icon-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-icon-item img {
+  width: 26px;
+  height: 26px;
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.about-icon-item img:hover {
+  transform: scale(1.15);
+  opacity: 1;
+}
+
+/* Tag pills row */
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.about-tag {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.about-tag:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .about-icons {
+    gap: 1rem;
+  }
+  
+  .about-icon-item img {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .about-tags {
+    gap: 0.4rem;
+  }
+  
+  .about-tag {
+    font-size: 0.68rem;
+    padding: 0.3rem 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-icons {
+    gap: 0.8rem;
+  }
+  
+  .about-icon-item img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .about-tag {
+    font-size: 0.62rem;
+    padding: 0.25rem 0.55rem;
+  }
+}
+
 /* Two-column layout */
 .about-layout {
   display: flex;

@@ -22,9 +22,42 @@ document.addEventListener('DOMContentLoaded', async () => {
       titleEl.textContent = data.title || 'About';
     }
     
-    // Populate tagline
+    // Populate tagline - use headerRoles if available, otherwise plain tagline
+    const headerRoles = Array.isArray(data.headerRoles) ? data.headerRoles : [];
+    
     if (taglineEl) {
-      taglineEl.textContent = data.tagline || '';
+      if (headerRoles.length > 0) {
+        // Build icons strip + tag pills
+        let iconsHtml = '';
+        let tagsHtml = '';
+        
+        // Check if any roles have icons
+        const hasIcons = headerRoles.some(role => role.iconUrl && role.iconUrl.trim());
+        
+        if (hasIcons) {
+          iconsHtml = '<div class="about-icons">';
+          headerRoles.forEach(role => {
+            if (role.iconUrl && role.iconUrl.trim()) {
+              iconsHtml += `<div class="about-icon-item"><img src="${role.iconUrl}" alt="${role.label || ''} icon"></div>`;
+            }
+          });
+          iconsHtml += '</div>';
+        }
+        
+        // Build tag pills
+        tagsHtml = '<div class="about-tags">';
+        headerRoles.forEach(role => {
+          if (role.label && role.label.trim()) {
+            tagsHtml += `<span class="about-tag">${role.label}</span>`;
+          }
+        });
+        tagsHtml += '</div>';
+        
+        taglineEl.innerHTML = iconsHtml + tagsHtml;
+      } else {
+        // Fallback to plain tagline text
+        taglineEl.textContent = data.tagline || '';
+      }
     }
 
     // Populate avatar - show wrapper only if image exists

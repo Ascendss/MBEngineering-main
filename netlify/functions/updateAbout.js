@@ -20,7 +20,7 @@ exports.handler = async function (event) {
     const filePath = "content/about.json";
 
     try {
-        const { title, tagline, content, profileImage, timeline } = JSON.parse(event.body);
+        const { title, tagline, content, profileImage, timeline, headerRoles } = JSON.parse(event.body);
 
         const getUrl = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`;
 
@@ -57,6 +57,8 @@ exports.handler = async function (event) {
             ...(profileImage ? { profileImage } : {}),
             // Handle timeline array
             timeline: Array.isArray(timeline) ? timeline : (existingData.timeline || []),
+            // Handle headerRoles array (icons + labels for About header)
+            headerRoles: Array.isArray(headerRoles) ? headerRoles : (existingData.headerRoles || []),
             updatedAt: new Date().toISOString()
         };
 
