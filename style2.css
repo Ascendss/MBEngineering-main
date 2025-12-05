@@ -232,6 +232,14 @@ header.scrolled {
   font-family: inherit;
 }
 
+/* Cursor blink span - uses opacity to avoid layout shift */
+#site-role-block .cursor-blink {
+  display: inline-block;
+  width: 0.5em; /* fixed width so text doesn't shift */
+  text-align: center;
+  transition: opacity 0.05s ease;
+}
+
 .site-subtitle {
   font-size: 0.9rem;
   font-weight: 400;

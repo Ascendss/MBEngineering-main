@@ -167,27 +167,28 @@ document.addEventListener('DOMContentLoaded', function () {
         let cursorVisible = true;
         const startTime = Date.now();
 
+        // Use a span for the cursor so we can toggle opacity without layout shift
+        roleBlock.innerHTML = `<span class="cursor-blink">|</span> ${phrase}`;
+        const cursorSpan = roleBlock.querySelector('.cursor-blink');
+
         function toggle() {
           const elapsed = Date.now() - startTime;
           if (elapsed >= duration) {
             // Ensure cursor is visible when done
-            roleBlock.textContent = `| ${phrase}`;
+            if (cursorSpan) cursorSpan.style.opacity = '1';
             resolve();
             return;
           }
 
           cursorVisible = !cursorVisible;
-          if (cursorVisible) {
-            roleBlock.textContent = `| ${phrase}`;  // cursor ON
-          } else {
-            roleBlock.textContent = `  ${phrase}`;  // cursor OFF (space instead)
+          if (cursorSpan) {
+            cursorSpan.style.opacity = cursorVisible ? '1' : '0';
           }
 
           setTimeout(toggle, CURSOR_BLINK_INTERVAL);
         }
 
         // Start with cursor visible, then begin toggling
-        roleBlock.textContent = `| ${phrase}`;
         setTimeout(toggle, CURSOR_BLINK_INTERVAL);
       });
     }
