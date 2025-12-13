@@ -380,6 +380,29 @@
         .header-role-remove:hover {
             background: #fecaca !important;
         }
+        
+        /* EasyMDE toolbar fix - make icons visible */
+        .EasyMDEContainer .editor-toolbar {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+        .EasyMDEContainer .editor-toolbar button {
+            color: #333 !important;
+        }
+        .EasyMDEContainer .editor-toolbar button:hover {
+            background: #e0e0e0;
+        }
+        .EasyMDEContainer .editor-toolbar button.active {
+            background: #d0d0d0;
+        }
+        .EasyMDEContainer .editor-toolbar i.separator {
+            border-left-color: #ccc;
+        }
+        .EasyMDEContainer .CodeMirror {
+            border: 1px solid #ddd;
+            border-radius: 0 0 4px 4px;
+        }
     </style>
 </head>
 <body>
