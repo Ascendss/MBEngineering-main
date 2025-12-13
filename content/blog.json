@@ -17,5 +17,14 @@
     "heroImage": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764957758751-eb0029.png",
     "content": "To begin, its important to know what engine we're using--> we have the Honda cbr 600rr engine. with a 1-2-4-3 firing order. \n\n![image description](https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764957487835-c8fee6.jpg)\n\n1.) I defined the engine configuration in Haltech NSP\n\n\n![image description](https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1764957693841-703b0b.png)\n\n\n\n",
     "createdAt": "2025-12-05T18:02:40.569Z"
+  },
+  {
+    "id": "1765587057493",
+    "title": "The common starting moves of Electrical Engineering",
+    "slug": "the-common-starting-moves-of-electrical-engineering-1765587057493",
+    "summary": "In chess, strong players do not start each game from scratch. They study opening books--collections of proven first moves that reliably lead to stable, playable positions. Electrical engineering is no different. While products vary widely in purpose, form factor, and complexity, most successful electronic systems are built from a small set of recurring circuit strategies that appear again and again across industries.",
+    "heroImage": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1765587055932-b2dbe6.jpg",
+    "content": "In chess, strong players do not start each game from scratch. They study opening books — collections of proven first moves that reliably lead to stable, playable positions. Electrical engineering is no different. While products vary widely in purpose, form factor, and complexity, most successful electronic systems are built from a small set of recurring circuit strategies that appear again and again across industries.\n\nThis blog is an attempt to catalog those strategies.\n\nRather than focusing on isolated textbook problems or novelty circuits, the goal is to document the core electrical “moves” that nearly every real product uses: power entry and protection, voltage regulation, signal conditioning, amplification, filtering, conversion between analog and digital domains, and safe interaction with the outside world. These are the circuits that quietly underpin consumer electronics, industrial controls, medical devices, and instrumentation alike.\n\nOver time, this blog will form a practical “opening book” for electrical engineering — a reference for students, hobbyists, and early-career engineers who want to recognize proven patterns, avoid common mistakes, and understand how real products are constructed. The emphasis is on clarity, repeatability, and reasoning, not memorization.\n",
+    "createdAt": "2025-12-13T00:50:57.493Z"
   }
 ]
