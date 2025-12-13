@@ -3,6 +3,9 @@
 <head>
     <title>Admin Panel - MB Engineering</title>
     <link rel="stylesheet" href="style.css">
+    <!-- EasyMDE Markdown Editor -->
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <style>
         /* Additional admin styles */
@@ -1069,15 +1072,103 @@
 
         let currentEditingBlog = null;
         let allBlogPosts = [];
+        
+        // Initialize EasyMDE for blog content
+        let blogMDE = null;
+        if (blogContentField && typeof EasyMDE !== 'undefined') {
+            blogMDE = new EasyMDE({
+                element: blogContentField,
+                spellChecker: false,
+                autofocus: false,
+                status: false,
+                placeholder: 'Write your blog post here using Markdown...',
+                toolbar: [
+                    'bold', 'italic', 'heading', '|',
+                    'quote', 'unordered-list', 'ordered-list', '|',
+                    'link', 'image', 'code', 'table', '|',
+                    'preview', 'side-by-side', 'fullscreen', '|',
+                    'guide'
+                ],
+                minHeight: '300px',
+            });
+        }
+
+        // Helper to get blog content (from EasyMDE or textarea)
+        function getBlogContent() {
+            return blogMDE ? blogMDE.value() : blogContentField.value;
+        }
+        
+        // Helper to set blog content
+        function setBlogContent(content) {
+            if (blogMDE) {
+                blogMDE.value(content || '');
+            } else {
+                blogContentField.value = content || '';
+            }
+        }
 
         blogInsertImageBtn.addEventListener('click', () => {
-            currentInlineTarget = { btn: blogInsertImageBtn, textarea: blogContentField };
-            inlineImageInput.click();
+            // For EasyMDE, we insert at cursor position
+            if (blogMDE) {
+                const cm = blogMDE.codemirror;
+                const originalBtn = blogInsertImageBtn.textContent;
+                
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    try {
+                        blogInsertImageBtn.disabled = true;
+                        blogInsertImageBtn.textContent = '⏳ Uploading...';
+                        const imageUrl = await uploadFile(file);
+                        cm.replaceSelection(`\n\n![image](${imageUrl})\n\n`);
+                        blogInsertImageBtn.textContent = '✅ Inserted!';
+                        setTimeout(() => { blogInsertImageBtn.textContent = originalBtn; blogInsertImageBtn.disabled = false; }, 1500);
+                    } catch (err) {
+                        alert('Upload failed: ' + err.message);
+                        blogInsertImageBtn.textContent = originalBtn;
+                        blogInsertImageBtn.disabled = false;
+                    }
+                };
+                input.click();
+            } else {
+                currentInlineTarget = { btn: blogInsertImageBtn, textarea: blogContentField };
+                inlineImageInput.click();
+            }
         });
 
         blogInsertVideoBtn.addEventListener('click', () => {
-            currentVideoTarget = { btn: blogInsertVideoBtn, textarea: blogContentField };
-            blogVideoInput.click();
+            if (blogMDE) {
+                const cm = blogMDE.codemirror;
+                const originalBtn = blogInsertVideoBtn.textContent;
+                
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'video/*';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    try {
+                        blogInsertVideoBtn.disabled = true;
+                        blogInsertVideoBtn.textContent = '⏳ Uploading...';
+                        const videoUrl = await uploadFile(file);
+                        const mimeType = getVideoMimeType(file.name);
+                        cm.replaceSelection(`\n\n<video controls width="100%"><source src="${videoUrl}" type="${mimeType}"></video>\n\n`);
+                        blogInsertVideoBtn.textContent = '✅ Inserted!';
+                        setTimeout(() => { blogInsertVideoBtn.textContent = originalBtn; blogInsertVideoBtn.disabled = false; }, 1500);
+                    } catch (err) {
+                        alert('Upload failed: ' + err.message);
+                        blogInsertVideoBtn.textContent = originalBtn;
+                        blogInsertVideoBtn.disabled = false;
+                    }
+                };
+                input.click();
+            } else {
+                currentVideoTarget = { btn: blogInsertVideoBtn, textarea: blogContentField };
+                blogVideoInput.click();
+            }
         });
 
         async function loadBlogPosts() {
@@ -1127,7 +1218,7 @@
             blogIdField.value = post.id;
             blogTitleField.value = post.title || '';
             blogSummaryField.value = post.summary || '';
-            blogContentField.value = post.content || '';
+            setBlogContent(post.content || '');
             if (post.heroImage) { blogCurrentImage.src = post.heroImage; blogCurrentImagePreview.style.display = 'block'; }
             else { blogCurrentImagePreview.style.display = 'none'; }
             blogFormMode.textContent = '✏️ Editing Blog Post';
@@ -1142,6 +1233,7 @@
             currentEditingBlog = null;
             blogForm.reset();
             blogIdField.value = '';
+            setBlogContent(''); // Clear EasyMDE content
             blogCurrentImagePreview.style.display = 'none';
             blogFormMode.textContent = '✨ Creating New Blog Post';
             blogFormMode.className = 'form-mode-indicator create-mode';
@@ -1171,7 +1263,7 @@
             const isEditing = !!blogIdField.value;
             const title = blogTitleField.value;
             const summary = blogSummaryField.value;
-            const content = blogContentField.value;
+            const content = getBlogContent();
             const imageFile = blogHeroImageField.files[0];
             let imageUrl = '';
             if (isEditing && !imageFile && currentEditingBlog) imageUrl = currentEditingBlog.heroImage || '';

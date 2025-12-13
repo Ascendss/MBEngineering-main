@@ -1,3 +1,8 @@
+// Enable line breaks in markdown (single Enter = <br>)
+if (typeof marked !== 'undefined') {
+  marked.setOptions({ breaks: true });
+}
+
 async function loadProject() {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('slug');

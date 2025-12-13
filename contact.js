@@ -1,3 +1,8 @@
+// Enable line breaks in markdown (single Enter = <br>)
+if (typeof marked !== 'undefined') {
+  marked.setOptions({ breaks: true });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('contact.js: Starting...');
   
