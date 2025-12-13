@@ -385,7 +385,11 @@
         .EasyMDEContainer .editor-toolbar {
             background: #f9f9f9;
             border: 1px solid #ddd;
-            border-bottom: none;
+            border-bottom: 1px solid #ddd;
+            /* Sticky toolbar - stays visible while scrolling */
+            position: sticky;
+            top: 0;
+            z-index: 9999;
         }
         .EasyMDEContainer .editor-toolbar button {
             color: #333 !important;
@@ -402,6 +406,7 @@
         .EasyMDEContainer .CodeMirror {
             border: 1px solid #ddd;
             border-radius: 0 0 4px 4px;
+            padding-top: 8px; /* Prevent sticky toolbar from overlapping text */
         }
     </style>
 </head>
