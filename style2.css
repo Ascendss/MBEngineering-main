@@ -460,6 +460,37 @@ footer p {
   color: #333;
 }
 
+/* Paragraph spacing - critical for readability */
+.markdown-content p {
+  margin-bottom: 1.25em;
+  line-height: 1.7;
+}
+
+.markdown-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Line breaks within paragraphs get slight spacing (for breaks: true option) */
+.markdown-content p br {
+  line-height: 1.8;
+}
+
+/* Multiple consecutive line breaks create visual spacing */
+.markdown-content br + br {
+  display: block;
+  margin-top: 0.5em;
+}
+
+/* Better spacing around block elements */
+.markdown-content p + h1,
+.markdown-content p + h2,
+.markdown-content p + h3,
+.markdown-content p + h4,
+.markdown-content p + h5,
+.markdown-content p + h6 {
+  margin-top: 2em;
+}
+
 .markdown-content h1 {
   font-size: 1.75rem;
   font-weight: 700;
