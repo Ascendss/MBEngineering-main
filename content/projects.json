@@ -12,5 +12,14 @@
     "description": "",
     "image": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1763840659731-cbcc61.png",
     "createdAt": "2025-11-22T19:44:20.551Z"
+  },
+  {
+    "id": "1772131278792",
+    "title": "Radar Analysis: Waveforms, Filtering, and RF Signal Processing Fundamentals",
+    "slug": "radar-analysis-waveforms-filtering-and-rf-signal-processing-fundamentals-1772131278792",
+    "summary": "This research paper provides a structured technical exploration of radar systems, signal waveforms, and filtering techniques from an electronic engineering perspective. It begins with foundational waveform concepts (frequency, amplitude, phase, and bandwidth) and builds toward a deeper analysis of how radio waves are transmitted, received, and processed within radar systems to determine distance, velocity, and direction of targets. The paper emphasizes the role of filters, signal modulation, and digital processing in improving radar accuracy and reducing interference in real-world environments.",
+    "heroImage": "https://raw.githubusercontent.com/Ascendss/MBEngineering-main/main/assets/uploads/1772131277387-cdb0e2.png",
+    "content": "",
+    "createdAt": "2026-02-26T18:41:18.792Z"
   }
 ]
